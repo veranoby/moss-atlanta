@@ -1,0 +1,624 @@
+<template>
+  <v-app>
+    <div class="min-h-screen bg-white text-[#424242]">
+      <!-- Header -->
+      <header class="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-gray-200">
+        <v-container class="py-0">
+          <div class="flex items-center justify-between h-16">
+            <a class="flex items-center gap-2" href="#">
+              <div
+                aria-hidden="true"
+                class="h-8 w-8 rounded-sm"
+                style="background-color:#FFF9C4;"
+              />
+              <span class="text-sm sm:text-base font-semibold tracking-wide">
+                MOSS Atlanta Staffing Services
+              </span>
+            </a>
+
+            <nav class="hidden sm:flex items-center gap-6 text-sm">
+              <a class="hover:text-black transition" href="#services">
+                {{ t.nav.services }}
+              </a>
+              <a class="hover:text-black transition" href="#why">
+                {{ t.nav.why }}
+              </a>
+              <a class="hover:text-black transition" href="#contact">
+                {{ t.nav.contact }}
+              </a>
+            </nav>
+
+            <div class="flex items-center gap-2">
+              <div class="text-xs sm:text-sm flex items-center rounded-md border border-gray-200">
+                <v-btn
+                  aria-label="English"
+                  class="px-2 py-1 min-h-0 h-auto"
+                  :class="isEN ? 'font-semibold text-gray-900' : 'text-gray-500'"
+                  density="comfortable"
+                  variant="text"
+                  @click="lang = 'en'"
+                >
+                  EN
+                </v-btn>
+                <span class="text-gray-300 select-none">|</span>
+                <v-btn
+                  aria-label="Español"
+                  class="px-2 py-1 min-h-0 h-auto"
+                  :class="isES ? 'font-semibold text-gray-900' : 'text-gray-500'"
+                  density="comfortable"
+                  variant="text"
+                  @click="lang = 'es'"
+                >
+                  ES
+                </v-btn>
+              </div>
+              <v-btn
+                class="hidden sm:inline-flex border border-gray-300 hover:bg-[#F5F5F5] transition"
+                :href="'#apply'"
+                variant="text"
+              >
+                {{ t.nav.apply }}
+              </v-btn>
+            </div>
+          </div>
+        </v-container>
+      </header>
+
+      <!-- Main Content -->
+      <transition mode="out-in" name="fade">
+        <main :key="lang">
+          <!-- Hero Section -->
+          <section class="bg-[#F5F5F5]">
+            <v-container>
+              <v-row
+                :class="'py-14 sm:py-20'"
+                align="center"
+                class="items-center"
+              >
+                <v-col cols="12" lg="6">
+                  <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-black">
+                    {{ t.hero.headline }}
+                  </h1>
+                  <p class="mt-4 text-base sm:text-lg">
+                    {{ t.hero.subtitle }}
+                  </p>
+                  <div class="mt-8 flex flex-col sm:flex-row gap-3">
+                    <v-btn
+                      class="font-semibold text-[#424242] border border-yellow-100 hover:shadow transition"
+                      :href="'#apply'"
+                      size="large"
+                      style="background-color:#FFF9C4;"
+                    >
+                      {{ t.hero.applyNow }}
+                    </v-btn>
+                    <v-btn
+                      class="font-semibold border border-gray-300 hover:bg-white hover:shadow-sm transition"
+                      :href="'#contact'"
+                      size="large"
+                      variant="text"
+                    >
+                      {{ t.hero.partner }}
+                    </v-btn>
+                  </div>
+                </v-col>
+
+                <v-col cols="12" lg="6">
+                  <v-card class="overflow-hidden border border-gray-200 bg-white">
+                    <div class="aspect-[16/10] w-full bg-gradient-to-br from-[#F5F5F5] to-white flex items-center justify-center">
+                      <div class="text-center px-6">
+                        <div class="mx-auto mb-3 h-10 w-10 rounded-md" style="background-color:#FFF9C4;" />
+                        <p class="text-sm text-gray-500">
+                          {{ t.hero.imageCaption }}
+                        </p>
+                      </div>
+                    </div>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+          </section>
+
+          <!-- Services Section -->
+          <section id="services" class="py-16 sm:py-20">
+            <v-container>
+              <header class="mb-10">
+                <h2 class="text-2xl sm:text-3xl font-bold text-black">
+                  {{ t.services.title }}
+                </h2>
+                <p class="mt-2 text-gray-600">
+                  {{ t.services.subtitle }}
+                </p>
+              </header>
+
+              <v-row class="gap-0" dense>
+                <v-col class="mb-6" cols="12" lg="3" sm="6">
+                  <v-card
+                    class="h-full rounded-lg border border-gray-200 bg-white p-6 hover:shadow-sm transition"
+                    elevation="0"
+                  >
+                    <h3 class="text-lg font-semibold text-black">
+                      {{ t.services.items.housekeeping.title }}
+                    </h3>
+                    <p class="mt-2 text-sm text-gray-600">
+                      {{ t.services.items.housekeeping.roles }}
+                    </p>
+                    <p class="mt-4 text-sm italic text-gray-700">
+                      "{{ t.services.items.housekeeping.note }}"
+                    </p>
+                  </v-card>
+                </v-col>
+
+                <v-col class="mb-6" cols="12" lg="3" sm="6">
+                  <v-card
+                    class="h-full rounded-lg border border-gray-200 bg-white p-6 hover:shadow-sm transition"
+                    elevation="0"
+                  >
+                    <h3 class="text-lg font-semibold text-black">
+                      {{ t.services.items.fnb.title }}
+                    </h3>
+                    <p class="mt-2 text-sm text-gray-600">
+                      {{ t.services.items.fnb.roles }}
+                    </p>
+                    <p class="mt-4 text-sm italic text-gray-700">
+                      "{{ t.services.items.fnb.note }}"
+                    </p>
+                  </v-card>
+                </v-col>
+
+                <v-col class="mb-6" cols="12" lg="3" sm="6">
+                  <v-card
+                    class="h-full rounded-lg border border-gray-200 bg-white p-6 hover:shadow-sm transition"
+                    elevation="0"
+                  >
+                    <h3 class="text-lg font-semibold text-black">
+                      {{ t.services.items.frontdesk.title }}
+                    </h3>
+                    <p class="mt-2 text-sm text-gray-600">
+                      {{ t.services.items.frontdesk.roles }}
+                    </p>
+                    <p class="mt-4 text-sm italic text-gray-700">
+                      "{{ t.services.items.frontdesk.note }}"
+                    </p>
+                  </v-card>
+                </v-col>
+
+                <v-col class="mb-6" cols="12" lg="3" sm="6">
+                  <v-card
+                    class="h-full rounded-lg border border-gray-200 bg-white p-6 hover:shadow-sm transition"
+                    elevation="0"
+                  >
+                    <h3 class="text-lg font-semibold text-black">
+                      {{ t.services.items.events.title }}
+                    </h3>
+                    <p class="mt-2 text-sm text-gray-600">
+                      {{ t.services.items.events.roles }}
+                    </p>
+                    <p class="mt-4 text-sm italic text-gray-700">
+                      "{{ t.services.items.events.note }}"
+                    </p>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+          </section>
+
+          <!-- Why Choose MOSS Section -->
+          <section id="why" class="bg-[#F5F5F5] py-16 sm:py-20">
+            <v-container>
+              <header class="mb-10">
+                <h2 class="text-2xl sm:text-3xl font-bold text-black">
+                  {{ t.why.title }}
+                </h2>
+              </header>
+
+              <v-row dense>
+                <v-col class="mb-6" cols="12" md="6">
+                  <v-card
+                    class="rounded-lg border border-gray-200 bg-white p-6"
+                    elevation="0"
+                  >
+                    <h3 class="font-semibold text-black">
+                      {{ t.why.items.reliable.title }}
+                    </h3>
+                    <p class="mt-2 text-gray-700">
+                      {{ t.why.items.reliable.desc }}
+                    </p>
+                  </v-card>
+                </v-col>
+                <v-col class="mb-6" cols="12" md="6">
+                  <v-card
+                    class="rounded-lg border border-gray-200 bg-white p-6"
+                    elevation="0"
+                  >
+                    <h3 class="font-semibold text-black">
+                      {{ t.why.items.trained.title }}
+                    </h3>
+                    <p class="mt-2 text-gray-700">
+                      {{ t.why.items.trained.desc }}
+                    </p>
+                  </v-card>
+                </v-col>
+                <v-col class="mb-6" cols="12" md="6">
+                  <v-card
+                    class="rounded-lg border border-gray-200 bg-white p-6"
+                    elevation="0"
+                  >
+                    <h3 class="font-semibold text-black">
+                      {{ t.why.items.flexible.title }}
+                    </h3>
+                    <p class="mt-2 text-gray-700">
+                      {{ t.why.items.flexible.desc }}
+                    </p>
+                  </v-card>
+                </v-col>
+                <v-col class="mb-6" cols="12" md="6">
+                  <v-card
+                    class="rounded-lg border border-gray-200 bg-white p-6"
+                    elevation="0"
+                  >
+                    <h3 class="font-semibold text-black">
+                      {{ t.why.items.local.title }}
+                    </h3>
+                    <p class="mt-2 text-gray-700">
+                      {{ t.why.items.local.desc }}
+                    </p>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+          </section>
+
+          <!-- Apply Section -->
+          <section id="apply" class="py-16 sm:py-20">
+            <v-container>
+              <v-row dense>
+                <v-col class="mb-6" cols="12" md="6">
+                  <v-card
+                    class="rounded-lg border border-gray-200 bg-white p-8"
+                    elevation="0"
+                  >
+                    <h3 class="text-xl sm:text-2xl font-bold text-black">
+                      {{ t.cta.joinTitle }}
+                    </h3>
+                    <p class="mt-2 text-gray-700">
+                      {{ t.cta.joinDesc }}
+                    </p>
+                    <v-btn
+                      class="mt-6 font-semibold text-[#424242] border border-yellow-100 hover:shadow transition"
+                      :href="'#contact'"
+                      size="large"
+                      style="background-color:#FFF9C4;"
+                    >
+                      {{ t.cta.applyToday }}
+                    </v-btn>
+                  </v-card>
+                </v-col>
+
+                <v-col class="mb-6" cols="12" md="6">
+                  <v-card
+                    class="rounded-lg border border-gray-200 bg-white p-8"
+                    elevation="0"
+                  >
+                    <h3 class="text-xl sm:text-2xl font-bold text-black">
+                      {{ t.cta.staffingTitle }}
+                    </h3>
+                    <p class="mt-2 text-gray-700">
+                      {{ t.cta.staffingDesc }}
+                    </p>
+                    <v-btn
+                      class="mt-6 font-semibold border border-gray-300 hover:bg-[#F5F5F5] transition"
+                      :href="'#contact'"
+                      size="large"
+                      variant="text"
+                    >
+                      {{ t.cta.contactUs }}
+                    </v-btn>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+          </section>
+
+          <!-- Footer -->
+          <footer id="contact" class="border-t border-gray-200 bg-white">
+            <v-container class="py-12">
+              <v-row>
+                <v-col class="mb-8" cols="12" lg="3" sm="6">
+                  <h4 class="font-semibold text-black">
+                    {{ t.footer.contact.title }}
+                  </h4>
+                  <ul class="mt-3 space-y-1 text-sm">
+                    <li>
+                      <a class="hover:text-black transition" href="tel:+1404XXXXXXX">
+                        (404) XXX-XXXX
+                      </a>
+                    </li>
+                    <li>
+                      <a class="hover:text-black transition" href="mailto:careers@mossatlanta.com">
+                        careers@mossatlanta.com
+                      </a>
+                    </li>
+                    <li>Atlanta, GA</li>
+                  </ul>
+                </v-col>
+                <v-col class="mb-8" cols="12" lg="3" sm="6">
+                  <h4 class="font-semibold text-black">
+                    {{ t.footer.company.title }}
+                  </h4>
+                  <ul class="mt-3 space-y-1 text-sm">
+                    <li>
+                      <a class="hover:text-black transition" href="#services">
+                        {{ t.nav.services }}
+                      </a>
+                    </li>
+                    <li>
+                      <a class="hover:text-black transition" href="#why">
+                        {{ t.nav.why }}
+                      </a>
+                    </li>
+                    <li>
+                      <a class="hover:text-black transition" href="#apply">
+                        {{ t.footer.company.careers }}
+                      </a>
+                    </li>
+                  </ul>
+                </v-col>
+                <v-col class="mb-8" cols="12" lg="3" sm="6">
+                  <h4 class="font-semibold text-black">
+                    {{ t.footer.legal.title }}
+                  </h4>
+                  <ul class="mt-3 space-y-1 text-sm">
+                    <li>
+                      <a class="hover:text-black transition" href="#">
+                        {{ t.footer.legal.privacy }}
+                      </a>
+                    </li>
+                    <li>
+                      <a class="hover:text-black transition" href="#">
+                        {{ t.footer.legal.terms }}
+                      </a>
+                    </li>
+                  </ul>
+                </v-col>
+                <v-col class="mb-8" cols="12" lg="3" sm="6">
+                  <h4 class="font-semibold text-black">
+                    {{ t.footer.languages.title }}
+                  </h4>
+                  <div class="mt-3 text-sm">
+                    <v-btn
+                      class="min-h-0 h-auto px-2 py-1"
+                      :class="isEN ? 'font-semibold text-gray-900' : 'text-gray-500'"
+                      density="comfortable"
+                      variant="text"
+                      @click="lang = 'en'"
+                    >
+                      English
+                    </v-btn>
+                    <span class="mx-1 text-gray-300 select-none">|</span>
+                    <v-btn
+                      class="min-h-0 h-auto px-2 py-1"
+                      :class="isES ? 'font-semibold text-gray-900' : 'text-gray-500'"
+                      density="comfortable"
+                      variant="text"
+                      @click="lang = 'es'"
+                    >
+                      Español
+                    </v-btn>
+                  </div>
+                </v-col>
+              </v-row>
+              <p class="mt-4 text-xs text-gray-500">
+                &copy; {{ year }} MOSS Atlanta Staffing Services. {{ t.footer.rights }}
+              </p>
+            </v-container>
+          </footer>
+        </main>
+      </transition>
+    </div>
+  </v-app>
+</template>
+
+<script setup>
+  import { computed, ref } from 'vue'
+
+  // ✅ OPTIMIZADO: Tipos y estado reactivo
+  const lang = ref('en')
+  const isEN = computed(() => lang.value === 'en')
+  const isES = computed(() => lang.value === 'es')
+  const year = new Date().getFullYear()
+
+  // ✅ OPTIMIZADO: Datos de traducción organizados
+  const copy = {
+    en: {
+      nav: {
+        services: 'Services',
+        why: 'Why MOSS',
+        contact: 'Contact',
+        apply: 'Apply',
+      },
+      hero: {
+        headline: 'Professional Hotel Staffing Solutions in Atlanta',
+        subtitle: '400+ trained professionals serving premium hotels across the metro area',
+        applyNow: 'Apply Now',
+        partner: 'Partner With Us',
+        imageCaption: 'Placeholder for hotel professionals in uniform',
+      },
+      services: {
+        title: 'Services',
+        subtitle: 'Specialists across all hospitality operations.',
+        items: {
+          housekeeping: {
+            title: 'Housekeeping Services',
+            roles: 'Room attendants, housemen, supervisors',
+            note: 'Our largest service area with trained professionals',
+          },
+          fnb: {
+            title: 'Food & Beverage',
+            roles: 'Servers, cooks, dishwashers, bartenders',
+            note: 'Restaurant and banquet specialists',
+          },
+          frontdesk: {
+            title: 'Front Desk Support',
+            roles: 'Receptionists, concierge, bell staff',
+            note: 'Guest-facing professionals',
+          },
+          events: {
+            title: 'Event Staffing',
+            roles: 'Temporary and emergency coverage',
+            note: 'Flexible solutions for peak demands',
+          },
+        },
+      },
+      why: {
+        title: 'Why Choose MOSS',
+        items: {
+          reliable: {
+            title: 'Reliable',
+            desc: 'Proven track record with major hotel chains.',
+          },
+          trained: {
+            title: 'Trained',
+            desc: 'All staff undergo hotel-specific training.',
+          },
+          flexible: {
+            title: 'Flexible',
+            desc: '24/7 coverage and emergency response.',
+          },
+          local: {
+            title: 'Local',
+            desc: 'Deep knowledge of Atlanta hospitality market.',
+          },
+        },
+      },
+      cta: {
+        joinTitle: 'Ready to Join Our Team?',
+        joinDesc: 'Competitive opportunities across housekeeping, F&B, front desk, and events.',
+        applyToday: 'Apply Today',
+        staffingTitle: 'Looking for Staffing Solutions?',
+        staffingDesc: 'Reliable, trained, and flexible teams ready to support your hotel operations.',
+        contactUs: 'Contact Us',
+      },
+      footer: {
+        contact: {
+          title: 'Contact',
+        },
+        company: {
+          title: 'Company',
+          careers: 'Careers',
+        },
+        legal: {
+          title: 'Legal',
+          privacy: 'Privacy Policy',
+          terms: 'Terms of Service',
+        },
+        languages: {
+          title: 'Languages',
+        },
+        rights: 'All rights reserved.',
+      },
+    },
+    es: {
+      nav: {
+        services: 'Servicios',
+        why: 'Por qué MOSS',
+        contact: 'Contacto',
+        apply: 'Aplicar',
+      },
+      hero: {
+        headline: 'Soluciones Profesionales de Personal Hotelero en Atlanta',
+        subtitle: '400+ profesionales entrenados atendiendo hoteles premium en el área metropolitana',
+        applyNow: 'Aplicar Hoy',
+        partner: 'Contáctanos',
+        imageCaption: 'Imagen de profesionales hoteleros con uniforme',
+      },
+      services: {
+        title: 'Servicios',
+        subtitle: 'Especialistas en todas las áreas de hospitalidad.',
+        items: {
+          housekeeping: {
+            title: 'Servicios de Housekeeping',
+            roles: 'Camaristas, housemen, supervisores',
+            note: 'Nuestra área de servicio más grande con profesionales capacitados',
+          },
+          fnb: {
+            title: 'Alimentos y Bebidas',
+            roles: 'Meseros, cocineros, lavaplatos, bartenders',
+            note: 'Especialistas en restaurante y banquetes',
+          },
+          frontdesk: {
+            title: 'Soporte de Front Desk',
+            roles: 'Recepcionistas, concierge, bell staff',
+            note: 'Profesionales de atención al huésped',
+          },
+          events: {
+            title: 'Staffing para Eventos',
+            roles: 'Cobertura temporal y de emergencia',
+            note: 'Soluciones flexibles para picos de demanda',
+          },
+        },
+      },
+      why: {
+        title: 'Por qué elegir MOSS',
+        items: {
+          reliable: {
+            title: 'Confiables',
+            desc: 'Historial comprobado con cadenas hoteleras.',
+          },
+          trained: {
+            title: 'Capacitados',
+            desc: 'Todo el personal recibe entrenamiento específico para hoteles.',
+          },
+          flexible: {
+            title: 'Flexibles',
+            desc: 'Cobertura 24/7 y respuesta a emergencias.',
+          },
+          local: {
+            title: 'Locales',
+            desc: 'Amplio conocimiento del mercado hotelero de Atlanta.',
+          },
+        },
+      },
+      cta: {
+        joinTitle: '¿Listo para Unirte a Nuestro Equipo?',
+        joinDesc: 'Oportunidades competitivas en housekeeping, A&B, front desk y eventos.',
+        applyToday: 'Aplicar Hoy',
+        staffingTitle: '¿Buscas Soluciones de Personal?',
+        staffingDesc: 'Equipos confiables, capacitados y flexibles listos para apoyar tus operaciones.',
+        contactUs: 'Contáctanos',
+      },
+      footer: {
+        contact: {
+          title: 'Contacto',
+        },
+        company: {
+          title: 'Compañía',
+          careers: 'Empleos',
+        },
+        legal: {
+          title: 'Legal',
+          privacy: 'Política de Privacidad',
+          terms: 'Términos de Servicio',
+        },
+        languages: {
+          title: 'Idiomas',
+        },
+        rights: 'Todos los derechos reservados.',
+      },
+    },
+  }
+
+  // ✅ OPTIMIZADO: Computed property para traducciones
+  const t = computed(() => copy[lang.value])
+</script>
+
+<style scoped>
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 300ms ease;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+</style>
