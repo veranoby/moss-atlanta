@@ -1,5 +1,5 @@
 <template>
-  <section class="section" :style="{ background: '#FFF9C4' }">
+  <section id="apply" class="section" :style="{ background: '#FFF9C4' }">
     <v-container>
       <v-row class="ga-8">
         <v-col cols="12" md="6">

@@ -4,14 +4,22 @@
     <v-container>
       <div class="d-flex align-center justify-space-between">
         <div class="d-flex align-center">
-          <div class="text-h5 font-weight-bold" style="color:#424242">MOSS</div>
+          <a
+            href="#hero"
+            class="text-h5 font-weight-bold"
+            style="color:#424242; text-decoration:none; cursor:pointer;"
+            aria-label="Go to top"
+            @click.prevent="scrollToSection('hero')"
+          >
+            MOSS
+          </a>
           <div class="ms-2 text-body-2" style="color:#757575">Atlanta Staffing Services</div>
         </div>
 
         <div class="d-none d-md-flex align-center" style="gap: 24px;">
-          <a href="#services" class="text-body-2 nav-link">{{ $t('nav.services') }}</a>
-          <a href="#about" class="text-body-2 nav-link">{{ $t('nav.about') }}</a>
-          <a href="#contact" class="text-body-2 nav-link">{{ $t('nav.contact') }}</a>
+          <a href="#services" class="text-body-2 nav-link" @click.prevent="scrollToSection('services')">{{ $t('nav.services') }}</a>
+          <a href="#about" class="text-body-2 nav-link" @click.prevent="scrollToSection('about')">{{ $t('nav.about') }}</a>
+          <a href="#contact" class="text-body-2 nav-link" @click.prevent="scrollToSection('contact')">{{ $t('nav.contact') }}</a>
         </div>
 
         <div class="d-flex align-center" style="gap: 12px;">

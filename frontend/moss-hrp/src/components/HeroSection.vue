@@ -1,5 +1,5 @@
 <template>
-  <section class="section hero-section" style="background: linear-gradient(135deg,#FFFFFF,#F5F5F5);">
+  <section id="hero" class="section hero-section" style="background: linear-gradient(135deg,#FFFFFF,#F5F5F5);">
     <v-container>
       <v-row align="center" justify="space-between" class="ga-8">
         <v-col cols="12" md="6">
