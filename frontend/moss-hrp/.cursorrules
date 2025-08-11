@@ -19,8 +19,24 @@ Architecture: Vue.js + Vuetify + Pocketbase + n8n + IA reconciliation.
 - TypeScript for all new components
 - Vuetify 3 components (v-container, v-row, v-col)
 - i18n for all user-facing text: `$t('key')`
-- recuerda nuestro flujo de "vibe coding": Idea/Problema → Planning → Tests → Implementation → Integration → Validation (y retornamos en un Iterative Refinement loop de ser necesario)
 - preciso, eficiente, conciso, para no gastar creditos de Cjursor.ai innecesariamente.
+
+## Vibe Coding Framework - MANDATORY STRUCTURE
+
+### BEFORE ANY CODE REQUEST - REQUIRE SPECIFICATION:
+```
+**Purpose**: What specific problem does this solve?
+**Input**: What data/parameters does it receive?
+**Output**: What should it return/render?
+**Test**: How do we verify it works correctly?
+**Constraints**: Performance/security/business limitations?
+```
+
+### FAIL-FAST VALIDATION:
+- If user request lacks clarity → Ask for specification FIRST
+- If scope seems large → Break into atomic tasks
+- If dependencies unclear → Map them explicitly
+
 
 
 ### File Structure
@@ -145,3 +161,39 @@ export const useHotels = () => {
 4. Test role permissions
 5. Verify mobile responsiveness
 6. Commit with descriptive message
+
+## STRICT OUTPUT FORMAT:
+```
+**SOLUTION:**
+[Minimal code only]
+
+**TEST:**
+[How to verify it works]
+```
+
+## CREDIT OPTIMIZATION RULES:
+1. **Single Response**: Provide complete working solution in ONE message
+2. **No Iterations**: Get requirements right first time
+3. **Minimal Tokens**: Code only, no explanations unless asked
+4. **Functional First**: Working code over perfect code
+5. **Error Handling**: Basic only, not comprehensive
+
+### PRECISION OVER VERBOSITY:
+- Generate ONLY requested code, no explanatory comments
+- Use concise variable names (e.g., `user` not `currentUser`)
+- Prefer composition API, single-file components
+- Skip boilerplate unless explicitly needed
+
+### CONTEXT ASSUMPTIONS:
+- Vuetify 3 components available globally
+- i18n setup with `$t()` for all text
+- Pocketbase collections per schema document
+- Role-based access via `system_role` field
+
+
+### ANTI-PATTERNS (FORBIDDEN):
+- ❌ Long explanatory comments
+- ❌ Multiple component variations  
+- ❌ Unused imports/variables
+- ❌ Options API syntax
+- ❌ Console.logs in production code

@@ -1,88 +1,80 @@
 {
-    "nav": {
-      "services": "Services",
-      "why": "Why MOSS",
-      "contact": "Contact",
-      "apply": "Apply"
+  "nav": {
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "apply": "Apply"
+  },
+  "hero": {
+    "title": "Professional Hotel Staffing Solutions in Atlanta",
+    "subtitle": "400+ trained professionals serving premium hotels across the metro area",
+    "applyNow": "Apply Now",
+    "partnerWithUs": "Partner With Us"
+  },
+  "services": {
+    "title": "Our Services",
+    "housekeeping": {
+      "title": "Housekeeping Services",
+      "description": "Room attendants, housemen, supervisors",
+      "subtitle": "Our largest service area with trained professionals"
     },
-    "hero": {
-      "headline": "Professional Hotel Staffing Solutions in Atlanta",
-      "subtitle": "400+ trained professionals serving premium hotels across the metro area",
-      "applyNow": "Apply Now",
-      "partner": "Partner With Us",
-      "imageCaption": "Placeholder for hotel professionals in uniform"
+    "fnb": {
+      "title": "Food & Beverage",
+      "description": "Servers, cooks, dishwashers, bartenders",
+      "subtitle": "Restaurant and banquet specialists"
     },
-    "services": {
-      "title": "Services",
-      "subtitle": "Specialists across all hospitality operations.",
-      "items": {
-        "housekeeping": {
-          "title": "Housekeeping Services",
-          "roles": "Room attendants, housemen, supervisors",
-          "note": "Our largest service area with trained professionals"
-        },
-        "fnb": {
-          "title": "Food & Beverage",
-          "roles": "Servers, cooks, dishwashers, bartenders",
-          "note": "Restaurant and banquet specialists"
-        },
-        "frontdesk": {
-          "title": "Front Desk Support",
-          "roles": "Receptionists, concierge, bell staff",
-          "note": "Guest-facing professionals"
-        },
-        "events": {
-          "title": "Event Staffing",
-          "roles": "Temporary and emergency coverage",
-          "note": "Flexible solutions for peak demands"
-        }
-      }
+    "frontdesk": {
+      "title": "Front Desk Support",
+      "description": "Receptionists, concierge, bell staff",
+      "subtitle": "Guest-facing professionals"
     },
-    "why": {
-      "title": "Why Choose MOSS",
-      "items": {
-        "reliable": {
-          "title": "Reliable",
-          "desc": "Proven track record with major hotel chains."
-        },
-        "trained": {
-          "title": "Trained",
-          "desc": "All staff undergo hotel-specific training."
-        },
-        "flexible": {
-          "title": "Flexible",
-          "desc": "24/7 coverage and emergency response."
-        },
-        "local": {
-          "title": "Local",
-          "desc": "Deep knowledge of Atlanta hospitality market."
-        }
-      }
-    },
-    "cta": {
-      "joinTitle": "Ready to Join Our Team?",
-      "joinDesc": "Competitive opportunities across housekeeping, F&B, front desk, and events.",
-      "applyToday": "Apply Today",
-      "staffingTitle": "Looking for Staffing Solutions?",
-      "staffingDesc": "Reliable, trained, and flexible teams ready to support your hotel operations.",
-      "contactUs": "Contact Us"
-    },
-    "footer": {
-      "contact": {
-        "title": "Contact"
-      },
-      "company": {
-        "title": "Company",
-        "careers": "Careers"
-      },
-      "legal": {
-        "title": "Legal",
-        "privacy": "Privacy Policy",
-        "terms": "Terms of Service"
-      },
-      "languages": {
-        "title": "Languages"
-      },
-      "rights": "All rights reserved."
+    "events": {
+      "title": "Event Staffing",
+      "description": "Temporary and emergency coverage",
+      "subtitle": "Flexible solutions for peak demands"
     }
+  },
+  "about": {
+    "title": "Why Choose MOSS",
+    "reliable": {
+      "title": "Reliable",
+      "description": "Proven track record with major hotel chains"
+    },
+    "trained": {
+      "title": "Trained",
+      "description": "All staff undergo hotel-specific training"
+    },
+    "flexible": {
+      "title": "Flexible",
+      "description": "24/7 coverage and emergency response"
+    },
+    "local": {
+      "title": "Local",
+      "description": "Deep knowledge of Atlanta hospitality market"
+    }
+  },
+  "cta": {
+    "employee": {
+      "title": "Ready to Join Our Team?",
+      "button": "Apply Today"
+    },
+    "employer": {
+      "title": "Looking for Staffing Solutions?",
+      "button": "Contact Us"
+    }
+  },
+  "footer": {
+    "contact": {
+      "title": "Contact",
+      "phone": "Phone: (404) XXX-XXXX",
+      "email": "Email: careers@mossatlanta.com",
+      "location": "Location: Atlanta, GA"
+    },
+    "legal": {
+      "title": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    },
+    "rights": "All rights reserved."
   }
+}

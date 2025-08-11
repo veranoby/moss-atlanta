@@ -8,10 +8,16 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AboutSection: typeof import('./src/components/AboutSection.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
+    CallToAction: typeof import('./src/components/CallToAction.vue')['default']
     ErrorBoundary: typeof import('./src/components/ErrorBoundary.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    HeroSection: typeof import('./src/components/HeroSection.vue')['default']
+    LanguageSwitch: typeof import('./src/components/LanguageSwitch.vue')['default']
+    LazyImage: typeof import('./src/components/LazyImage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ServicesGrid: typeof import('./src/components/ServicesGrid.vue')['default']
   }
 }
