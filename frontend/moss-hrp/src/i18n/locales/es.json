@@ -1,0 +1,88 @@
+{
+    "nav": {
+      "services": "Servicios",
+      "why": "Por qué MOSS",
+      "contact": "Contacto",
+      "apply": "Aplicar"
+    },
+    "hero": {
+      "headline": "Soluciones Profesionales de Personal Hotelero en Atlanta",
+      "subtitle": "400+ profesionales entrenados atendiendo hoteles premium en el área metropolitana",
+      "applyNow": "Aplicar Hoy",
+      "partner": "Contáctanos",
+      "imageCaption": "Imagen de profesionales hoteleros con uniforme"
+    },
+    "services": {
+      "title": "Servicios",
+      "subtitle": "Especialistas en todas las áreas de hospitalidad.",
+      "items": {
+        "housekeeping": {
+          "title": "Servicios de Housekeeping",
+          "roles": "Camaristas, housemen, supervisores",
+          "note": "Nuestra área de servicio más grande con profesionales capacitados"
+        },
+        "fnb": {
+          "title": "Alimentos y Bebidas",
+          "roles": "Meseros, cocineros, lavaplatos, bartenders",
+          "note": "Especialistas en restaurante y banquetes"
+        },
+        "frontdesk": {
+          "title": "Soporte de Front Desk",
+          "roles": "Recepcionistas, concierge, bell staff",
+          "note": "Profesionales de atención al huésped"
+        },
+        "events": {
+          "title": "Staffing para Eventos",
+          "roles": "Cobertura temporal y de emergencia",
+          "note": "Soluciones flexibles para picos de demanda"
+        }
+      }
+    },
+    "why": {
+      "title": "Por qué elegir MOSS",
+      "items": {
+        "reliable": {
+          "title": "Confiables",
+          "desc": "Historial comprobado con cadenas hoteleras."
+        },
+        "trained": {
+          "title": "Capacitados",
+          "desc": "Todo el personal recibe entrenamiento específico para hoteles."
+        },
+        "flexible": {
+          "title": "Flexibles",
+          "desc": "Cobertura 24/7 y respuesta a emergencias."
+        },
+        "local": {
+          "title": "Locales",
+          "desc": "Amplio conocimiento del mercado hotelero de Atlanta."
+        }
+      }
+    },
+    "cta": {
+      "joinTitle": "¿Listo para Unirte a Nuestro Equipo?",
+      "joinDesc": "Oportunidades competitivas en housekeeping, A&B, front desk y eventos.",
+      "applyToday": "Aplicar Hoy",
+      "staffingTitle": "¿Buscas Soluciones de Personal?",
+      "staffingDesc": "Equipos confiables, capacitados y flexibles listos para apoyar tus operaciones.",
+      "contactUs": "Contáctanos"
+    },
+    "footer": {
+      "contact": {
+        "title": "Contacto"
+      },
+      "company": {
+        "title": "Compañía",
+        "careers": "Empleos"
+      },
+      "legal": {
+        "title": "Legal",
+        "privacy": "Política de Privacidad",
+        "terms": "Términos de Servicio"
+      },
+      "languages": {
+        "title": "Idiomas"
+      },
+      "rights": "Todos los derechos reservados."
+    }
+  }

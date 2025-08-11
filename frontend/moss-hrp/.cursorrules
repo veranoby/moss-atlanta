@@ -1,0 +1,147 @@
+# MOSS Atlanta - Cursor AI Rules
+
+## Project Context
+MOSS Atlanta staffing services transformation: Manual WhatsApp chaos → Digital platform.
+Architecture: Vue.js + Vuetify + Pocketbase + n8n + IA reconciliation.
+
+## Core Technologies
+- **Frontend**: Vue.js 3 + Composition API, Vuetify 3, TypeScript
+- **Backend**: Pocketbase (SQLite), n8n workflows  
+- **Mobile**: React Native + Expo (future)
+- **AI**: Gemini 2.5 Pro via OpenRouter
+- **Hosting**: Native CachyOS → VPS production
+
+## Code Standards
+
+### Vue.js Rules
+- Use `<script setup>` syntax exclusively
+- Composition API over Options API
+- TypeScript for all new components
+- Vuetify 3 components (v-container, v-row, v-col)
+- i18n for all user-facing text: `$t('key')`
+- recuerda nuestro flujo de "vibe coding": Idea/Problema → Planning → Tests → Implementation → Integration → Validation (y retornamos en un Iterative Refinement loop de ser necesario)
+- preciso, eficiente, conciso, para no gastar creditos de Cjursor.ai innecesariamente.
+
+
+### File Structure
+```
+src/
+├── views/           # Route components
+├── components/      # Reusable components
+├── stores/          # Pinia stores
+├── composables/     # Vue composables
+├── i18n/           # Translation files
+└── types/          # TypeScript definitions
+```
+
+### Naming Conventions
+- Components: PascalCase (HotelCard.vue)
+- Files: kebab-case (employee-list.vue)
+- Variables: camelCase (employeeData)
+- Constants: SCREAMING_SNAKE_CASE (API_BASE_URL)
+
+### Pocketbase Integration
+- Use composables for API calls
+- Handle auth state globally
+- Follow collection schema exactly:
+  - hotels, employees, employee_assignments
+  - punches, reconciliations, open_positions
+  - audit_logs for all critical changes
+
+### UI/UX Patterns
+- Mobile-first responsive design
+- Role-based component visibility
+- Loading states for all async operations
+- Error boundaries for API failures
+- Consistent spacing: pa-4, ma-2, etc.
+
+### Security Rules
+- Implement role-based access (super_admin, operations_hr, finance, employee)
+- Validate all inputs client + server side
+- No sensitive data in localStorage
+- Audit trail for all CRUD operations
+
+### Performance
+- Lazy load route components
+- Debounce search inputs
+- Pagination for large datasets
+- Optimize Pocketbase queries (filter, sort, limit)
+
+### Business Logic Priorities
+1. **Admin Tools**: Hotel/Employee/Position CRUD
+2. **OpenPositions**: Application workflow
+3. **Reconciliation**: IA-processed timesheets
+4. **Mobile App**: Employee punch system
+
+## Specific Patterns
+
+### API Composable Example
+```typescript
+export const useHotels = () => {
+  const { pb } = usePocketbase()
+  
+  const hotels = ref([])
+  const loading = ref(false)
+  
+  const fetchHotels = async () => {
+    loading.value = true
+    try {
+      hotels.value = await pb.collection('hotels').getFullList()
+    } catch (error) {
+      console.error('Hotels fetch failed:', error)
+    } finally {
+      loading.value = false
+    }
+  }
+  
+  return { hotels, loading, fetchHotels }
+}
+```
+
+### Component Structure
+```vue
+<template>
+  <v-container>
+    <v-row>
+      <v-col cols="12">
+        <!-- Content -->
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script setup lang="ts">
+// Imports
+// Composables
+// Reactive data
+// Methods
+// Lifecycle
+</script>
+```
+
+### Role-Based Rendering
+```vue
+<template>
+  <v-btn 
+    v-if="userCan('hotels', 'create')"
+    @click="createHotel"
+  >
+    {{ $t('hotels.create') }}
+  </v-btn>
+</template>
+```
+
+## Critical Notes
+- Reconciliation logic in n8n, NOT frontend
+- UI shows pre-calculated discrepancies only
+- All timesheets flow through IA processing
+- Maintain audit trail for compliance
+- Cost optimization: minimize AI calls
+
+## Development Workflow
+1. Create feature branch from main
+2. Implement with tests
+3. Update i18n files (en.json, es.json)
+4. Test role permissions
+5. Verify mobile responsiveness
+6. Commit with descriptive message

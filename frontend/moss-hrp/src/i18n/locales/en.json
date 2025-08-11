@@ -1,0 +1,88 @@
+{
+    "nav": {
+      "services": "Services",
+      "why": "Why MOSS",
+      "contact": "Contact",
+      "apply": "Apply"
+    },
+    "hero": {
+      "headline": "Professional Hotel Staffing Solutions in Atlanta",
+      "subtitle": "400+ trained professionals serving premium hotels across the metro area",
+      "applyNow": "Apply Now",
+      "partner": "Partner With Us",
+      "imageCaption": "Placeholder for hotel professionals in uniform"
+    },
+    "services": {
+      "title": "Services",
+      "subtitle": "Specialists across all hospitality operations.",
+      "items": {
+        "housekeeping": {
+          "title": "Housekeeping Services",
+          "roles": "Room attendants, housemen, supervisors",
+          "note": "Our largest service area with trained professionals"
+        },
+        "fnb": {
+          "title": "Food & Beverage",
+          "roles": "Servers, cooks, dishwashers, bartenders",
+          "note": "Restaurant and banquet specialists"
+        },
+        "frontdesk": {
+          "title": "Front Desk Support",
+          "roles": "Receptionists, concierge, bell staff",
+          "note": "Guest-facing professionals"
+        },
+        "events": {
+          "title": "Event Staffing",
+          "roles": "Temporary and emergency coverage",
+          "note": "Flexible solutions for peak demands"
+        }
+      }
+    },
+    "why": {
+      "title": "Why Choose MOSS",
+      "items": {
+        "reliable": {
+          "title": "Reliable",
+          "desc": "Proven track record with major hotel chains."
+        },
+        "trained": {
+          "title": "Trained",
+          "desc": "All staff undergo hotel-specific training."
+        },
+        "flexible": {
+          "title": "Flexible",
+          "desc": "24/7 coverage and emergency response."
+        },
+        "local": {
+          "title": "Local",
+          "desc": "Deep knowledge of Atlanta hospitality market."
+        }
+      }
+    },
+    "cta": {
+      "joinTitle": "Ready to Join Our Team?",
+      "joinDesc": "Competitive opportunities across housekeeping, F&B, front desk, and events.",
+      "applyToday": "Apply Today",
+      "staffingTitle": "Looking for Staffing Solutions?",
+      "staffingDesc": "Reliable, trained, and flexible teams ready to support your hotel operations.",
+      "contactUs": "Contact Us"
+    },
+    "footer": {
+      "contact": {
+        "title": "Contact"
+      },
+      "company": {
+        "title": "Company",
+        "careers": "Careers"
+      },
+      "legal": {
+        "title": "Legal",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service"
+      },
+      "languages": {
+        "title": "Languages"
+      },
+      "rights": "All rights reserved."
+    }
+  }

@@ -18,13 +18,13 @@
 
             <nav class="hidden sm:flex items-center gap-6 text-sm">
               <a class="hover:text-black transition" href="#services">
-                {{ t.nav.services }}
+                {{ $t('nav.services') }}
               </a>
               <a class="hover:text-black transition" href="#why">
-                {{ t.nav.why }}
+                {{ $t('nav.why') }}
               </a>
               <a class="hover:text-black transition" href="#contact">
-                {{ t.nav.contact }}
+                {{ $t('nav.contact') }}
               </a>
             </nav>
 
@@ -36,7 +36,7 @@
                   :class="isEN ? 'font-semibold text-gray-900' : 'text-gray-500'"
                   density="comfortable"
                   variant="text"
-                  @click="lang = 'en'"
+                  @click="setLocale('en')"
                 >
                   EN
                 </v-btn>
@@ -47,7 +47,7 @@
                   :class="isES ? 'font-semibold text-gray-900' : 'text-gray-500'"
                   density="comfortable"
                   variant="text"
-                  @click="lang = 'es'"
+                  @click="setLocale('es')"
                 >
                   ES
                 </v-btn>
@@ -57,7 +57,7 @@
                 :href="'#apply'"
                 variant="text"
               >
-                {{ t.nav.apply }}
+                {{ $t('nav.apply') }}
               </v-btn>
             </div>
           </div>
@@ -66,7 +66,7 @@
 
       <!-- Main Content -->
       <transition mode="out-in" name="fade">
-        <main :key="lang">
+        <main :key="currentLocale">
           <!-- Hero Section -->
           <section class="bg-[#F5F5F5]">
             <v-container>
@@ -77,10 +77,10 @@
               >
                 <v-col cols="12" lg="6">
                   <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-black">
-                    {{ t.hero.headline }}
+                    {{ $t('hero.headline') }}
                   </h1>
                   <p class="mt-4 text-base sm:text-lg">
-                    {{ t.hero.subtitle }}
+                    {{ $t('hero.subtitle') }}
                   </p>
                   <div class="mt-8 flex flex-col sm:flex-row gap-3">
                     <v-btn
@@ -89,7 +89,7 @@
                       size="large"
                       style="background-color:#FFF9C4;"
                     >
-                      {{ t.hero.applyNow }}
+                      {{ $t('hero.applyNow') }}
                     </v-btn>
                     <v-btn
                       class="font-semibold border border-gray-300 hover:bg-white hover:shadow-sm transition"
@@ -97,7 +97,7 @@
                       size="large"
                       variant="text"
                     >
-                      {{ t.hero.partner }}
+                      {{ $t('hero.partner') }}
                     </v-btn>
                   </div>
                 </v-col>
@@ -108,7 +108,7 @@
                       <div class="text-center px-6">
                         <div class="mx-auto mb-3 h-10 w-10 rounded-md" style="background-color:#FFF9C4;" />
                         <p class="text-sm text-gray-500">
-                          {{ t.hero.imageCaption }}
+                          {{ $t('hero.imageCaption') }}
                         </p>
                       </div>
                     </div>
@@ -123,10 +123,10 @@
             <v-container>
               <header class="mb-10">
                 <h2 class="text-2xl sm:text-3xl font-bold text-black">
-                  {{ t.services.title }}
+                  {{ $t('services.title') }}
                 </h2>
                 <p class="mt-2 text-gray-600">
-                  {{ t.services.subtitle }}
+                  {{ $t('services.subtitle') }}
                 </p>
               </header>
 
@@ -137,13 +137,13 @@
                     elevation="0"
                   >
                     <h3 class="text-lg font-semibold text-black">
-                      {{ t.services.items.housekeeping.title }}
+                      {{ $t('services.items.housekeeping.title') }}
                     </h3>
                     <p class="mt-2 text-sm text-gray-600">
-                      {{ t.services.items.housekeeping.roles }}
+                      {{ $t('services.items.housekeeping.roles') }}
                     </p>
                     <p class="mt-4 text-sm italic text-gray-700">
-                      "{{ t.services.items.housekeeping.note }}"
+                      "{{ $t('services.items.housekeeping.note') }}"
                     </p>
                   </v-card>
                 </v-col>
@@ -154,13 +154,13 @@
                     elevation="0"
                   >
                     <h3 class="text-lg font-semibold text-black">
-                      {{ t.services.items.fnb.title }}
+                      {{ $t('services.items.fnb.title') }}
                     </h3>
                     <p class="mt-2 text-sm text-gray-600">
-                      {{ t.services.items.fnb.roles }}
+                      {{ $t('services.items.fnb.roles') }}
                     </p>
                     <p class="mt-4 text-sm italic text-gray-700">
-                      "{{ t.services.items.fnb.note }}"
+                      "{{ $t('services.items.fnb.note') }}"
                     </p>
                   </v-card>
                 </v-col>
@@ -171,13 +171,13 @@
                     elevation="0"
                   >
                     <h3 class="text-lg font-semibold text-black">
-                      {{ t.services.items.frontdesk.title }}
+                      {{ $t('services.items.frontdesk.title') }}
                     </h3>
                     <p class="mt-2 text-sm text-gray-600">
-                      {{ t.services.items.frontdesk.roles }}
+                      {{ $t('services.items.frontdesk.roles') }}
                     </p>
                     <p class="mt-4 text-sm italic text-gray-700">
-                      "{{ t.services.items.frontdesk.note }}"
+                      "{{ $t('services.items.frontdesk.note') }}"
                     </p>
                   </v-card>
                 </v-col>
@@ -188,13 +188,13 @@
                     elevation="0"
                   >
                     <h3 class="text-lg font-semibold text-black">
-                      {{ t.services.items.events.title }}
+                      {{ $t('services.items.events.title') }}
                     </h3>
                     <p class="mt-2 text-sm text-gray-600">
-                      {{ t.services.items.events.roles }}
+                      {{ $t('services.items.events.roles') }}
                     </p>
                     <p class="mt-4 text-sm italic text-gray-700">
-                      "{{ t.services.items.events.note }}"
+                      "{{ $t('services.items.events.note') }}"
                     </p>
                   </v-card>
                 </v-col>
@@ -207,7 +207,7 @@
             <v-container>
               <header class="mb-10">
                 <h2 class="text-2xl sm:text-3xl font-bold text-black">
-                  {{ t.why.title }}
+                  {{ $t('why.title') }}
                 </h2>
               </header>
 
@@ -218,10 +218,10 @@
                     elevation="0"
                   >
                     <h3 class="font-semibold text-black">
-                      {{ t.why.items.reliable.title }}
+                      {{ $t('why.items.reliable.title') }}
                     </h3>
                     <p class="mt-2 text-gray-700">
-                      {{ t.why.items.reliable.desc }}
+                      {{ $t('why.items.reliable.desc') }}
                     </p>
                   </v-card>
                 </v-col>
@@ -231,10 +231,10 @@
                     elevation="0"
                   >
                     <h3 class="font-semibold text-black">
-                      {{ t.why.items.trained.title }}
+                      {{ $t('why.items.trained.title') }}
                     </h3>
                     <p class="mt-2 text-gray-700">
-                      {{ t.why.items.trained.desc }}
+                      {{ $t('why.items.trained.desc') }}
                     </p>
                   </v-card>
                 </v-col>
@@ -244,10 +244,10 @@
                     elevation="0"
                   >
                     <h3 class="font-semibold text-black">
-                      {{ t.why.items.flexible.title }}
+                      {{ $t('why.items.flexible.title') }}
                     </h3>
                     <p class="mt-2 text-gray-700">
-                      {{ t.why.items.flexible.desc }}
+                      {{ $t('why.items.flexible.desc') }}
                     </p>
                   </v-card>
                 </v-col>
@@ -257,10 +257,10 @@
                     elevation="0"
                   >
                     <h3 class="font-semibold text-black">
-                      {{ t.why.items.local.title }}
+                      {{ $t('why.items.local.title') }}
                     </h3>
                     <p class="mt-2 text-gray-700">
-                      {{ t.why.items.local.desc }}
+                      {{ $t('why.items.local.desc') }}
                     </p>
                   </v-card>
                 </v-col>
@@ -278,10 +278,10 @@
                     elevation="0"
                   >
                     <h3 class="text-xl sm:text-2xl font-bold text-black">
-                      {{ t.cta.joinTitle }}
+                      {{ $t('cta.joinTitle') }}
                     </h3>
                     <p class="mt-2 text-gray-700">
-                      {{ t.cta.joinDesc }}
+                      {{ $t('cta.joinDesc') }}
                     </p>
                     <v-btn
                       class="mt-6 font-semibold text-[#424242] border border-yellow-100 hover:shadow transition"
@@ -289,7 +289,7 @@
                       size="large"
                       style="background-color:#FFF9C4;"
                     >
-                      {{ t.cta.applyToday }}
+                      {{ $t('cta.applyToday') }}
                     </v-btn>
                   </v-card>
                 </v-col>
@@ -300,10 +300,10 @@
                     elevation="0"
                   >
                     <h3 class="text-xl sm:text-2xl font-bold text-black">
-                      {{ t.cta.staffingTitle }}
+                      {{ $t('cta.staffingTitle') }}
                     </h3>
                     <p class="mt-2 text-gray-700">
-                      {{ t.cta.staffingDesc }}
+                      {{ $t('cta.staffingDesc') }}
                     </p>
                     <v-btn
                       class="mt-6 font-semibold border border-gray-300 hover:bg-[#F5F5F5] transition"
@@ -311,7 +311,7 @@
                       size="large"
                       variant="text"
                     >
-                      {{ t.cta.contactUs }}
+                      {{ $t('cta.contactUs') }}
                     </v-btn>
                   </v-card>
                 </v-col>
@@ -325,7 +325,7 @@
               <v-row>
                 <v-col class="mb-8" cols="12" lg="3" sm="6">
                   <h4 class="font-semibold text-black">
-                    {{ t.footer.contact.title }}
+                    {{ $t('footer.contact.title') }}
                   </h4>
                   <ul class="mt-3 space-y-1 text-sm">
                     <li>
@@ -343,46 +343,46 @@
                 </v-col>
                 <v-col class="mb-8" cols="12" lg="3" sm="6">
                   <h4 class="font-semibold text-black">
-                    {{ t.footer.company.title }}
+                    {{ $t('footer.company.title') }}
                   </h4>
                   <ul class="mt-3 space-y-1 text-sm">
                     <li>
                       <a class="hover:text-black transition" href="#services">
-                        {{ t.nav.services }}
+                        {{ $t('nav.services') }}
                       </a>
                     </li>
                     <li>
                       <a class="hover:text-black transition" href="#why">
-                        {{ t.nav.why }}
+                        {{ $t('nav.why') }}
                       </a>
                     </li>
                     <li>
                       <a class="hover:text-black transition" href="#apply">
-                        {{ t.footer.company.careers }}
+                        {{ $t('footer.company.careers') }}
                       </a>
                     </li>
                   </ul>
                 </v-col>
                 <v-col class="mb-8" cols="12" lg="3" sm="6">
                   <h4 class="font-semibold text-black">
-                    {{ t.footer.legal.title }}
+                    {{ $t('footer.legal.title') }}
                   </h4>
                   <ul class="mt-3 space-y-1 text-sm">
                     <li>
                       <a class="hover:text-black transition" href="#">
-                        {{ t.footer.legal.privacy }}
+                        {{ $t('footer.legal.privacy') }}
                       </a>
                     </li>
                     <li>
                       <a class="hover:text-black transition" href="#">
-                        {{ t.footer.legal.terms }}
+                        {{ $t('footer.legal.terms') }}
                       </a>
                     </li>
                   </ul>
                 </v-col>
                 <v-col class="mb-8" cols="12" lg="3" sm="6">
                   <h4 class="font-semibold text-black">
-                    {{ t.footer.languages.title }}
+                    {{ $t('footer.languages.title') }}
                   </h4>
                   <div class="mt-3 text-sm">
                     <v-btn
@@ -390,7 +390,7 @@
                       :class="isEN ? 'font-semibold text-gray-900' : 'text-gray-500'"
                       density="comfortable"
                       variant="text"
-                      @click="lang = 'en'"
+                      @click="setLocale('en')"
                     >
                       English
                     </v-btn>
@@ -400,7 +400,7 @@
                       :class="isES ? 'font-semibold text-gray-900' : 'text-gray-500'"
                       density="comfortable"
                       variant="text"
-                      @click="lang = 'es'"
+                      @click="setLocale('es')"
                     >
                       Español
                     </v-btn>
@@ -408,7 +408,7 @@
                 </v-col>
               </v-row>
               <p class="mt-4 text-xs text-gray-500">
-                &copy; {{ year }} MOSS Atlanta Staffing Services. {{ t.footer.rights }}
+                &copy; {{ year }} MOSS Atlanta Staffing Services. {{ $t('footer.rights') }}
               </p>
             </v-container>
           </footer>
@@ -418,197 +418,47 @@
   </v-app>
 </template>
 
-<script setup>
-  import { computed, ref } from 'vue'
+<script setup lang="ts">
+  import { computed, ref, onMounted } from 'vue'
+  import { useI18n } from 'vue-i18n'
 
-  // ✅ OPTIMIZADO: Tipos y estado reactivo
-  const lang = ref('en')
-  const isEN = computed(() => lang.value === 'en')
-  const isES = computed(() => lang.value === 'es')
-  const year = new Date().getFullYear()
+  // ✅ TypeScript types
+  type Locale = 'en' | 'es'
 
-  // ✅ OPTIMIZADO: Datos de traducción organizados
-  const copy = {
-    en: {
-      nav: {
-        services: 'Services',
-        why: 'Why MOSS',
-        contact: 'Contact',
-        apply: 'Apply',
-      },
-      hero: {
-        headline: 'Professional Hotel Staffing Solutions in Atlanta',
-        subtitle: '400+ trained professionals serving premium hotels across the metro area',
-        applyNow: 'Apply Now',
-        partner: 'Partner With Us',
-        imageCaption: 'Placeholder for hotel professionals in uniform',
-      },
-      services: {
-        title: 'Services',
-        subtitle: 'Specialists across all hospitality operations.',
-        items: {
-          housekeeping: {
-            title: 'Housekeeping Services',
-            roles: 'Room attendants, housemen, supervisors',
-            note: 'Our largest service area with trained professionals',
-          },
-          fnb: {
-            title: 'Food & Beverage',
-            roles: 'Servers, cooks, dishwashers, bartenders',
-            note: 'Restaurant and banquet specialists',
-          },
-          frontdesk: {
-            title: 'Front Desk Support',
-            roles: 'Receptionists, concierge, bell staff',
-            note: 'Guest-facing professionals',
-          },
-          events: {
-            title: 'Event Staffing',
-            roles: 'Temporary and emergency coverage',
-            note: 'Flexible solutions for peak demands',
-          },
-        },
-      },
-      why: {
-        title: 'Why Choose MOSS',
-        items: {
-          reliable: {
-            title: 'Reliable',
-            desc: 'Proven track record with major hotel chains.',
-          },
-          trained: {
-            title: 'Trained',
-            desc: 'All staff undergo hotel-specific training.',
-          },
-          flexible: {
-            title: 'Flexible',
-            desc: '24/7 coverage and emergency response.',
-          },
-          local: {
-            title: 'Local',
-            desc: 'Deep knowledge of Atlanta hospitality market.',
-          },
-        },
-      },
-      cta: {
-        joinTitle: 'Ready to Join Our Team?',
-        joinDesc: 'Competitive opportunities across housekeeping, F&B, front desk, and events.',
-        applyToday: 'Apply Today',
-        staffingTitle: 'Looking for Staffing Solutions?',
-        staffingDesc: 'Reliable, trained, and flexible teams ready to support your hotel operations.',
-        contactUs: 'Contact Us',
-      },
-      footer: {
-        contact: {
-          title: 'Contact',
-        },
-        company: {
-          title: 'Company',
-          careers: 'Careers',
-        },
-        legal: {
-          title: 'Legal',
-          privacy: 'Privacy Policy',
-          terms: 'Terms of Service',
-        },
-        languages: {
-          title: 'Languages',
-        },
-        rights: 'All rights reserved.',
-      },
-    },
-    es: {
-      nav: {
-        services: 'Servicios',
-        why: 'Por qué MOSS',
-        contact: 'Contacto',
-        apply: 'Aplicar',
-      },
-      hero: {
-        headline: 'Soluciones Profesionales de Personal Hotelero en Atlanta',
-        subtitle: '400+ profesionales entrenados atendiendo hoteles premium en el área metropolitana',
-        applyNow: 'Aplicar Hoy',
-        partner: 'Contáctanos',
-        imageCaption: 'Imagen de profesionales hoteleros con uniforme',
-      },
-      services: {
-        title: 'Servicios',
-        subtitle: 'Especialistas en todas las áreas de hospitalidad.',
-        items: {
-          housekeeping: {
-            title: 'Servicios de Housekeeping',
-            roles: 'Camaristas, housemen, supervisores',
-            note: 'Nuestra área de servicio más grande con profesionales capacitados',
-          },
-          fnb: {
-            title: 'Alimentos y Bebidas',
-            roles: 'Meseros, cocineros, lavaplatos, bartenders',
-            note: 'Especialistas en restaurante y banquetes',
-          },
-          frontdesk: {
-            title: 'Soporte de Front Desk',
-            roles: 'Recepcionistas, concierge, bell staff',
-            note: 'Profesionales de atención al huésped',
-          },
-          events: {
-            title: 'Staffing para Eventos',
-            roles: 'Cobertura temporal y de emergencia',
-            note: 'Soluciones flexibles para picos de demanda',
-          },
-        },
-      },
-      why: {
-        title: 'Por qué elegir MOSS',
-        items: {
-          reliable: {
-            title: 'Confiables',
-            desc: 'Historial comprobado con cadenas hoteleras.',
-          },
-          trained: {
-            title: 'Capacitados',
-            desc: 'Todo el personal recibe entrenamiento específico para hoteles.',
-          },
-          flexible: {
-            title: 'Flexibles',
-            desc: 'Cobertura 24/7 y respuesta a emergencias.',
-          },
-          local: {
-            title: 'Locales',
-            desc: 'Amplio conocimiento del mercado hotelero de Atlanta.',
-          },
-        },
-      },
-      cta: {
-        joinTitle: '¿Listo para Unirte a Nuestro Equipo?',
-        joinDesc: 'Oportunidades competitivas en housekeeping, A&B, front desk y eventos.',
-        applyToday: 'Aplicar Hoy',
-        staffingTitle: '¿Buscas Soluciones de Personal?',
-        staffingDesc: 'Equipos confiables, capacitados y flexibles listos para apoyar tus operaciones.',
-        contactUs: 'Contáctanos',
-      },
-      footer: {
-        contact: {
-          title: 'Contacto',
-        },
-        company: {
-          title: 'Compañía',
-          careers: 'Empleos',
-        },
-        legal: {
-          title: 'Legal',
-          privacy: 'Política de Privacidad',
-          terms: 'Términos de Servicio',
-        },
-        languages: {
-          title: 'Idiomas',
-        },
-        rights: 'Todos los derechos reservados.',
-      },
-    },
+  // ✅ Vue 3 Composition API with proper imports
+  const { locale, t } = useI18n()
+
+  // ✅ Reactive state
+  const currentLocale = ref<Locale>('en')
+  const year = ref(new Date().getFullYear())
+
+  // ✅ Computed properties
+  const isEN = computed(() => currentLocale.value === 'en')
+  const isES = computed(() => currentLocale.value === 'es')
+
+  // ✅ Methods
+  const setLocale = (newLocale: Locale) => {
+    currentLocale.value = newLocale
+    locale.value = newLocale
+
+    // ✅ Persist to localStorage
+    try {
+      localStorage.setItem('app-locale', newLocale)
+    } catch (error) {
+      console.error('Error saving locale to localStorage:', error)
+    }
   }
 
-  // ✅ OPTIMIZADO: Computed property para traducciones
-  const t = computed(() => copy[lang.value])
+  // ✅ Lifecycle hooks
+  onMounted(() => {
+    // ✅ Initialize locale from localStorage or default
+    const savedLocale = localStorage.getItem('app-locale') as Locale
+    if (savedLocale && (savedLocale === 'en' || savedLocale === 'es')) {
+      setLocale(savedLocale)
+    } else {
+      setLocale('en')
+    }
+  })
 </script>
 
 <style scoped>

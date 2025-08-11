@@ -1,6 +1,8 @@
 <template>
   <v-app>
+    <ErrorBoundary>
     <router-view />
+  </ErrorBoundary>
   </v-app>
 </template>
 
