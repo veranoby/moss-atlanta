@@ -1,474 +1,427 @@
 <template>
   <v-app>
-    <div class="min-h-screen bg-white text-[#424242]">
-      <!-- Header -->
-      <header class="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-gray-200">
-        <v-container class="py-0">
-          <div class="flex items-center justify-between h-16">
-            <a class="flex items-center gap-2" href="#">
-              <div
-                aria-hidden="true"
-                class="h-8 w-8 rounded-sm"
-                style="background-color:#FFF9C4;"
-              />
-              <span class="text-sm sm:text-base font-semibold tracking-wide">
-                MOSS Atlanta Staffing Services
-              </span>
-            </a>
+     App Bar
+    <v-app-bar color="white" flat density="comfortable" elevation="1">
+      <v-container class="d-flex align-center">
+        <div class="text-h6 font-weight-bold" style="color:#424242">
+          MOSS Atlanta
+        </div>
+        <v-spacer />
+         Navigation
+        <div class="d-none d-md-flex align-center">
+          <v-btn variant="text" color="grey-darken-2" :to="'/'" class="mx-1">{{ t.nav.home }}</v-btn>
+          <v-btn variant="text" color="grey-darken-2" href="#services" class="mx-1">{{ t.nav.services }}</v-btn>
+          <v-btn variant="text" color="grey-darken-2" href="#why" class="mx-1">{{ t.nav.why }}</v-btn>
+          <v-btn variant="text" color="grey-darken-2" href="#contact" class="mx-1">{{ t.nav.contact }}</v-btn>
+          <v-divider vertical class="mx-3" />
+          <v-btn color="grey-darken-2" variant="outlined" :to="'/apply'" class="mx-1">
+            {{ t.nav.apply }}
+          </v-btn>
+        </div>
+        <v-spacer class="d-none d-md-flex" />
+         Language Toggle
+        <div class="d-flex align-center">
+          <v-btn
+            size="small"
+            :variant="lang === 'en' ? 'flat' : 'text'"
+            :color="lang === 'en' ? 'grey-darken-2' : undefined"
+            class="mx-1"
+            @click="setLang('en')"
+          >EN</v-btn>
+          <v-btn
+            size="small"
+            :variant="lang === 'es' ? 'flat' : 'text'"
+            :color="lang === 'es' ? 'grey-darken-2' : undefined"
+            class="mx-1"
+            @click="setLang('es')"
+          >ES</v-btn>
+        </div>
+      </v-container>
+    </v-app-bar>
 
-            <nav class="hidden sm:flex items-center gap-6 text-sm">
-              <a class="hover:text-black transition" href="#services">
-                {{ $t('nav.services') }}
-              </a>
-              <a class="hover:text-black transition" href="#why">
-                {{ $t('nav.why') }}
-              </a>
-              <a class="hover:text-black transition" href="#contact">
-                {{ $t('nav.contact') }}
-              </a>
-            </nav>
-
-            <div class="flex items-center gap-2">
-              <div class="text-xs sm:text-sm flex items-center rounded-md border border-gray-200">
-                <v-btn
-                  aria-label="English"
-                  class="px-2 py-1 min-h-0 h-auto"
-                  :class="isEN ? 'font-semibold text-gray-900' : 'text-gray-500'"
-                  density="comfortable"
-                  variant="text"
-                  @click="setLocale('en')"
-                >
-                  EN
-                </v-btn>
-                <span class="text-gray-300 select-none">|</span>
-                <v-btn
-                  aria-label="Español"
-                  class="px-2 py-1 min-h-0 h-auto"
-                  :class="isES ? 'font-semibold text-gray-900' : 'text-gray-500'"
-                  density="comfortable"
-                  variant="text"
-                  @click="setLocale('es')"
-                >
-                  ES
-                </v-btn>
-              </div>
-              <v-btn
-                class="hidden sm:inline-flex border border-gray-300 hover:bg-[#F5F5F5] transition"
-                :href="'#apply'"
-                variant="text"
-              >
-                {{ $t('nav.apply') }}
-              </v-btn>
-            </div>
-          </div>
-        </v-container>
-      </header>
-
-      <!-- Main Content -->
-      <transition mode="out-in" name="fade">
-        <main :key="currentLocale">
-          <!-- Hero Section -->
-          <section class="bg-[#F5F5F5]">
-            <v-container>
-              <v-row
-                :class="'py-14 sm:py-20'"
-                align="center"
-                class="items-center"
-              >
-                <v-col cols="12" lg="6">
-                  <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-black">
-                    {{ $t('hero.headline') }}
+    <v-main>
+       Hero
+      <section id="hero" class="hero-gradient">
+        <v-container class="py-16">
+          <v-row align="center" justify="center">
+            <v-col cols="12" md="8" class="text-center">
+              <v-fade-transition mode="out-in">
+                <div :key="lang">
+                  <h1 class="text-h4 text-md-h3 mb-4" style="color:#424242">
+                    {{ t.hero.title }}
                   </h1>
-                  <p class="mt-4 text-base sm:text-lg">
-                    {{ $t('hero.subtitle') }}
+                  <p class="text-body-1 mb-6" style="color:#424242">
+                    {{ t.hero.subtitle }}
                   </p>
-                  <div class="mt-8 flex flex-col sm:flex-row gap-3">
+                  <div class="mb-6">
+                    <v-chip color="amber-lighten-4" class="ma-1" text-color="black">
+                      {{ t.hero.chip1 }}
+                    </v-chip>
+                    <v-chip color="amber-lighten-4" class="ma-1" text-color="black">
+                      {{ t.hero.chip2 }}
+                    </v-chip>
+                  </div>
+                  <div class="d-flex justify-center flex-wrap">
                     <v-btn
-                      class="font-semibold text-[#424242] border border-yellow-100 hover:shadow transition"
-                      :href="'#apply'"
                       size="large"
-                      style="background-color:#FFF9C4;"
+                      color="amber-lighten-4"
+                      class="ma-2"
+                      style="color:#424242"
+                      :to="'/apply'"
                     >
-                      {{ $t('hero.applyNow') }}
+                      {{ t.cta.applyNow }}
                     </v-btn>
                     <v-btn
-                      class="font-semibold border border-gray-300 hover:bg-white hover:shadow-sm transition"
-                      :href="'#contact'"
                       size="large"
-                      variant="text"
+                      variant="outlined"
+                      color="grey-darken-2"
+                      class="ma-2"
+                      href="#contact"
                     >
-                      {{ $t('hero.partner') }}
+                      {{ t.cta.partner }}
                     </v-btn>
                   </div>
-                </v-col>
+                </div>
+              </v-fade-transition>
+            </v-col>
+          </v-row>
+        </v-container>
+      </section>
 
-                <v-col cols="12" lg="6">
-                  <v-card class="overflow-hidden border border-gray-200 bg-white">
-                    <div class="aspect-[16/10] w-full bg-gradient-to-br from-[#F5F5F5] to-white flex items-center justify-center">
-                      <div class="text-center px-6">
-                        <div class="mx-auto mb-3 h-10 w-10 rounded-md" style="background-color:#FFF9C4;" />
-                        <p class="text-sm text-gray-500">
-                          {{ $t('hero.imageCaption') }}
-                        </p>
-                      </div>
-                    </div>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </section>
+      <v-divider />
 
-          <!-- Services Section -->
-          <section id="services" class="py-16 sm:py-20">
-            <v-container>
-              <header class="mb-10">
-                <h2 class="text-2xl sm:text-3xl font-bold text-black">
-                  {{ $t('services.title') }}
-                </h2>
-                <p class="mt-2 text-gray-600">
-                  {{ $t('services.subtitle') }}
-                </p>
-              </header>
-
-              <v-row class="gap-0" dense>
-                <v-col class="mb-6" cols="12" lg="3" sm="6">
-                  <v-card
-                    class="h-full rounded-lg border border-gray-200 bg-white p-6 hover:shadow-sm transition"
-                    elevation="0"
-                  >
-                    <h3 class="text-lg font-semibold text-black">
-                      {{ $t('services.items.housekeeping.title') }}
-                    </h3>
-                    <p class="mt-2 text-sm text-gray-600">
-                      {{ $t('services.items.housekeeping.roles') }}
-                    </p>
-                    <p class="mt-4 text-sm italic text-gray-700">
-                      "{{ $t('services.items.housekeeping.note') }}"
-                    </p>
-                  </v-card>
-                </v-col>
-
-                <v-col class="mb-6" cols="12" lg="3" sm="6">
-                  <v-card
-                    class="h-full rounded-lg border border-gray-200 bg-white p-6 hover:shadow-sm transition"
-                    elevation="0"
-                  >
-                    <h3 class="text-lg font-semibold text-black">
-                      {{ $t('services.items.fnb.title') }}
-                    </h3>
-                    <p class="mt-2 text-sm text-gray-600">
-                      {{ $t('services.items.fnb.roles') }}
-                    </p>
-                    <p class="mt-4 text-sm italic text-gray-700">
-                      "{{ $t('services.items.fnb.note') }}"
-                    </p>
-                  </v-card>
-                </v-col>
-
-                <v-col class="mb-6" cols="12" lg="3" sm="6">
-                  <v-card
-                    class="h-full rounded-lg border border-gray-200 bg-white p-6 hover:shadow-sm transition"
-                    elevation="0"
-                  >
-                    <h3 class="text-lg font-semibold text-black">
-                      {{ $t('services.items.frontdesk.title') }}
-                    </h3>
-                    <p class="mt-2 text-sm text-gray-600">
-                      {{ $t('services.items.frontdesk.roles') }}
-                    </p>
-                    <p class="mt-4 text-sm italic text-gray-700">
-                      "{{ $t('services.items.frontdesk.note') }}"
-                    </p>
-                  </v-card>
-                </v-col>
-
-                <v-col class="mb-6" cols="12" lg="3" sm="6">
-                  <v-card
-                    class="h-full rounded-lg border border-gray-200 bg-white p-6 hover:shadow-sm transition"
-                    elevation="0"
-                  >
-                    <h3 class="text-lg font-semibold text-black">
-                      {{ $t('services.items.events.title') }}
-                    </h3>
-                    <p class="mt-2 text-sm text-gray-600">
-                      {{ $t('services.items.events.roles') }}
-                    </p>
-                    <p class="mt-4 text-sm italic text-gray-700">
-                      "{{ $t('services.items.events.note') }}"
-                    </p>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </section>
-
-          <!-- Why Choose MOSS Section -->
-          <section id="why" class="bg-[#F5F5F5] py-16 sm:py-20">
-            <v-container>
-              <header class="mb-10">
-                <h2 class="text-2xl sm:text-3xl font-bold text-black">
-                  {{ $t('why.title') }}
-                </h2>
-              </header>
-
-              <v-row dense>
-                <v-col class="mb-6" cols="12" md="6">
-                  <v-card
-                    class="rounded-lg border border-gray-200 bg-white p-6"
-                    elevation="0"
-                  >
-                    <h3 class="font-semibold text-black">
-                      {{ $t('why.items.reliable.title') }}
-                    </h3>
-                    <p class="mt-2 text-gray-700">
-                      {{ $t('why.items.reliable.desc') }}
-                    </p>
-                  </v-card>
-                </v-col>
-                <v-col class="mb-6" cols="12" md="6">
-                  <v-card
-                    class="rounded-lg border border-gray-200 bg-white p-6"
-                    elevation="0"
-                  >
-                    <h3 class="font-semibold text-black">
-                      {{ $t('why.items.trained.title') }}
-                    </h3>
-                    <p class="mt-2 text-gray-700">
-                      {{ $t('why.items.trained.desc') }}
-                    </p>
-                  </v-card>
-                </v-col>
-                <v-col class="mb-6" cols="12" md="6">
-                  <v-card
-                    class="rounded-lg border border-gray-200 bg-white p-6"
-                    elevation="0"
-                  >
-                    <h3 class="font-semibold text-black">
-                      {{ $t('why.items.flexible.title') }}
-                    </h3>
-                    <p class="mt-2 text-gray-700">
-                      {{ $t('why.items.flexible.desc') }}
-                    </p>
-                  </v-card>
-                </v-col>
-                <v-col class="mb-6" cols="12" md="6">
-                  <v-card
-                    class="rounded-lg border border-gray-200 bg-white p-6"
-                    elevation="0"
-                  >
-                    <h3 class="font-semibold text-black">
-                      {{ $t('why.items.local.title') }}
-                    </h3>
-                    <p class="mt-2 text-gray-700">
-                      {{ $t('why.items.local.desc') }}
-                    </p>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </section>
-
-          <!-- Apply Section -->
-          <section id="apply" class="py-16 sm:py-20">
-            <v-container>
-              <v-row dense>
-                <v-col class="mb-6" cols="12" md="6">
-                  <v-card
-                    class="rounded-lg border border-gray-200 bg-white p-8"
-                    elevation="0"
-                  >
-                    <h3 class="text-xl sm:text-2xl font-bold text-black">
-                      {{ $t('cta.joinTitle') }}
-                    </h3>
-                    <p class="mt-2 text-gray-700">
-                      {{ $t('cta.joinDesc') }}
-                    </p>
-                    <v-btn
-                      class="mt-6 font-semibold text-[#424242] border border-yellow-100 hover:shadow transition"
-                      :href="'#contact'"
-                      size="large"
-                      style="background-color:#FFF9C4;"
-                    >
-                      {{ $t('cta.applyToday') }}
-                    </v-btn>
-                  </v-card>
-                </v-col>
-
-                <v-col class="mb-6" cols="12" md="6">
-                  <v-card
-                    class="rounded-lg border border-gray-200 bg-white p-8"
-                    elevation="0"
-                  >
-                    <h3 class="text-xl sm:text-2xl font-bold text-black">
-                      {{ $t('cta.staffingTitle') }}
-                    </h3>
-                    <p class="mt-2 text-gray-700">
-                      {{ $t('cta.staffingDesc') }}
-                    </p>
-                    <v-btn
-                      class="mt-6 font-semibold border border-gray-300 hover:bg-[#F5F5F5] transition"
-                      :href="'#contact'"
-                      size="large"
-                      variant="text"
-                    >
-                      {{ $t('cta.contactUs') }}
-                    </v-btn>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </section>
-
-          <!-- Footer -->
-          <footer id="contact" class="border-t border-gray-200 bg-white">
-            <v-container class="py-12">
-              <v-row>
-                <v-col class="mb-8" cols="12" lg="3" sm="6">
-                  <h4 class="font-semibold text-black">
-                    {{ $t('footer.contact.title') }}
-                  </h4>
-                  <ul class="mt-3 space-y-1 text-sm">
-                    <li>
-                      <a class="hover:text-black transition" href="tel:+1404XXXXXXX">
-                        (404) XXX-XXXX
-                      </a>
-                    </li>
-                    <li>
-                      <a class="hover:text-black transition" href="mailto:careers@mossatlanta.com">
-                        careers@mossatlanta.com
-                      </a>
-                    </li>
-                    <li>Atlanta, GA</li>
-                  </ul>
-                </v-col>
-                <v-col class="mb-8" cols="12" lg="3" sm="6">
-                  <h4 class="font-semibold text-black">
-                    {{ $t('footer.company.title') }}
-                  </h4>
-                  <ul class="mt-3 space-y-1 text-sm">
-                    <li>
-                      <a class="hover:text-black transition" href="#services">
-                        {{ $t('nav.services') }}
-                      </a>
-                    </li>
-                    <li>
-                      <a class="hover:text-black transition" href="#why">
-                        {{ $t('nav.why') }}
-                      </a>
-                    </li>
-                    <li>
-                      <a class="hover:text-black transition" href="#apply">
-                        {{ $t('footer.company.careers') }}
-                      </a>
-                    </li>
-                  </ul>
-                </v-col>
-                <v-col class="mb-8" cols="12" lg="3" sm="6">
-                  <h4 class="font-semibold text-black">
-                    {{ $t('footer.legal.title') }}
-                  </h4>
-                  <ul class="mt-3 space-y-1 text-sm">
-                    <li>
-                      <a class="hover:text-black transition" href="#">
-                        {{ $t('footer.legal.privacy') }}
-                      </a>
-                    </li>
-                    <li>
-                      <a class="hover:text-black transition" href="#">
-                        {{ $t('footer.legal.terms') }}
-                      </a>
-                    </li>
-                  </ul>
-                </v-col>
-                <v-col class="mb-8" cols="12" lg="3" sm="6">
-                  <h4 class="font-semibold text-black">
-                    {{ $t('footer.languages.title') }}
-                  </h4>
-                  <div class="mt-3 text-sm">
-                    <v-btn
-                      class="min-h-0 h-auto px-2 py-1"
-                      :class="isEN ? 'font-semibold text-gray-900' : 'text-gray-500'"
-                      density="comfortable"
-                      variant="text"
-                      @click="setLocale('en')"
-                    >
-                      English
-                    </v-btn>
-                    <span class="mx-1 text-gray-300 select-none">|</span>
-                    <v-btn
-                      class="min-h-0 h-auto px-2 py-1"
-                      :class="isES ? 'font-semibold text-gray-900' : 'text-gray-500'"
-                      density="comfortable"
-                      variant="text"
-                      @click="setLocale('es')"
-                    >
-                      Español
-                    </v-btn>
+       Services
+      <section id="services">
+        <v-container class="py-12">
+          <h2 class="text-h5 text-md-h4 mb-6" style="color:#424242">{{ t.sections.services }}</h2>
+          <v-row>
+            <v-col v-for="(svc, i) in services" :key="i" cols="12" md="6" lg="3" class="mb-4">
+              <v-card hover :elevation="2" class="h-100">
+                <v-card-text>
+                  <div class="d-flex align-center mb-3">
+                    <v-avatar size="40" color="grey-lighten-4" class="mr-3">
+                      <v-icon :icon="svc.icon" color="grey-darken-2"></v-icon>
+                    </v-avatar>
+                    <div class="text-h6" style="color:#424242">{{ svc.title }}</div>
                   </div>
-                </v-col>
-              </v-row>
-              <p class="mt-4 text-xs text-gray-500">
-                &copy; {{ year }} MOSS Atlanta Staffing Services. {{ $t('footer.rights') }}
-              </p>
-            </v-container>
-          </footer>
-        </main>
-      </transition>
-    </div>
+                  <v-card-subtitle class="mb-2" style="white-space: pre-line; color:#616161">
+                    {{ svc.line1 }}
+                  </v-card-subtitle>
+                  <div class="text-body-2" style="color:#616161">{{ svc.line2 }}</div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
+      </section>
+
+      <v-divider />
+
+       Why Choose MOSS
+      <section id="why">
+        <v-container class="py-12">
+          <h2 class="text-h5 text-md-h4 mb-6" style="color:#424242">{{ t.sections.why }}</h2>
+          <v-row>
+            <v-col cols="12" md="6" class="mb-6">
+              <v-list lines="two" density="comfortable" class="bg-white">
+                <v-list-item v-for="(item, idx) in t.why.items" :key="idx">
+                  <template #prepend>
+                    <v-icon color="grey-darken-2" icon="mdi-check-circle-outline" />
+                  </template>
+                  <v-list-item-title class="font-weight-medium" style="color:#424242">
+                    {{ item.title }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle style="color:#616161">
+                    {{ item.text }}
+                  </v-list-item-subtitle>
+                </v-list-item>
+              </v-list>
+            </v-col>
+            <v-col cols="12" md="6" class="mb-6">
+              <v-card variant="tonal" color="grey-lighten-4" class="pa-4">
+                <div class="d-flex flex-wrap">
+                  <v-chip color="amber-lighten-4" class="ma-2" text-color="black">
+                    {{ t.metrics.staff }}
+                  </v-chip>
+                  <v-chip color="amber-lighten-4" class="ma-2" text-color="black">
+                    {{ t.metrics.hotels }}
+                  </v-chip>
+                  <v-chip color="grey-lighten-4" class="ma-2" text-color="black">
+                    {{ t.metrics.specialties }}
+                  </v-chip>
+                  <v-chip color="grey-lighten-4" class="ma-2" text-color="black">
+                    {{ t.metrics.coverage }}
+                  </v-chip>
+                </div>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
+      </section>
+
+      <v-divider />
+
+       Call-to-Action
+      <section id="cta">
+        <v-container class="py-12">
+          <v-row>
+            <v-col cols="12" md="6" class="mb-6">
+              <v-card hover :elevation="2" class="h-100">
+                <v-card-text>
+                  <h3 class="text-h6 text-md-h5 mb-2" style="color:#424242">{{ t.ctaCard.joinTitle }}</h3>
+                  <p class="text-body-1 mb-4" style="color:#616161">{{ t.ctaCard.joinText }}</p>
+                  <v-btn color="grey-darken-2" :to="'/apply'">{{ t.cta.applyNow }}</v-btn>
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col cols="12" md="6" class="mb-6">
+              <v-card hover :elevation="2" class="h-100">
+                <v-card-text>
+                  <h3 class="text-h6 text-md-h5 mb-2" style="color:#424242">{{ t.ctaCard.partnerTitle }}</h3>
+                  <p class="text-body-1 mb-4" style="color:#616161">{{ t.ctaCard.partnerText }}</p>
+                  <v-btn variant="outlined" color="grey-darken-2" href="#contact">{{ t.cta.partner }}</v-btn>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
+      </section>
+    </v-main>
+
+     Footer
+    <v-footer id="contact" color="grey-lighten-4" class="pt-10 pb-6">
+      <v-container>
+        <v-row>
+          <v-col cols="12" md="4" class="mb-6">
+            <div class="text-h6 mb-2" style="color:#424242">MOSS Atlanta</div>
+            <div class="text-body-2 mb-1" style="color:#616161">
+              {{ t.footer.contact }}: (404) 555-0123
+            </div>
+            <div class="text-body-2" style="color:#616161">
+              careers@mossatlanta.com
+            </div>
+          </v-col>
+          <v-col cols="12" md="4" class="mb-6">
+            <div class="text-subtitle-1 mb-2" style="color:#424242">{{ t.footer.company }}</div>
+            <div class="d-flex flex-column">
+              <v-btn variant="text" color="grey-darken-2" href="#services" class="px-0 justify-start">{{ t.nav.services }}</v-btn>
+              <v-btn variant="text" color="grey-darken-2" href="#why" class="px-0 justify-start">{{ t.nav.why }}</v-btn>
+              <v-btn variant="text" color="grey-darken-2" :to="'/apply'" class="px-0 justify-start">{{ t.nav.careers }}</v-btn>
+            </div>
+          </v-col>
+          <v-col cols="12" md="4" class="mb-6">
+            <div class="text-subtitle-1 mb-2" style="color:#424242">{{ t.footer.legal }}</div>
+            <div class="d-flex flex-column">
+              <v-btn variant="text" color="grey-darken-2" class="px-0 justify-start">Privacy Policy</v-btn>
+              <v-btn variant="text" color="grey-darken-2" class="px-0 justify-start">Terms of Service</v-btn>
+            </div>
+          </v-col>
+        </v-row>
+        <v-divider class="my-4" />
+        <div class="d-flex align-center justify-space-between">
+          <div class="text-caption" style="color:#616161">© {{ new Date().getFullYear() }} MOSS Atlanta Staffing Services</div>
+          <div class="d-flex align-center">
+            <span class="text-caption mr-2" style="color:#616161">{{ t.footer.language }}</span>
+            <v-btn
+              size="x-small"
+              :variant="lang === 'en' ? 'flat' : 'text'"
+              :color="lang === 'en' ? 'grey-darken-2' : undefined"
+              class="mx-1"
+              @click="setLang('en')"
+            >EN</v-btn>
+            <v-btn
+              size="x-small"
+              :variant="lang === 'es' ? 'flat' : 'text'"
+              :color="lang === 'es' ? 'grey-darken-2' : undefined"
+              class="mx-1"
+              @click="setLang('es')"
+            >ES</v-btn>
+          </div>
+        </div>
+      </v-container>
+    </v-footer>
   </v-app>
 </template>
 
 <script setup lang="ts">
-  import { computed, ref, onMounted } from 'vue'
-  import { useI18n } from 'vue-i18n'
+import { ref, computed } from 'vue'
 
-  // ✅ TypeScript types
-  type Locale = 'en' | 'es'
+type Lang = 'en' | 'es'
+const lang = ref<Lang>('en')
+const setLang = (l: Lang) => (lang.value = l)
 
-  // ✅ Vue 3 Composition API with proper imports
-  const { locale, t } = useI18n()
+// Bilingual copy
+const copy = {
+  en: {
+    nav: {
+      home: 'Home',
+      services: 'Services',
+      why: 'Why MOSS',
+      contact: 'Contact',
+      apply: 'Apply Now',
+      careers: 'Careers',
+    },
+    hero: {
+      title: 'Professional Hotel Staffing Solutions in Atlanta',
+      subtitle: '400+ trained professionals serving premium hotels across the metro area',
+      chip1: 'Housekeeping Specialists',
+      chip2: '20+ Hotels Served',
+    },
+    services: {
+      housekeeping: {
+        title: 'Housekeeping Services',
+        line1: 'Room attendants, housemen, supervisors',
+        line2: 'Our largest service area with trained professionals',
+        icon: 'mdi-broom',
+      },
+      fnb: {
+        title: 'Food & Beverage',
+        line1: 'Servers, cooks, dishwashers, bartenders',
+        line2: 'Restaurant and banquet specialists',
+        icon: 'mdi-silverware-fork-knife',
+      },
+      frontdesk: {
+        title: 'Front Desk Support',
+        line1: 'Receptionists, concierge, bell staff',
+        line2: 'Guest-facing professionals',
+        icon: 'mdi-account-tie',
+      },
+      events: {
+        title: 'Event Staffing',
+        line1: 'Temporary and emergency coverage',
+        line2: 'Flexible solutions for peak demands',
+        icon: 'mdi-calendar-clock',
+      },
+    },
+    sections: {
+      services: 'Our Services',
+      why: 'Why Choose MOSS',
+    },
+    why: {
+      items: [
+        { title: 'Reliable', text: 'Proven track record with major hotel chains' },
+        { title: 'Trained', text: 'All staff undergo hotel-specific training' },
+        { title: 'Flexible', text: '24/7 coverage and emergency response' },
+        { title: 'Local', text: 'Deep knowledge of Atlanta hospitality market' },
+      ],
+    },
+    metrics: {
+      staff: '400+ trained staff',
+      hotels: '20+ premium hotels served',
+      specialties: 'Housekeeping • F&B • Front Desk • Events',
+      coverage: 'Metro Atlanta coverage',
+    },
+    cta: {
+      applyNow: 'Apply Now',
+      partner: 'Partner With Us',
+    },
+    ctaCard: {
+      joinTitle: 'Ready to Join Our Team?',
+      joinText: 'Apply today and start your hospitality career with MOSS.',
+      partnerTitle: 'Looking for Staffing Solutions?',
+      partnerText: 'Partner with us for reliable hotel staffing.',
+    },
+    footer: {
+      contact: 'Contact',
+      company: 'Company',
+      legal: 'Legal',
+      language: 'Language',
+    },
+  },
+  es: {
+    nav: {
+      home: 'Inicio',
+      services: 'Servicios',
+      why: '¿Por qué MOSS?',
+      contact: 'Contacto',
+      apply: 'Postular',
+      careers: 'Empleos',
+    },
+    hero: {
+      title: 'Soluciones Profesionales de Personal Hotelero en Atlanta',
+      subtitle: 'Más de 400 profesionales capacitados que atienden hoteles premium en el área metropolitana',
+      chip1: 'Especialistas en Housekeeping',
+      chip2: '20+ Hoteles Atendidos',
+    },
+    services: {
+      housekeeping: {
+        title: 'Servicios de Housekeeping',
+        line1: 'Camaristas, housemen, supervisores',
+        line2: 'Nuestra mayor área con personal capacitado',
+        icon: 'mdi-broom',
+      },
+      fnb: {
+        title: 'Alimentos y Bebidas',
+        line1: 'Meseros, cocineros, lavalozas, bartenders',
+        line2: 'Especialistas en restaurante y banquetes',
+        icon: 'mdi-silverware-fork-knife',
+      },
+      frontdesk: {
+        title: 'Soporte de Recepción',
+        line1: 'Recepcionistas, concierge, botones',
+        line2: 'Profesionales de atención al huésped',
+        icon: 'mdi-account-tie',
+      },
+      events: {
+        title: 'Personal para Eventos',
+        line1: 'Cobertura temporal y de emergencia',
+        line2: 'Soluciones flexibles para picos de demanda',
+        icon: 'mdi-calendar-clock',
+      },
+    },
+    sections: {
+      services: 'Nuestros Servicios',
+      why: 'Por qué elegir MOSS',
+    },
+    why: {
+      items: [
+        { title: 'Confiable', text: 'Historial comprobado con cadenas hoteleras importantes' },
+        { title: 'Capacitado', text: 'Todo el personal recibe formación específica hotelera' },
+        { title: 'Flexible', text: 'Cobertura 24/7 y respuesta a emergencias' },
+        { title: 'Local', text: 'Amplio conocimiento del mercado hotelero de Atlanta' },
+      ],
+    },
+    metrics: {
+      staff: '400+ colaboradores capacitados',
+      hotels: '20+ hoteles premium atendidos',
+      specialties: 'Housekeeping • A&B • Recepción • Eventos',
+      coverage: 'Cobertura en Metro Atlanta',
+    },
+    cta: {
+      applyNow: 'Postular Ahora',
+      partner: 'Asóciate con Nosotros',
+    },
+    ctaCard: {
+      joinTitle: '¿Listo para Unirte a Nuestro Equipo?',
+      joinText: 'Postula hoy y comienza tu carrera en hospitalidad con MOSS.',
+      partnerTitle: '¿Buscas Soluciones de Personal?',
+      partnerText: 'Asóciate con nosotros para personal hotelero confiable.',
+    },
+    footer: {
+      contact: 'Contacto',
+      company: 'Empresa',
+      legal: 'Legal',
+      language: 'Idioma',
+    },
+  },
+} as const
 
-  // ✅ Reactive state
-  const currentLocale = ref<Locale>('en')
-  const year = ref(new Date().getFullYear())
+const t = computed(() => copy[lang.value])
 
-  // ✅ Computed properties
-  const isEN = computed(() => currentLocale.value === 'en')
-  const isES = computed(() => currentLocale.value === 'es')
-
-  // ✅ Methods
-  const setLocale = (newLocale: Locale) => {
-    currentLocale.value = newLocale
-    locale.value = newLocale
-
-    // ✅ Persist to localStorage
-    try {
-      localStorage.setItem('app-locale', newLocale)
-    } catch (error) {
-      console.error('Error saving locale to localStorage:', error)
-    }
-  }
-
-  // ✅ Lifecycle hooks
-  onMounted(() => {
-    // ✅ Initialize locale from localStorage or default
-    const savedLocale = localStorage.getItem('app-locale') as Locale
-    if (savedLocale && (savedLocale === 'en' || savedLocale === 'es')) {
-      setLocale(savedLocale)
-    } else {
-      setLocale('en')
-    }
-  })
+const services = computed(() => {
+  const s = t.value.services
+  return [
+    { title: s.housekeeping.title, line1: s.housekeeping.line1, line2: s.housekeeping.line2, icon: s.housekeeping.icon },
+    { title: s.fnb.title,         line1: s.fnb.line1,         line2: s.fnb.line2,         icon: s.fnb.icon },
+    { title: s.frontdesk.title,   line1: s.frontdesk.line1,   line2: s.frontdesk.line2,   icon: s.frontdesk.icon },
+    { title: s.events.title,      line1: s.events.line1,      line2: s.events.line2,      icon: s.events.icon },
+  ]
+})
 </script>
 
 <style scoped>
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 300ms ease;
-  }
-
-  .fade-enter-from,
-  .fade-leave-to {
-    opacity: 0;
-  }
+.hero-gradient {
+  /* Subtle corporate gradient using specified palette */
+  background: linear-gradient(180deg, #F5F5F5 0%, #FFFFFF 100%);
+}
 </style>
