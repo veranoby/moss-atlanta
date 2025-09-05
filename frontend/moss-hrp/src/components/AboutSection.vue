@@ -7,15 +7,16 @@
         </h2>
       </div>
 
-      <v-row class="ga-6">
+      <v-row align="stretch">
         <v-col
           cols="12"
-          md="6"
+          sm="6"
+          md="4"
           lg="3"
           v-for="(benefit, index) in benefits"
           :key="index"
         >
-          <div class="text-center">
+          <div class="text-center h-100 d-flex flex-column justify-space-between">
             <div
               class="w-16 h-16 rounded-circle d-flex align-center justify-center mx-auto mb-4"
               style="background:#FFF9C4;"

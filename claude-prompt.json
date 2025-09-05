@@ -1,0 +1,111 @@
+{
+  "task": "MOSS - Fase 1: Pocketbase Client + Auth",
+  "context": {
+    "project_base": "frontend/moss-hrp/",
+    "existing_structure": "Vue.js 3 + Vuetify 3 + TypeScript + i18n + Pinia + Router",
+    "pocketbase_url": "http://localhost:8080",
+    "auth_roles": ["super_admin", "operations_hr", "finance", "employee"]
+  },
+
+  "specific_files_to_create": {
+    "src/composables/usePocketbase.ts": {
+      "purpose": "Pocketbase client connection",
+      "requirements": [
+        "Import PocketBase from 'pocketbase'",
+        "Create reactive client instance", 
+        "Handle auth state changes",
+        "Export authenticated user info"
+      ]
+    },
+    "src/stores/auth.ts": {
+      "purpose": "Pinia auth store",
+      "requirements": [
+        "Login/logout functions",
+        "Role-based permissions",
+        "Persist auth state",
+        "Route protection logic"
+      ]
+    },
+    "src/pages/LoginPage.vue": {
+      "purpose": "Login form component", 
+      "requirements": [
+        "Vuetify form with email/password",
+        "Error handling",
+        "Redirect after login",
+        "Loading states"
+      ]
+    },
+    "src/middleware/auth.ts": {
+      "purpose": "Router middleware",
+      "requirements": [
+        "Check authentication status",
+        "Role-based route protection", 
+        "Redirect unauthenticated users"
+      ]
+    }
+  },
+
+  "existing_files_to_modify": {
+    "src/router/index.ts": {
+      "add_routes": [
+        "{ path: '/login', component: LoginPage }",
+        "{ path: '/admin', component: AdminDashboard, meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] } }"
+      ],
+      "add_middleware": "Apply auth middleware globally"
+    },
+    "src/main.ts": {
+      "add_imports": "Import auth store and initialize auth state",
+      "before_mount": "Check existing auth token on app start"
+    }
+  },
+
+  "implementation_requirements": {
+    "auth_flow": [
+      "User enters email/password",
+      "PocketBase authenticates",
+      "Store user data + role in Pinia",
+      "Redirect based on role",
+      "Protect routes with middleware"
+    ],
+    "role_mapping": {
+      "super_admin": "Full access to all routes",
+      "operations_hr": "Access to reconciliation + audit",
+      "finance": "Access to payroll + audit", 
+      "employee": "Access to personal portal only"
+    },
+    "error_handling": [
+      "Invalid credentials",
+      "Network errors",
+      "Token expiration",
+      "Permission denied"
+    ]
+  },
+
+  "code_examples": {
+    "auth_store_pattern": {
+      "login_action": "async login(email: string, password: string) => { const authData = await pb.collection('users').authWithPassword(email, password); this.user = authData.record; }",
+      "role_check": "hasRole(role: string): boolean { return this.user?.system_role === role || this.user?.system_role === 'super_admin'; }"
+    },
+    "route_protection": {
+      "meta_field": "{ requiresAuth: true, roles: ['operations_hr', 'super_admin'] }",
+      "guard_logic": "if (!authStore.isAuthenticated) return '/login'; if (!authStore.hasAnyRole(route.meta.roles)) return '/unauthorized';"
+    }
+  },
+
+  "commands_for_jules": [
+    "Create usePocketbase.ts composable with client connection",
+    "Implement auth.ts Pinia store with login/logout/role methods", 
+    "Build LoginPage.vue with Vuetify form components",
+    "Add auth middleware for route protection",
+    "Update router with new routes and middleware",
+    "Test complete auth flow from login to protected routes"
+  ],
+
+  "success_criteria": [
+    "User can login with valid PocketBase credentials",
+    "Role-based routing works correctly",
+    "Auth state persists across browser refresh",
+    "Logout clears auth and redirects to login",
+    "Invalid access attempts redirect appropriately"
+  ]
+}

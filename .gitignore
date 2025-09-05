@@ -26,10 +26,14 @@ Thumbs.db
 
 # IDE
 .vscode/
-.idea/
 *.swp
 *.swo
 *~
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
 
 # Logs
 logs/
@@ -38,3 +42,22 @@ logs/
 # Temporary files
 tmp/
 temp/
+
+# Claude/Cursor
+.claude/
+claude_workspace/
+*.claude
+*.claude-desktop-arch/
+claude-desktop-arch/
+.cursor/
+cursor_workspace/
+.gemini-session/
+.gemini/
+.ai-context/
+
+
+# Brain system
+.brain/
+README-brain-setup.md
+especificacion_completa_optimizada.md
+uix_blueprint_moss.md

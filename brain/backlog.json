@@ -1,0 +1,205 @@
+{
+  "current_sprint": {
+    "sprint_name": "Month 2 - Infrastructure & Core Development",
+    "start_date": "2025-02-01",
+    "end_date": "2025-02-28",
+    "focus": "Pocketbase setup + MOSS Time MVP + Reconciliation engine foundation"
+  },
+
+  "active_tasks": {
+    "p0_critical": [
+      {
+        "task": "VPS Setup & Pocketbase Deployment",
+        "status": "TODO",
+        "complexity": "MEDIUM",
+        "estimated_hours": 8,
+        "dependencies": [],
+        "tools": ["SSH", "systemd", "nginx"],
+        "success_criteria": "19 collections accessible via admin panel"
+      },
+      {
+        "task": "MOSS Time MVP (RapidNative)",
+        "status": "TODO", 
+        "complexity": "HIGH",
+        "estimated_hours": 20,
+        "dependencies": ["Pocketbase live"],
+        "tools": ["RapidNative.com", "React Native"],
+        "success_criteria": "4-punch cycle working with GPS+photo"
+      }
+    ],
+
+    "p1_high": [
+      {
+        "task": "n8n Installation & First Workflow",
+        "status": "TODO",
+        "complexity": "MEDIUM",
+        "estimated_hours": 12,
+        "dependencies": ["VPS setup"],
+        "tools": ["n8n", "npm"],
+        "success_criteria": "Hotel report processing workflow functional"
+      },
+      {
+        "task": "OpenRouter + Gemini Integration",
+        "status": "TODO",
+        "complexity": "LOW",
+        "estimated_hours": 4,
+        "dependencies": ["n8n setup"],
+        "tools": ["OpenRouter API", "n8n HTTP nodes"],
+        "success_criteria": "AI extracts timesheet data from PDF"
+      }
+    ],
+
+    "p2_medium": [
+      {
+        "task": "Vue.js Admin Portal Skeleton",
+        "status": "TODO",
+        "complexity": "MEDIUM", 
+        "estimated_hours": 16,
+        "dependencies": ["Pocketbase API"],
+        "tools": ["Vue.js", "Vuetify", "Pinia"],
+        "success_criteria": "Basic CRUD operations working"
+      }
+    ]
+  },
+
+  "completed_tasks": [
+    {
+      "task": "Complete Architecture Documentation", 
+      "completed_date": "2025-01-31",
+      "hours_spent": 40,
+      "outcome": "PRD/SDD/Memory system complete"
+    }
+  ],
+
+  "vibe_coding_sessions": [
+    {
+      "session_id": "session_001",
+      "date": "TBD",
+      "focus": "JSON Work Plan Guide Creation",
+      "tools_used": ["Claude", "Project Knowledge"],
+      "discoveries": [
+        "Comprehensive JSON structure for Claude Code + Gemini CLI",
+        "TDD methodology integration with AI coding",
+        "Context injection patterns for MOSS architecture",
+        "Tool-specific optimization strategies"
+      ],
+      "blockers": [],
+      "session_outcome": "success",
+      "deliverables_completed": [
+        "Complete JSON Work Plan Guide with templates",
+        "Claude Code MCP verification checklist", 
+        "Gemini CLI optimization parameters",
+        "MOSS-specific examples and patterns"
+      ],
+      "technical_debt_created": [],
+      "next_session_prep": "Ready to implement first Vibe Coding session using new JSON structure"
+    }
+  ],
+
+  "technical_debt": [
+    {
+      "item": "RapidNative → GitHub export needed",
+      "priority": "MEDIUM",
+      "timeline": "Month 3",
+      "impact": "Custom features limited until export"
+    }
+  ],
+
+  "discovery_notes": [
+    {
+      "date": "2025-09-01",
+      "category": "architecture",
+      "discovery": "JSON Work Plan methodology optimized for dual AI tools",
+      "impact": "Enables consistent, high-quality code generation from both Claude Code and Gemini CLI",
+      "action_required": "Implement first Vibe Coding session using new JSON structure"
+    },
+    {
+      "date": "2025-09-01", 
+      "category": "integration",
+      "discovery": "Context injection patterns specific to MOSS architecture",
+      "impact": "AIs will generate code that follows project conventions and patterns automatically",
+      "action_required": "Create project-specific context files for each major component"
+    },
+    {
+      "date": "2025-09-01",
+      "category": "performance",
+      "discovery": "TDD methodology with AI coding produces higher quality, testable code",
+      "impact": "Reduces debugging time and increases code reliability",
+      "action_required": "Always specify tests first in JSON work plans"
+    }
+  ],
+
+  "coding_environment": {
+    "primary_tools": {
+      "claude_code": {
+        "purpose": "Agentic coding from terminal",
+        "brain_integration": "Can read/write JSON files for context",
+        "usage": "Complex backend workflows, n8n automation"
+      },
+      "gemini_cli": {
+        "purpose": "Local AI assistant",
+        "brain_integration": "Manual JSON sharing needed",
+        "usage": "Code review, debugging"
+      },
+      "cursor": {
+        "purpose": "AI-powered code editor",
+        "brain_integration": "Direct file access",
+        "usage": "Frontend development, Vue.js components"
+      },
+      "windsurf": {
+        "purpose": "AI coding assistant",
+        "brain_integration": "Direct file access", 
+        "usage": "Full-stack development"
+      }
+    }
+  },
+
+  "weekly_sprints": {
+    "week_1": {
+      "focus": "Infrastructure foundation",
+      "key_tasks": ["VPS setup", "Pocketbase deployment"],
+      "success_gate": "Database accessible"
+    },
+    "week_2": {
+      "focus": "Automation setup", 
+      "key_tasks": ["n8n installation", "First AI workflow"],
+      "success_gate": "Hotel report processed automatically"
+    },
+    "week_3": {
+      "focus": "Mobile app MVP",
+      "key_tasks": ["RapidNative development", "Basic punch flow"],
+      "success_gate": "App functional on test device"
+    },
+    "week_4": {
+      "focus": "Integration testing",
+      "key_tasks": ["End-to-end testing", "Pilot prep"],
+      "success_gate": "Ready for pilot group"
+    }
+  },
+
+  "blockers_and_risks": [
+    {
+      "blocker": "RapidNative learning curve",
+      "impact": "MEDIUM",
+      "mitigation": "Fallback to React Native CLI",
+      "owner": "Developer"
+    }
+  ],
+
+  "brain_update_triggers": [
+    "Task status changes (TODO→IN_PROGRESS→DONE)",
+    "New discoveries or technical constraints",
+    "Blocker identification or resolution",
+    "Weekly progress reviews",
+    "Architecture decisions or changes",
+    "Vibe coding session completions",
+    "Stakeholder feedback or requirement changes",
+    "Performance/security findings"
+  ],
+
+  "brain_usage_notes": {
+    "query_before_strategic_advice": "Always check priorities_memory_index.json + monthly_report.json + backlog.json before recommendations",
+    "update_patterns": "Status changes = modify existing, discoveries = add new entries",
+    "cross_tool_sync": "Updates from claude_code, gemini_cli, cursor, windsurf should sync back to brain files"
+  }
+}

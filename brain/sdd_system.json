@@ -1,0 +1,340 @@
+{
+  "technical_architecture": {
+    "design_philosophy": {
+      "principle": "Native architecture with single source of truth",
+      "approach": "Self-hosted, lean, maximum control",
+      "cost_target": "$5-10/month operational costs",
+      "scalability": "Designed for 1000+ employees, 40+ hotels"
+    },
+
+    "infrastructure": {
+      "hosting": {
+        "provider": "Hetzner VPS CX11",
+        "specs": "1 vCPU, 2GB RAM, 20GB SSD",
+        "cost": "$4.50/month",
+        "os": "Linux (systemd services)"
+      },
+      
+      "services": {
+        "pocketbase": {
+          "port": 8080,
+          "type": "Single binary",
+          "database": "SQLite",
+          "backup_method": "File copy"
+        },
+        "n8n": {
+          "port": 5678, 
+          "installation": "NPM local",
+          "credentials": "Encrypted storage"
+        },
+        "nginx": {
+          "role": "Reverse proxy",
+          "domains": ["api.mossatlanta.com", "workflows.mossatlanta.com"]
+        }
+      }
+    },
+
+    "technology_stack": {
+      "backend": {
+        "database": "Pocketbase (SQLite)",
+        "api": "Auto-generated REST API",
+        "authentication": "Pocketbase JWT",
+        "automation": "n8n workflows"
+      },
+      
+      "frontend": {
+        "admin_portal": {
+          "framework": "Vue.js 3 + Composition API",
+          "ui_library": "Vuetify 3",
+          "state_management": "Pinia",
+          "internationalization": "Vue-i18n",
+          "routing": "Vue Router"
+        },
+        
+        "mobile_app": {
+          "framework": "React Native + Expo",
+          "ui_library": "Gluestack UI", 
+          "development_tool": "RapidNative.com (MVP)",
+          "deployment": "$25 Google Play + $99/year Apple"
+        }
+      },
+
+      "integrations": {
+        "ai_processing": "Gemini 2.5 Pro via OpenRouter API",
+        "accounting": "QuickBooks Online API",
+        "communication": "Microsoft Teams webhooks",
+        "storage": "OneDrive (structured folders)"
+      }
+    }
+  },
+
+  "database_architecture": {
+    "collections_total": 19,
+    
+    "collection_categories": {
+      "configuration_master": {
+        "count": 6,
+        "collections": ["app_settings", "legal_entities", "hotels", "departments", "positions", "hotel_position_rates"]
+      },
+      "hr_operations": {
+        "count": 5, 
+        "collections": ["employees", "open_positions", "applications", "employee_assignments", "punches"]
+      },
+      "financial_audit": {
+        "count": 8,
+        "collections": ["hotel_reports", "payroll_periods", "reconciliations", "payroll", "payroll_items", "hotel_invoices", "audit_logs", "quickbooks_transactions"]
+      }
+    },
+
+    "critical_collections": {
+      "payroll_periods": {
+        "role": "Central workflow orchestrator",
+        "states": ["pending", "processing", "reconciled", "payroll_generated", "completed"],
+        "triggers_workflows": true
+      },
+      
+      "punches": {
+        "role": "Core timesheet data from MOSS Time app",
+        "types": ["clock_in", "break_start", "break_end", "clock_out"],
+        "validation": "4-punch daily cycle required"
+      },
+      
+      "quickbooks_transactions": {
+        "role": "Audit trail for all QB API interactions", 
+        "key_fields": ["moss_record_id", "transaction_type", "status", "qb_response_data"],
+        "retention": "7 years (compliance)"
+      },
+
+      "audit_logs": {
+        "role": "Immutable trail of critical actions",
+        "triggers": ["manual_hours_adjustment", "approval_actions", "system_changes"],
+        "required_fields": ["user", "action", "ip_address"]
+      }
+    }
+  },
+
+  "application_components": {
+    "moss_time_app": {
+      "priority": "Highest - primary pain point solver",
+      "platform": "React Native + Expo",
+      
+      "core_features": {
+        "punch_system": {
+          "flow": "clock_in → break_start → break_end → clock_out",
+          "validation": "Sequence enforcement, no skipping steps",
+          "data_capture": ["timestamp", "GPS_location", "selfie_photo"]
+        },
+        
+        "offline_capability": {
+          "storage": "Local device storage",
+          "sync_trigger": "Network reconnection", 
+          "conflict_resolution": "Latest timestamp wins"
+        },
+        
+        "security": {
+          "authentication": "Pocketbase JWT",
+          "photo_storage": "OneDrive structured folders",
+          "gps_validation": "Geofencing per assignment"
+        }
+      },
+
+      "development_approach": {
+        "phase_1": "RapidNative.com MVP (free)",
+        "phase_2": "Export to GitHub, custom development", 
+        "testing": "Pilot group 10-15 employees"
+      }
+    },
+
+    "reconciliation_engine": {
+      "purpose": "Automate 3-day manual process to 4 hours",
+      
+      "ai_component": {
+        "model": "Gemini 2.5 Pro",
+        "task": "Extract employee timesheet data from any format",
+        "prompt": "Extract: employee_name, date, clock_in, break_start, break_end, clock_out as JSON",
+        "input_formats": ["PDF", "Excel", "Photos", "Any hotel format"]
+      },
+
+      "workflow_logic": {
+        "trigger": "Hotel report received (Teams/Email)",
+        "processing": "n8n → IA extraction → hotel_reports collection",
+        "comparison": "hotel_reports vs punches by employee+date", 
+        "output": "reconciliations with status (match/discrepancy/resolved)"
+      },
+
+      "ui_design": {
+        "tabbed_interface": "Role-based visibility",
+        "reconciliation_modal": "3-column comparison (Hotel|MOSS|Final)",
+        "status_indicators": "Visual chips (Hotel✅/⏳, MOSS✅/❌, Discrepancy%)",
+        "audit_requirement": "Justification required for manual edits"
+      }
+    },
+
+    "admin_portal": {
+      "architecture": "Vue.js 3 + Vuetify 3 + Pinia",
+      
+      "role_based_access": {
+        "super_admin": "All tabs + configuration",
+        "operations_hr": "Reconciliation + Audit (readonly)", 
+        "finance": "Payroll + Audit (readonly)",
+        "administrator": "All operational functions"
+      },
+
+      "key_interfaces": [
+        {
+          "section": "Data Management", 
+          "features": ["CRUD for all master data", "Employee management", "Hotel/position rates"]
+        },
+        {
+          "section": "Reconciliation",
+          "features": ["Pending periods table", "3-column modal", "Bulk approval", "Excel export"]
+        },
+        {
+          "section": "Payroll Management", 
+          "features": ["Financial calculations", "OT rules", "QuickBooks batching"]
+        },
+        {
+          "section": "Audit & Monitoring",
+          "features": ["QB transaction status", "System logs", "User activity"]
+        }
+      ]
+    }
+  },
+
+  "automation_workflows": {
+    "n8n_orchestration": {
+      "philosophy": "Event-driven, reactive architecture",
+      
+      "critical_workflows": [
+        {
+          "name": "Hotel Report Processing",
+          "trigger": "Teams webhook / Email attachment",
+          "steps": ["File detection", "AI extraction (Gemini)", "hotel_reports creation", "payroll_period status update"],
+          "output": "Structured data ready for reconciliation"
+        },
+        
+        {
+          "name": "Employee Sync to QuickBooks", 
+          "trigger": "employees.qb_sync_status = 'pending'",
+          "steps": ["OAuth refresh", "QB employee creation", "ID storage", "Audit log"],
+          "error_handling": "3 retries + Teams notification"
+        },
+        
+        {
+          "name": "Payroll Processing",
+          "trigger": "payroll.status = 'approved'", 
+          "steps": ["Collect payroll_items", "Format QB batch", "Submit timesheet batch", "Confirmation storage"],
+          "validation": "Pre-submission data validation"
+        },
+
+        {
+          "name": "Automatic Period Creation",
+          "trigger": "Sunday 6PM cron job",
+          "logic": "Create next week payroll_periods for all active hotels",
+          "fallback": "Manual creation interface available"
+        }
+      ],
+
+      "configuration": {
+        "credentials": ["OpenRouter API", "QuickBooks OAuth", "Pocketbase admin"],
+        "rate_limiting": "QB 500req/min prod, 100req/min sandbox",
+        "error_recovery": "Exponential backoff, Teams alerts",
+        "monitoring": "Health checks every 15 minutes"
+      }
+    }
+  },
+
+  "security_implementation": {
+    "authentication": {
+      "system": "Pocketbase JWT tokens",
+      "roles": "Database-level permissions",
+      "sessions": "Configurable expiration"
+    },
+
+    "data_protection": {
+      "encryption": "SQLite encryption at rest",
+      "transmission": "HTTPS mandatory",
+      "sensitive_data": "SSN/documents never in database, OneDrive only"
+    },
+
+    "audit_requirements": {
+      "mandatory_logging": ["User login/logout", "Data modifications", "System configuration changes"],
+      "retention": "audit_logs permanent, quickbooks_transactions 7 years",
+      "compliance": "Immutable audit trail for financial transactions"
+    },
+
+    "quickbooks_specific": {
+      "credentials": "n8n encrypted storage only",
+      "token_rotation": "Automatic refresh every 60 days", 
+      "data_validation": "Pre-submission format checking",
+      "audit_trail": "Every API call logged to quickbooks_transactions"
+    }
+  },
+
+  "development_phases": {
+    "phase_1_foundation": {
+      "duration": "Month 2",
+      "deliverables": [
+        "Pocketbase 19 collections implemented",
+        "Basic Vue.js admin portal with CRUDs", 
+        "n8n installation + first workflows",
+        "VPS infrastructure setup"
+      ],
+      "success_criteria": ["Data entry functional", "Basic automation working"]
+    },
+
+    "phase_2_core_functionality": {
+      "duration": "Month 3", 
+      "deliverables": [
+        "MOSS Time app MVP (RapidNative)",
+        "Reconciliation engine with AI",
+        "Tabbed admin interface",
+        "Basic reporting"
+      ],
+      "success_criteria": ["End-to-end timesheet flow", "Manual process elimination"]
+    },
+
+    "phase_3_integration": {
+      "duration": "Month 4",
+      "deliverables": [
+        "QuickBooks full integration",
+        "Advanced reconciliation UI",
+        "Audit trail complete", 
+        "Dashboard monitoring"
+      ],
+      "success_criteria": ["Zero manual QB entry", "Full audit compliance"]
+    },
+
+    "phase_4_optimization": {
+      "duration": "Month 5-6",
+      "deliverables": [
+        "Performance optimization",
+        "User training materials", 
+        "Pilot testing",
+        "Production deployment"
+      ],
+      "success_criteria": ["Production ready", "User adoption achieved"]
+    }
+  },
+
+  "performance_requirements": {
+    "response_times": {
+      "admin_portal": "< 3 seconds page load (50 hotels)",
+      "mobile_app": "< 1 second punch submission",
+      "workflows": "< 2 seconds QB API calls",
+      "reconciliation": "< 5 seconds modal load (all periods)"
+    },
+
+    "scalability_targets": {
+      "concurrent_users": "50+ admin users, 400+ mobile users",
+      "data_volume": "1M+ punches/month, 50+ hotels",
+      "workflow_capacity": "500+ n8n workflow executions/day"
+    },
+
+    "availability": {
+      "target": "99.9% uptime",
+      "backup_strategy": "Daily SQLite file backup + OneDrive sync",
+      "recovery_time": "< 1 hour from backup"
+    }
+  }
+}

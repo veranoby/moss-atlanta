@@ -1,0 +1,247 @@
+{
+  "project_identity": {
+    "name": "Proyecto Atlanta",
+    "company": "MOSS Atlanta (includes GLOBAL as administrative subcontractor)",
+    "project_type": "Digital Transformation Platform",
+    "vision": "Transform chaotic manual processes into automated, scalable operations to enable growth from 20 to 40+ hotels",
+    "mission": "Eliminate WhatsApp-based workflows, paper timesheets, and manual reconciliation to achieve operational efficiency"
+  },
+  
+  "stakeholders": {
+    "decision_makers": {
+      "ceo": {
+        "name": "Luis Moncayo",
+        "role": "Final decision maker",
+        "decision_style": "Instinct-based, 'feeling' the operation",
+        "priorities": ["scalability", "growth", "efficiency"]
+      },
+      "cfo": {
+        "name": "Walter Moncayo", 
+        "role": "Second-level decision maker",
+        "focus": ["financial_control", "cost_optimization", "compliance"]
+      },
+      "cto_aspirant": {
+        "role": "Technical architect and implementation lead",
+        "goal": "Become CTO through successful digital transformation"
+      }
+    },
+    
+    "operational_team": {
+      "johanna": {
+        "role": "Operations manager",
+        "pain_points": ["manual_reconciliation", "missing_hours", "timesheet_chaos"],
+        "time_impact": "3 days/week on manual processes"
+      },
+      "edny": {
+        "role": "HR operations",
+        "focus": ["employee_management", "compliance", "document_tracking"]
+      }
+    }
+  },
+
+  "business_metrics": {
+    "current_scale": {
+      "employees": 400,
+      "hotels_serviced": "~20",
+      "growth_target": "40+ hotels",
+      "primary_service": "Housekeeping staff provisioning"
+    },
+    
+    "estimated_financials": {
+      "revenue_model": "Hourly billing to hotels",
+      "employee_rates": "$15-19/hour",
+      "billing_rates": "$19-25/hour", 
+      "weekly_hours_sample": "240-400 hours per hotel",
+      "overhead_concern": "Staff growth not reflecting revenue increase"
+    }
+  },
+
+  "pain_points_prioritized": {
+    "primary": {
+      "issue": "Informal processes preventing scalability",
+      "impact": "Cannot scale from 20 to 40+ hotels without exponential staff increase",
+      "root_cause": "Technology adoption resistance in organizational culture"
+    },
+    
+    "operational": [
+      {
+        "process": "Timesheet reconciliation", 
+        "current_state": "3 days manual work per week",
+        "impact": "Delayed payroll, billing errors"
+      },
+      {
+        "process": "Document management",
+        "current_state": "SSN, passports via WhatsApp",
+        "impact": "Security catastrophe, compliance risk"
+      },
+      {
+        "process": "Employee onboarding",
+        "current_state": "WhatsApp-based coordination",
+        "impact": "Informal, untrackable, error-prone"
+      },
+      {
+        "process": "QuickBooks data entry",
+        "current_state": "Manual import/transcription",
+        "impact": "Transcription errors, time waste"
+      }
+    ]
+  },
+
+  "solution_architecture": {
+    "core_principle": "Native architecture with single source of truth",
+    
+    "technology_stack": {
+      "database": "Pocketbase (19 collections schema)",
+      "automation": "n8n (self-hosted workflows)", 
+      "frontend_admin": "Vue.js + Vuetify + Pinia",
+      "mobile_app": "React Native + Expo (MOSS Time)",
+      "ai_processing": "Gemini 2.5 Pro via OpenRouter",
+      "integration": "QuickBooks Online API",
+      "communication": "Microsoft Teams",
+      "storage": "OneDrive (structured by employee)",
+      "hosting": "VPS (Hetzner CX11)"
+    },
+
+    "cost_philosophy": "Extremely lean - $5-10/month operational costs",
+    
+    "key_components": [
+      {
+        "component": "MOSS Time App",
+        "purpose": "Replace paper timesheets",
+        "features": ["4-punch cycle", "GPS+photo", "offline sync"],
+        "priority": "Highest - solves biggest pain point"
+      },
+      {
+        "component": "Reconciliation Engine", 
+        "purpose": "Automate hotel report vs app data comparison",
+        "features": ["AI extraction", "payroll_periods workflow", "3-column UI"],
+        "automation": "Reduces 3-day manual work to 4 hours"
+      },
+      {
+        "component": "QuickBooks Integration",
+        "purpose": "Eliminate manual data entry",
+        "features": ["Employee sync", "Payroll batching", "Audit trail"],
+        "impact": "Zero transcription errors"
+      }
+    ]
+  },
+
+  "system_roles": {
+    "super_admin": {
+      "access": "Full system + configuration",
+      "users": ["CTO role", "Luis Moncayo"]
+    },
+    "administrator": {
+      "access": "All operational functions",
+      "users": ["Walter Moncayo", "Senior management"]
+    },
+    "operations_hr": {
+      "access": "Reconciliation + Audit (readonly)", 
+      "users": ["Edny", "HR team"]
+    },
+    "finance": {
+      "access": "Payroll + Audit (readonly)",
+      "users": ["Accounting team"]
+    },
+    "field_manager": {
+      "access": "Hotel-specific operations",
+      "users": ["On-site supervisors"]
+    },
+    "employee": {
+      "access": "Personal data + timesheet history", 
+      "users": ["400 hotel workers"]
+    }
+  },
+
+  "success_metrics_proposed": {
+    "efficiency_kpis": [
+      {
+        "metric": "Reconciliation time",
+        "current": "3 days/week manual",
+        "target": "4 hours automated", 
+        "measurement": "Weekly time tracking"
+      },
+      {
+        "metric": "Missing hours incidents", 
+        "current": "Unknown frequency",
+        "target": "< 5% of total punches",
+        "measurement": "Automated discrepancy reports"
+      },
+      {
+        "metric": "QuickBooks errors",
+        "current": "Manual transcription errors",
+        "target": "Zero transcription errors", 
+        "measurement": "QB transaction audit logs"
+      }
+    ],
+
+    "growth_enablement": [
+      {
+        "metric": "Hotels per operations FTE",
+        "current": "~20 hotels per operations team",
+        "target": "40+ hotels same team",
+        "measurement": "Hotel count / operations headcount"
+      },
+      {
+        "metric": "New hotel onboarding time",
+        "target": "< 1 week from contract to operations",
+        "measurement": "Contract signature to first payroll"
+      }
+    ],
+
+    "financial_tracking": [
+      {
+        "metric": "Revenue per employee ratio",
+        "concern": "Staff growth not reflecting revenue increase", 
+        "measurement": "Monthly revenue / total headcount"
+      },
+      {
+        "metric": "Billing accuracy", 
+        "target": "99.9% accurate hotel billing",
+        "measurement": "Disputed invoices / total invoices"
+      }
+    ]
+  },
+
+  "timeline_constraints": {
+    "mvp_target": "Month 4 (3-4 months from now)",
+    "final_product": "Month 6", 
+    "current_progress": "Month 1 complete - all investigative work, documentation, architecture defined",
+    "next_phase": "Month 2 - Begin development/coding",
+    
+    "critical_path": [
+      "Month 2: Pocketbase + n8n infrastructure",
+      "Month 3: MOSS Time app MVP + Reconciliation engine", 
+      "Month 4: QuickBooks integration + Testing",
+      "Month 5: User training + Pilot rollout",
+      "Month 6: Full deployment + optimization"
+    ],
+
+    "seasonal_considerations": {
+      "unknown": "Need to identify hotel industry busy/slow periods for deployment timing"
+    }
+  },
+
+  "risk_mitigation": {
+    "primary_risk": {
+      "issue": "Cultural resistance to technology adoption", 
+      "evidence": "Previous Microsoft Teams implementation failed",
+      "mitigation": "Incremental adoption, immediate visible wins, training focus"
+    },
+    
+    "technical_risks": [
+      {
+        "risk": "Hotel report format variations",
+        "mitigation": "AI-based universal translator (Gemini)"
+      },
+      {
+        "risk": "Offline mobile functionality",
+        "mitigation": "React Native offline-first architecture"
+      },
+      {
+        "risk": "QuickBooks API limits",
+        "mitigation": "Rate limiting + exponential backoff in n8n"
+      }
+    ]
+  }
+}

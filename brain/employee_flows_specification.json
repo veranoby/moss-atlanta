@@ -1,0 +1,80 @@
+{
+  "employee_flows_complete_specification": {
+    "status": "optimized_ready_for_implementation",
+    "created": "2025-09-01",
+    "updated": "2025-09-03",
+    "scope": "Complete optimized user flows with scale considerations (400 users, 20+ hotels)",
+    
+    "key_optimizations_implemented": {
+      "domain_expansion": "moss.com (not mossatlanta.com) - expansion to Georgia/Florida",
+      "posting_privacy": "Area-based locations (Downtown, Buckhead) instead of specific hotels",
+      "temporal_applications": "Accept incomplete applications but freeze payments until documents complete",
+      "dual_admin_sections": "General applications view + job-specific applicant management",
+      "transfer_management": "Internal job changes with preserved punch history via assignment tracking"
+    },
+
+    "public_portal_optimized": {
+      "careers_landing": "https://moss.com/careers - Extends existing GitHub i18n landing",
+      "access_restriction": "Only registered and approved users can apply to positions",
+      "posting_format": "Informal optimized - maintains simplicity but adds structure",
+      "location_privacy": "City + area only, never specific hotel names"
+    },
+
+    "registration_flow_modern": {
+      "initial_registration": "Email + password standard",
+      "progressive_states": ["profile_incomplete", "documents_pending", "under_review", "approved_active"],
+      "payment_freeze_logic": "payment_eligible: false until critical documents provided",
+      "critical_documents": ["W9/W4", "Photo ID", "Social Security verification"],
+      "dashboard_visibility": "Real-time application status with next steps"
+    },
+
+    "admin_dual_sections": {
+      "general_view": {
+        "url": "admin.moss.com/applications", 
+        "purpose": "HR overview of all applications across positions",
+        "features": ["bulk_actions", "cross_position_analytics", "hiring_pipeline_kpis"]
+      },
+      "job_specific_view": {
+        "url": "admin.moss.com/positions/{id}/applicants",
+        "purpose": "Hiring manager view for specific position",
+        "features": ["candidate_comparison", "stage_management", "quick_hiring_actions"]
+      }
+    },
+
+    "employee_management_transfers": {
+      "internal_transfers": {
+        "trigger": "Employee applies to internal open position",
+        "admin_action": "Update current assignment end_date + create new assignment",
+        "punch_continuity": "Punches linked to specific assignment - history preserved",
+        "validation": "No punch overlaps between assignments"
+      },
+      "assignment_architecture": {
+        "relationship": "punches -> employee_assignment -> employee",
+        "benefit": "Complete audit trail + flexible job changes",
+        "validation_rules": "Active assignment required for punch acceptance"
+      }
+    },
+
+    "scale_considerations": {
+      "user_volume": "400 active employees across 20+ hotels",
+      "growth_planning": "Architecture supports expansion to 40+ hotels",
+      "performance_requirements": ["bulk_operations", "efficient_filtering", "mobile_optimization"],
+      "privacy_requirements": "Area-based posting to protect hotel client relationships"
+    },
+
+    "technical_integrations_updated": {
+      "github_landing_extension": "Leverage existing i18n system, add /careers section", 
+      "pocketbase_collections": "Updated open_positions with area/zone fields",
+      "onedrive_structure": "Area-based organization for scalability",
+      "notification_system": "State-based automatic emails with payment status clarity"
+    },
+
+    "success_metrics_updated": {
+      "registration_completion": ">85% (accounting for document requirement)",
+      "time_to_first_punch": "<5 days from application",
+      "document_compliance": ">95% maintained",
+      "internal_transfer_efficiency": "Zero data loss during job changes",
+      "admin_efficiency": "70% reduction in manual application processing"
+    }
+  }
+}
