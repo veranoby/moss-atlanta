@@ -10,21 +10,21 @@
           @update:options="loadItems"
         >
           <template #title>
-            <h2>Gestión de Hoteles</h2>
+            <h2>Entidades Legales</h2>
           </template>
 
           <template #actions>
             <v-btn color="primary" prepend-icon="mdi-plus" @click="openCreateModal">
-              Crear Nuevo Hotel
+              Crear Nueva
             </v-btn>
-          </template>
-
-          <template #[`item.legal_entity_name`]="{ item }">
-            {{ item.expand?.legal_entity?.name || 'N/A' }}
           </template>
 
           <template #[`item.created`]="{ item }">
             {{ new Date(item.created).toLocaleDateString() }}
+          </template>
+
+          <template #[`item.updated`]="{ item }">
+            {{ new Date(item.updated).toLocaleDateString() }}
           </template>
 
           <template #[`item.actions`]="{ item }">
@@ -45,7 +45,7 @@
       :loading="isSaving"
       @save="saveItem"
     >
-      <HotelForm ref="hotelForm" v-model="editedItem" />
+      <LegalEntityForm ref="legalEntityForm" v-model="editedItem" />
     </FormModal>
   </v-container>
 </template>
@@ -55,51 +55,48 @@ import { ref, computed } from 'vue';
 import { pb } from '@/composables/usePocketbase';
 import DataTable from '@/components/DataTable.vue';
 import FormModal from '@/components/FormModal.vue';
-import HotelForm from '@/components/forms/HotelForm.vue';
+import LegalEntityForm from '@/components/forms/LegalEntityForm.vue';
 
 // Data Table State
 const items = ref([]);
 const loading = ref(true);
 const totalItems = ref(0);
-let tableOptions = {};
+let tableOptions = {}; // To store current table options for reloading
 
 // Modal and Form State
 const dialogVisible = ref(false);
 const isSaving = ref(false);
 const editedItem = ref({});
-const hotelForm = ref(null);
+const legalEntityForm = ref(null); // Ref to the form component
 const isEditing = computed(() => !!editedItem.value.id);
-const modalTitle = computed(() => isEditing.value ? 'Editar Hotel' : 'Crear Hotel');
+const modalTitle = computed(() => isEditing.value ? 'Editar Entidad Legal' : 'Crear Entidad Legal');
 
 const headers = [
-  { title: 'Nombre del Hotel', key: 'name', align: 'start' },
-  { title: 'Dirección', key: 'address', sortable: false },
-  { title: 'Entidad Legal', key: 'legal_entity_name', sortable: false },
+  { title: 'Nombre', key: 'name', align: 'start' },
+  { title: 'Tax ID', key: 'tax_id', sortable: false },
   { title: 'Creado', key: 'created' },
+  { title: 'Actualizado', key: 'updated' },
   { title: 'Acciones', key: 'actions', sortable: false, align: 'end' },
 ];
 
 async function loadItems(options) {
   loading.value = true;
-  tableOptions = options;
+  tableOptions = options; // Save options for reload
   const { page, itemsPerPage, sortBy } = options;
   try {
     const sortOption = sortBy && sortBy.length ? `${sortBy[0].order === 'desc' ? '-' : '+'}${sortBy[0].key}` : '+name';
-    const result = await pb.collection('hotels').getList(page, itemsPerPage, {
-      sort: sortOption,
-      expand: 'legal_entity',
-    });
+    const result = await pb.collection('legal_entities').getList(page, itemsPerPage, { sort: sortOption });
     items.value = result.items;
     totalItems.value = result.totalItems;
   } catch (error) {
-    console.error("Failed to load hotels:", error);
+    console.error("Failed to load legal entities:", error);
   } finally {
     loading.value = false;
   }
 }
 
 function openCreateModal() {
-  editedItem.value = { name: '', address: '', legal_entity: null, notes: '' };
+  editedItem.value = { name: '', tax_id: '', code: '', notes: '' };
   dialogVisible.value = true;
 }
 
@@ -109,38 +106,36 @@ function openEditModal(item) {
 }
 
 async function saveItem() {
-  if (!hotelForm.value) return;
-  const isValid = await hotelForm.value.validate();
+  if (!legalEntityForm.value) return;
+
+  const isValid = await legalEntityForm.value.validate();
   if (!isValid) return;
 
   isSaving.value = true;
   try {
-    const dataToSave = { ...editedItem.value };
-    // Ensure expand object is not sent back to PocketBase
-    delete dataToSave.expand;
-
     if (isEditing.value) {
-      await pb.collection('hotels').update(dataToSave.id, dataToSave);
+      await pb.collection('legal_entities').update(editedItem.value.id, editedItem.value);
     } else {
-      await pb.collection('hotels').create(dataToSave);
+      await pb.collection('legal_entities').create(editedItem.value);
     }
     dialogVisible.value = false;
-    await loadItems(tableOptions);
+    await loadItems(tableOptions); // Reload data
   } catch (error) {
-    console.error('Failed to save hotel:', error);
+    console.error('Failed to save item:', error);
   } finally {
     isSaving.value = false;
   }
 }
 
 async function deleteItem(item) {
+  // A simple confirmation dialog. A custom component would be better for UX.
   if (window.confirm(`¿Estás seguro de que quieres eliminar "${item.name}"?`)) {
     loading.value = true;
     try {
-      await pb.collection('hotels').delete(item.id);
-      await loadItems(tableOptions);
+      await pb.collection('legal_entities').delete(item.id);
+      await loadItems(tableOptions); // Reload data
     } catch (error) {
-      console.error('Failed to delete hotel:', error);
+      console.error('Failed to delete item:', error);
     } finally {
       loading.value = false;
     }

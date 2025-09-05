@@ -7,7 +7,9 @@
             <v-toolbar-title>Login</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
-            <v-form @submit.prevent="handleLogin">
+
+            <v-form ref="form" @submit.prevent="handleLogin">
+
               <v-alert
                 v-if="errorMessage"
                 type="error"
@@ -24,7 +26,9 @@
                 name="email"
                 prepend-icon="mdi-account"
                 type="email"
-                required
+
+                :rules="[rules.required, rules.email]"
+
                 :disabled="loading"
                 variant="underlined"
               ></v-text-field>
@@ -35,7 +39,9 @@
                 name="password"
                 prepend-icon="mdi-lock"
                 type="password"
-                required
+
+                :rules="[rules.required, rules.minLength]"
+
                 :disabled="loading"
                 variant="underlined"
               ></v-text-field>
@@ -46,7 +52,9 @@
                   type="submit"
                   color="primary"
                   :loading="loading"
+
                   :disabled="loading || !email || !password"
+
                 >
                   Login
                 </v-btn>
@@ -64,6 +72,9 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 
+
+const form = ref(null);
+
 const email = ref('');
 const password = ref('');
 const loading = ref(false);
@@ -72,20 +83,35 @@ const errorMessage = ref(null);
 const authStore = useAuthStore();
 const router = useRouter();
 
+
+// Validation rules for the form fields
+const rules = {
+  required: value => !!value || 'Este campo es requerido.',
+  email: value => {
+    const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return pattern.test(value) || 'Email inválido.';
+  },
+  minLength: value => (value && value.length >= 8) || 'La contraseña debe tener al menos 8 caracteres.'
+};
+
 const handleLogin = async () => {
-  if (!email.value || !password.value) return;
+  // Validate the form before proceeding
+  const { valid } = await form.value.validate();
+  if (!valid) return;
+
 
   loading.value = true;
   errorMessage.value = null;
   try {
     await authStore.login(email.value, password.value);
 
-    // Redirect after successful login.
-    // The prompt mentions an '/admin' route as an example for a protected area.
+
+    // Redirect after successful login
     router.push('/admin');
   } catch (error) {
     console.error('Login failed:', error);
-    errorMessage.value = error.data?.message || 'Invalid credentials or server error.';
+    errorMessage.value = error.data?.message || 'Credenciales inválidas o error del servidor.';
+
   } finally {
     loading.value = false;
   }

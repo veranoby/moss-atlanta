@@ -20,6 +20,32 @@ const routes = [
     name: 'Admin',
     component: () => import('@/views/Admin/Dashboard.vue'),
     meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
+
+  },
+  {
+    path: '/admin/settings',
+    name: 'AdminSettings',
+    component: () => import('@/views/Admin/Settings.vue'),
+    meta: { requiresAuth: true, roles: ['super_admin'] }
+  },
+  {
+    path: '/admin/positions',
+    name: 'AdminPositions',
+    component: () => import('@/views/Admin/Positions.vue'),
+    meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
+  },
+  {
+    path: '/admin/departments',
+    name: 'AdminDepartments',
+    component: () => import('@/views/Admin/Departments.vue'),
+    meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
+  },
+  {
+    path: '/admin/legal-entities',
+    name: 'AdminLegalEntities',
+    component: () => import('@/views/Admin/LegalEntities.vue'),
+    meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
+
   },
   {
     path: '/admin/hotels',
