@@ -10,17 +10,13 @@
           @update:options="loadItems"
         >
           <template #title>
-            <h2>Gestión de Hoteles</h2>
+            <h2>Gestión de Puestos</h2>
           </template>
 
           <template #actions>
             <v-btn color="primary" prepend-icon="mdi-plus" @click="openCreateModal">
-              Crear Nuevo Hotel
+              Crear Nuevo Puesto
             </v-btn>
-          </template>
-
-          <template #[`item.legal_entity_name`]="{ item }">
-            {{ item.expand?.legal_entity?.name || 'N/A' }}
           </template>
 
           <template #[`item.created`]="{ item }">
@@ -45,7 +41,7 @@
       :loading="isSaving"
       @save="saveItem"
     >
-      <HotelForm ref="hotelForm" v-model="editedItem" />
+      <PositionForm ref="positionForm" v-model="editedItem" />
     </FormModal>
   </v-container>
 </template>
@@ -55,7 +51,7 @@ import { ref, computed } from 'vue';
 import { pb } from '@/composables/usePocketbase';
 import DataTable from '@/components/DataTable.vue';
 import FormModal from '@/components/FormModal.vue';
-import HotelForm from '@/components/forms/HotelForm.vue';
+import PositionForm from '@/components/forms/PositionForm.vue';
 
 // Data Table State
 const items = ref([]);
@@ -67,14 +63,12 @@ let tableOptions = {};
 const dialogVisible = ref(false);
 const isSaving = ref(false);
 const editedItem = ref({});
-const hotelForm = ref(null);
+const positionForm = ref(null);
 const isEditing = computed(() => !!editedItem.value.id);
-const modalTitle = computed(() => isEditing.value ? 'Editar Hotel' : 'Crear Hotel');
+const modalTitle = computed(() => isEditing.value ? 'Editar Puesto' : 'Crear Puesto');
 
 const headers = [
-  { title: 'Nombre del Hotel', key: 'name', align: 'start' },
-  { title: 'Dirección', key: 'address', sortable: false },
-  { title: 'Entidad Legal', key: 'legal_entity_name', sortable: false },
+  { title: 'Nombre del Puesto', key: 'name', align: 'start' },
   { title: 'Creado', key: 'created' },
   { title: 'Acciones', key: 'actions', sortable: false, align: 'end' },
 ];
@@ -85,21 +79,18 @@ async function loadItems(options) {
   const { page, itemsPerPage, sortBy } = options;
   try {
     const sortOption = sortBy && sortBy.length ? `${sortBy[0].order === 'desc' ? '-' : '+'}${sortBy[0].key}` : '+name';
-    const result = await pb.collection('hotels').getList(page, itemsPerPage, {
-      sort: sortOption,
-      expand: 'legal_entity',
-    });
+    const result = await pb.collection('positions').getList(page, itemsPerPage, { sort: sortOption });
     items.value = result.items;
     totalItems.value = result.totalItems;
   } catch (error) {
-    console.error("Failed to load hotels:", error);
+    console.error("Failed to load positions:", error);
   } finally {
     loading.value = false;
   }
 }
 
 function openCreateModal() {
-  editedItem.value = { name: '', address: '', legal_entity: null, notes: '' };
+  editedItem.value = { name: '', description: '' };
   dialogVisible.value = true;
 }
 
@@ -109,25 +100,22 @@ function openEditModal(item) {
 }
 
 async function saveItem() {
-  if (!hotelForm.value) return;
-  const isValid = await hotelForm.value.validate();
+  if (!positionForm.value) return;
+  const isValid = await positionForm.value.validate();
   if (!isValid) return;
 
   isSaving.value = true;
   try {
     const dataToSave = { ...editedItem.value };
-    // Ensure expand object is not sent back to PocketBase
-    delete dataToSave.expand;
-
     if (isEditing.value) {
-      await pb.collection('hotels').update(dataToSave.id, dataToSave);
+      await pb.collection('positions').update(dataToSave.id, dataToSave);
     } else {
-      await pb.collection('hotels').create(dataToSave);
+      await pb.collection('positions').create(dataToSave);
     }
     dialogVisible.value = false;
     await loadItems(tableOptions);
   } catch (error) {
-    console.error('Failed to save hotel:', error);
+    console.error('Failed to save position:', error);
   } finally {
     isSaving.value = false;
   }
@@ -137,10 +125,10 @@ async function deleteItem(item) {
   if (window.confirm(`¿Estás seguro de que quieres eliminar "${item.name}"?`)) {
     loading.value = true;
     try {
-      await pb.collection('hotels').delete(item.id);
+      await pb.collection('positions').delete(item.id);
       await loadItems(tableOptions);
     } catch (error) {
-      console.error('Failed to delete hotel:', error);
+      console.error('Failed to delete position:', error);
     } finally {
       loading.value = false;
     }
