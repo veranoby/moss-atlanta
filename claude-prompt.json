@@ -2,7 +2,7 @@
   "task": "MOSS - Fase 1: Pocketbase Client + Auth",
   "context": {
     "project_base": "frontend/moss-hrp/",
-    "existing_structure": "Vue.js 3 + Vuetify 3 + TypeScript + i18n + Pinia + Router",
+    "existing_structure": "Vue.js 3 + Vuetify 3 + JavaScript + i18n + Pinia + Router",
     "pocketbase_url": "http://localhost:8080",
     "auth_roles": ["super_admin", "operations_hr", "finance", "employee"]
   },
