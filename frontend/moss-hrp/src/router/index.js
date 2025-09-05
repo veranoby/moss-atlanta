@@ -20,6 +20,7 @@ const routes = [
     name: 'Admin',
     component: () => import('@/views/Admin/Dashboard.vue'),
     meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
+
   },
   {
     path: '/admin/settings',
@@ -44,6 +45,7 @@ const routes = [
     name: 'AdminLegalEntities',
     component: () => import('@/views/Admin/LegalEntities.vue'),
     meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
+
   },
   {
     path: '/admin/hotels',

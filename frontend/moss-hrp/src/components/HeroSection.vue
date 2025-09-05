@@ -1,8 +1,8 @@
 <template>
   <section id="hero" class="section hero-section" style="background: linear-gradient(135deg,#FFFFFF,#F5F5F5);">
     <v-container>
-      <v-row align="center" justify="space-between" class="ga-8">
-        <v-col cols="12" md="6">
+      <v-row align="center" justify="space-between" >
+        <v-col cols="12" sm="4" md="4">
           <transition name="slide-up" mode="out-in">
             <div :key="currentLang" class="hero-content">
               <h1 class="text-h3 text-md-h2 font-weight-bold hero-title">
@@ -14,7 +14,7 @@
               <div class="d-flex flex-column flex-sm-row mt-8 hero-buttons" style="gap: 12px;">
                 <v-btn
                   color="accent"
-                  class="text-black px-8 py-5 hero-btn"
+                  class=" px-8  hero-btn"
                   rounded="lg"
                   size="large"
                   elevation="2"
@@ -25,7 +25,7 @@
                 <v-btn
                   variant="outlined"
                   color="primary"
-                  class="px-8 py-5 hero-btn"
+                  class="text-black px-8  hero-btn"
                   rounded="lg"
                   size="large"
                   @click="scrollToSection('contact')"
@@ -37,7 +37,7 @@
           </transition>
         </v-col>
 
-        <v-col cols="12" md="6">
+        <v-col cols="12" sm="8" md="8">
           <!-- ✅ Lazy loaded image with sophisticated animations -->
           <div class="hero-image-container">
             <LazyImage
@@ -81,7 +81,7 @@ const scrollToSection = (sectionId: string) => {
 
 @media (min-width: 960px) {
   .section {
-    padding: 96px 0;
+    padding: 64px 0;
   }
 }
 

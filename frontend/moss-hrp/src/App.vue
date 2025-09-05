@@ -16,15 +16,11 @@
       </v-overlay>
 
       <!-- ✅ Main router view with transition -->
-      <transition name="page" mode="out-in">
-        <router-view v-slot="{ Component, route }">
-          <component
-            :is="Component"
-            :key="route.path"
-            @loading="handleLoading"
-          />
-        </router-view>
-      </transition>
+      <router-view v-slot="{ Component, route }">
+        <transition name="page" mode="out-in">
+          <component :is="Component" :key="route.fullPath" />
+        </transition>
+      </router-view>
     </ErrorBoundary>
   </v-app>
 </template>
