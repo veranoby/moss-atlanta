@@ -58,6 +58,7 @@ cursor_workspace/
 
 # Brain system
 .brain/
+.brain/*
 README-brain-setup.md
 especificacion_completa_optimizada.md
 uix_blueprint_moss.md
