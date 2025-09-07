@@ -22,11 +22,16 @@ const routes = [
     meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
   },
   {
+    path: '/admin/employees',
+    name: 'AdminEmployees',
+    component: () => import('@/views/Admin/Employees.vue'),
+    meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
+  },
+  {
     path: '/admin/reconciliation',
     name: 'AdminReconciliation',
     component: () => import('@/views/Admin/Reconciliation.vue'),
     meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
-
   },
   {
     path: '/admin/settings',

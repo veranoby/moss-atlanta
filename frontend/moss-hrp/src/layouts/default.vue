@@ -52,9 +52,8 @@ const showAdminLayout = computed(() => route.meta.requiresAuth);
 // List of navigation items for the admin sidebar.
 const navItems = [
   { title: 'Dashboard', to: '/admin', icon: 'mdi-view-dashboard' },
-
+  { title: 'Empleados', to: '/admin/employees', icon: 'mdi-account-group' },
   { title: 'Reconciliation', to: '/admin/reconciliation', icon: 'mdi-compare' },
-
   { title: 'Entidades Legales', to: '/admin/legal-entities', icon: 'mdi-office-building' },
   { title: 'Hoteles', to: '/admin/hotels', icon: 'mdi-domain' },
   { title: 'Departamentos', to: '/admin/departments', icon: 'mdi-google-circles-communities' },
@@ -66,7 +65,14 @@ const navItems = [
  * Logs the user out and redirects to the login page.
  */
 async function handleLogout() {
-  authStore.logout();
-  router.push('/login');
+  try {
+    authStore.logout();
+    await router.push('/login');
+  } catch (error) {
+    console.error('Logout failed:', error);
+    // Even if router.push fails, ensure we still clear auth
+    authStore.logout();
+    window.location.href = '/login';
+  }
 }
 </script>

@@ -16,8 +16,8 @@ export function authGuard(to, from) {
 
   // Redirect authenticated users away from the login page
   if (to.path === '/login' && authStore.isAuthenticated) {
-    // Redirect to a default authenticated page, e.g., home or dashboard
-    return { path: '/' };
+    // Redirect to admin dashboard for authenticated users
+    return { path: '/admin' };
   }
 
   // If the route doesn't require authentication, allow access
