@@ -50,7 +50,13 @@ export default defineConfig({
       vueTemplate: true,
     }),
   ],
+  build: {
+    rollupOptions: {
+      external: [],
+    },
+  },
   optimizeDeps: {
+    include: ['pocketbase'],
     exclude: [
       'vuetify',
       'vue-router',

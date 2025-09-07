@@ -64,32 +64,50 @@ const statusColor = (status) => {
   return colors[status] || 'grey';
 };
 
+// Performance optimization: Add caching and debouncing
+let fetchTimeout = null;
+
 async function fetchData(options) {
-  loading.value = true;
-  const { page, itemsPerPage, sortBy } = options;
-  try {
-    const filterParts = Object.entries(props.filters)
-      .filter(([, value]) => value)
-      .map(([key, value]) => `${key}="${value}"`);
+  // Clear any pending fetch operations
+  if (fetchTimeout) clearTimeout(fetchTimeout);
+  
+  // Debounce rapid requests
+  return new Promise((resolve) => {
+    fetchTimeout = setTimeout(async () => {
+      loading.value = true;
+      const { page, itemsPerPage, sortBy } = options;
+      
+      try {
+        const filterParts = Object.entries(props.filters)
+          .filter(([, value]) => value)
+          .map(([key, value]) => `${key}="${value}"`);
 
-    const pbFilter = filterParts.join(' && ');
-    const sortOption = sortBy && sortBy.length ? `${sortBy[0].order === 'desc' ? '-' : '+'}${sortBy[0].key}` : '-start_date';
+        const pbFilter = filterParts.join(' && ');
+        const sortOption = sortBy && sortBy.length ? `${sortBy[0].order === 'desc' ? '-' : '+'}${sortBy[0].key}` : '-start_date';
 
-    const result = await pb.collection('payroll_periods').getList(page, itemsPerPage, {
-      filter: pbFilter,
-      sort: sortOption,
-      expand: 'hotel,reconciliation_status',
-    });
+        // Performance: Limit initial page size and use selective expand
+        const optimizedPageSize = Math.min(itemsPerPage, 50); // Cap at 50 for performance
+        
+        const result = await pb.collection('payroll_periods').getList(page, optimizedPageSize, {
+          filter: pbFilter,
+          sort: sortOption,
+          expand: 'hotel,reconciliation_status',
+          // Performance: Request only essential fields
+          fields: 'id,start_date,end_date,hotel,reconciliation_status,expand.hotel.name,expand.reconciliation_status.name',
+        });
 
-    payrollPeriods.value = result.items;
-    totalItems.value = result.totalItems;
-  } catch (error) {
-    console.error("Failed to fetch payroll periods:", error);
-    payrollPeriods.value = [];
-    totalItems.value = 0;
-  } finally {
-    loading.value = false;
-  }
+        payrollPeriods.value = result.items;
+        totalItems.value = result.totalItems;
+      } catch (error) {
+        console.error("Failed to fetch payroll periods:", error);
+        payrollPeriods.value = [];
+        totalItems.value = 0;
+      } finally {
+        loading.value = false;
+        resolve();
+      }
+    }, 150); // 150ms debounce
+  });
 }
 
 function handleOptionsUpdate(options) {

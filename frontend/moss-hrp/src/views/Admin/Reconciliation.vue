@@ -38,8 +38,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { pb } from '@/composables/usePocketbase';
+import { useSSE } from '@/composables/useSSE';
 import PayrollPeriodsList from '@/components/PayrollPeriodsList.vue';
 import ReconciliationModal from '@/components/ReconciliationModal.vue';
 
@@ -47,6 +48,10 @@ const filters = ref({ hotel: null });
 const hotels = ref([]);
 const isModalOpen = ref(false);
 const selectedPeriodId = ref(null);
+
+// SSE connection for real-time updates
+const sseUrl = 'http://localhost:8080/api/sse/reconciliation'
+const { status: sseStatus, connect: connectSSE, close: closeSSE, addEventListener } = useSSE(sseUrl)
 
 async function loadHotelsForFilter() {
   try {
@@ -75,5 +80,26 @@ function handleSaveReconciliation() {
   isModalOpen.value = false;
 }
 
-onMounted(loadHotelsForFilter);
+onMounted(async () => {
+  await loadHotelsForFilter()
+  
+  // Set up SSE listeners for real-time updates
+  addEventListener('hotel_report_processed', (data) => {
+    console.log('Hotel report processed:', data)
+    // Trigger refresh of payroll periods list
+    // The PayrollPeriodsList component should handle this automatically
+  })
+  
+  addEventListener('reconciliation_status_changed', (data) => {
+    console.log('Reconciliation status changed:', data)
+    // Update UI to reflect status changes
+  })
+  
+  // Connect to SSE
+  connectSSE()
+})
+
+onUnmounted(() => {
+  closeSSE()
+})
 </script>

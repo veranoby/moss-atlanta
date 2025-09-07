@@ -1,111 +1,172 @@
 {
-  "task": "MOSS - Fase 1: Pocketbase Client + Auth",
-  "context": {
+  "task": "MOSS - Fase 5: Reconciliation Dashboard",
+  "session_metadata": {
+    "session_id": "moss_phase5_reconciliation_2025",
+    "phase": "5", 
+    "tool_primary": "claude_code",
+    "estimated_duration": "24 hours",
+    "complexity": "HIGH"
+  },
+
+  "context_injection": {
     "project_base": "frontend/moss-hrp/",
-    "existing_structure": "Vue.js 3 + Vuetify 3 + JavaScript + i18n + Pinia + Router",
-    "pocketbase_url": "http://localhost:8080",
-    "auth_roles": ["super_admin", "operations_hr", "finance", "employee"]
-  },
-
-  "specific_files_to_create": {
-    "src/composables/usePocketbase.ts": {
-      "purpose": "Pocketbase client connection",
-      "requirements": [
-        "Import PocketBase from 'pocketbase'",
-        "Create reactive client instance", 
-        "Handle auth state changes",
-        "Export authenticated user info"
-      ]
-    },
-    "src/stores/auth.ts": {
-      "purpose": "Pinia auth store",
-      "requirements": [
-        "Login/logout functions",
-        "Role-based permissions",
-        "Persist auth state",
-        "Route protection logic"
-      ]
-    },
-    "src/pages/LoginPage.vue": {
-      "purpose": "Login form component", 
-      "requirements": [
-        "Vuetify form with email/password",
-        "Error handling",
-        "Redirect after login",
-        "Loading states"
-      ]
-    },
-    "src/middleware/auth.ts": {
-      "purpose": "Router middleware",
-      "requirements": [
-        "Check authentication status",
-        "Role-based route protection", 
-        "Redirect unauthenticated users"
-      ]
-    }
-  },
-
-  "existing_files_to_modify": {
-    "src/router/index.ts": {
-      "add_routes": [
-        "{ path: '/login', component: LoginPage }",
-        "{ path: '/admin', component: AdminDashboard, meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] } }"
-      ],
-      "add_middleware": "Apply auth middleware globally"
-    },
-    "src/main.ts": {
-      "add_imports": "Import auth store and initialize auth state",
-      "before_mount": "Check existing auth token on app start"
-    }
-  },
-
-  "implementation_requirements": {
-    "auth_flow": [
-      "User enters email/password",
-      "PocketBase authenticates",
-      "Store user data + role in Pinia",
-      "Redirect based on role",
-      "Protect routes with middleware"
+    "existing_code": [
+      "src/views/Admin/Employees.vue",
+      "src/components/DataTable.vue",
+      "src/components/FormModal.vue",
+      "src/composables/usePocketbase.js"
     ],
-    "role_mapping": {
-      "super_admin": "Full access to all routes",
-      "operations_hr": "Access to reconciliation + audit",
-      "finance": "Access to payroll + audit", 
-      "employee": "Access to personal portal only"
-    },
-    "error_handling": [
-      "Invalid credentials",
-      "Network errors",
-      "Token expiration",
-      "Permission denied"
+    "pocketbase_collections": ["payroll_periods", "hotel_reports", "punches", "reconciliations", "audit_logs"],
+    "moss_business_rules": [
+      "3-column reconciliation modal (Hotel|MOSS|Final) is critical",
+      "Johanna's 3-day manual process → 4 hours automated",
+      "Missing hours detection and resolution",
+      "SSE for real-time updates"
+    ],
+    "constraints": [
+      "3-column layout mandatory",
+      "Real-time updates via SSE only", 
+      "Role-based access (operations_hr, super_admin)",
+      "Mobile responsive design"
     ]
   },
 
-  "code_examples": {
-    "auth_store_pattern": {
-      "login_action": "async login(email: string, password: string) => { const authData = await pb.collection('users').authWithPassword(email, password); this.user = authData.record; }",
-      "role_check": "hasRole(role: string): boolean { return this.user?.system_role === role || this.user?.system_role === 'super_admin'; }"
-    },
-    "route_protection": {
-      "meta_field": "{ requiresAuth: true, roles: ['operations_hr', 'super_admin'] }",
-      "guard_logic": "if (!authStore.isAuthenticated) return '/login'; if (!authStore.hasAnyRole(route.meta.roles)) return '/unauthorized';"
-    }
+  "tdd_specification": {
+    "purpose": "Automate 3-day manual reconciliation process to 4 hours with AI assistance",
+    "inputs": "Hotel reports, MOSS punch data, manual adjustments",
+    "outputs": "3-column comparison interface, discrepancy resolution, audit trail",
+    "test_criteria": [
+      "unit_test: 3-column data comparison logic works correctly",
+      "integration_test: Hotel reports vs punch data matching algorithm",
+      "e2e_test: Complete reconciliation workflow (upload → process → approve)",
+      "performance_test: <5 seconds reconciliation modal load time",
+      "sse_test: Real-time updates when hotel reports processed"
+    ],
+    "success_definition": "Operations team can reconcile weekly payroll in 4 hours vs current 3 days"
   },
 
-  "commands_for_jules": [
-    "Create usePocketbase.ts composable with client connection",
-    "Implement auth.ts Pinia store with login/logout/role methods", 
-    "Build LoginPage.vue with Vuetify form components",
-    "Add auth middleware for route protection",
-    "Update router with new routes and middleware",
-    "Test complete auth flow from login to protected routes"
-  ],
+  "implementation_spec": {
+    "components_needed": [
+      "src/views/Admin/Reconciliation.vue - Main reconciliation dashboard",
+      "src/components/PayrollPeriodsList.vue - Periods by hotel/week", 
+      "src/components/ReconciliationModal.vue - 3-column comparison (CRITICAL)",
+      "src/components/DiscrepancyCard.vue - Individual discrepancy display",
+      "src/components/BulkReconciliation.vue - Approve <5% discrepancies auto",
+      "src/components/AuditTrail.vue - Who approved what changes",
+      "src/composables/useReconciliation.js - Business logic",
+      "src/composables/useSSE.js - Real-time updates"
+    ],
+    "api_endpoints": [
+      "payroll_periods (workflow orchestrator)",
+      "reconciliations (Hotel vs MOSS comparison)", 
+      "hotel_reports (AI processed data)",
+      "punches (MOSS Time app data)",
+      "audit_logs (approval tracking)"
+    ],
+    "business_logic": [
+      "3-column reconciliation modal (Hotel|MOSS|Final)",
+      "Discrepancy calculation and categorization",
+      "Bulk approval for <5% discrepancies",
+      "Manual justification for >5% changes",
+      "Real-time status updates via SSE"
+    ],
+    "ui_requirements": [
+      "3-column layout with data comparison",
+      "Status chips (Hotel✅/⏳, MOSS✅/❌, Discrepancy%)",
+      "Bulk selection and approval",
+      "Excel export functionality",
+      "Mobile responsive 3-column design"
+    ],
+    "performance_targets": [
+      "<5 seconds reconciliation modal load",
+      "<3 seconds payroll periods list",
+      "<1 second SSE update response"
+    ]
+  },
+
+  "critical_3_column_design": {
+    "layout": "v-row with three v-col cols='4'",
+    "column_1": {
+      "title": "Hotel Report",
+      "content": "AI extracted timesheet data",
+      "styling": "border-right, hotel brand colors"
+    },
+    "column_2": {
+      "title": "MOSS Time", 
+      "content": "App punch data",
+      "styling": "border-right, moss brand colors"
+    },
+    "column_3": {
+      "title": "Final Hours",
+      "content": "Reconciled/approved hours",
+      "styling": "highlight approved changes"
+    },
+    "comparison_logic": "Row-by-row employee comparison with diff highlighting"
+  },
+
+  "file_tests_required": {
+    "src/views/Admin/Reconciliation.vue": [
+      "Renders payroll periods list correctly",
+      "Filters by hotel and date range work",
+      "Opens reconciliation modal on period click",
+      "Shows correct status indicators"
+    ],
+    "src/components/ReconciliationModal.vue": [
+      "Displays 3 columns with correct data",
+      "Highlights discrepancies > 5%", 
+      "Bulk approval functionality works",
+      "Manual justification field required for >5%",
+      "Mobile responsive 3-column layout"
+    ],
+    "src/components/PayrollPeriodsList.vue": [
+      "Groups periods by hotel correctly",
+      "Shows status chips with accurate states",
+      "Pagination works for large datasets",
+      "Export to Excel functionality"
+    ],
+    "src/composables/useReconciliation.js": [
+      "Discrepancy calculation algorithm correct",
+      "Bulk approval logic validates permissions",
+      "Audit trail creation on all changes",
+      "Error handling for failed reconciliations"
+    ],
+    "src/composables/useSSE.js": [
+      "Establishes SSE connection correctly",
+      "Handles reconnection on connection loss",
+      "Updates reconciliation status in real-time",
+      "Cleans up connections on component unmount"
+    ]
+  },
+
+  "deliverables": {
+    "primary_files": [
+      "src/views/Admin/Reconciliation.vue",
+      "src/components/ReconciliationModal.vue", 
+      "src/components/PayrollPeriodsList.vue",
+      "src/components/DiscrepancyCard.vue",
+      "src/composables/useReconciliation.js",
+      "src/composables/useSSE.js"
+    ],
+    "integration_points": [
+      "Router: /admin/reconciliation",
+      "Navigation menu integration",
+      "SSE endpoint configuration"
+    ],
+    "documentation": [
+      "3-column reconciliation workflow",
+      "SSE real-time update patterns"
+    ]
+  },
 
   "success_criteria": [
-    "User can login with valid PocketBase credentials",
-    "Role-based routing works correctly",
-    "Auth state persists across browser refresh",
-    "Logout clears auth and redirects to login",
-    "Invalid access attempts redirect appropriately"
+    "3-column reconciliation modal functional (CRITICAL)",
+    "Hotel vs MOSS data comparison working",
+    "Bulk approval for <5% discrepancies",
+    "Manual justification for >5% changes", 
+    "Real-time updates via SSE",
+    "Audit trail captures all changes",
+    "Excel export functionality",
+    "Mobile responsive design",
+    "Performance targets met (<5s modal load)"
   ]
 }
