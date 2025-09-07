@@ -26,7 +26,6 @@
                 name="email"
                 prepend-icon="mdi-account"
                 type="email"
-
                 :rules="[rules.required, rules.email]"
 
                 :disabled="loading"
@@ -39,7 +38,6 @@
                 name="password"
                 prepend-icon="mdi-lock"
                 type="password"
-
                 :rules="[rules.required, rules.minLength]"
 
                 :disabled="loading"
@@ -52,6 +50,7 @@
                   type="submit"
                   color="primary"
                   :loading="loading"
+
 
                   :disabled="loading || !email || !password"
 
@@ -71,7 +70,6 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-
 
 const form = ref(null);
 
@@ -98,7 +96,6 @@ const handleLogin = async () => {
   // Validate the form before proceeding
   const { valid } = await form.value.validate();
   if (!valid) return;
-
 
   loading.value = true;
   errorMessage.value = null;
