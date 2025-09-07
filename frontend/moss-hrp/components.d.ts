@@ -9,15 +9,28 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AboutSection: typeof import('./src/components/AboutSection.vue')['default']
+    AdvancedSearch: typeof import('./src/components/AdvancedSearch.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
+    BulkActionBar: typeof import('./src/components/BulkActionBar.vue')['default']
     CallToAction: typeof import('./src/components/CallToAction.vue')['default']
+    DataTable: typeof import('./src/components/DataTable.vue')['default']
+    DepartmentForm: typeof import('./src/components/forms/DepartmentForm.vue')['default']
+    EmployeeForm: typeof import('./src/components/forms/EmployeeForm.vue')['default']
     ErrorBoundary: typeof import('./src/components/ErrorBoundary.vue')['default']
+    FormModal: typeof import('./src/components/FormModal.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     HeroSection: typeof import('./src/components/HeroSection.vue')['default']
+    HotelForm: typeof import('./src/components/forms/HotelForm.vue')['default']
     LanguageSwitch: typeof import('./src/components/LanguageSwitch.vue')['default']
     LazyImage: typeof import('./src/components/LazyImage.vue')['default']
+    LegalEntityForm: typeof import('./src/components/forms/LegalEntityForm.vue')['default']
+    PayrollPeriodsList: typeof import('./src/components/PayrollPeriodsList.vue')['default']
+    PositionForm: typeof import('./src/components/forms/PositionForm.vue')['default']
+    ReconciliationModal: typeof import('./src/components/ReconciliationModal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ServicesGrid: typeof import('./src/components/ServicesGrid.vue')['default']
+    SettingForm: typeof import('./src/components/forms/SettingForm.vue')['default']
+    VirtualScrollTable: typeof import('./src/components/VirtualScrollTable.vue')['default']
   }
 }
