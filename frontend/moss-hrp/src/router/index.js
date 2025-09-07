@@ -26,6 +26,7 @@ const routes = [
     name: 'AdminReconciliation',
     component: () => import('@/views/Admin/Reconciliation.vue'),
     meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
+
   },
   {
     path: '/admin/settings',

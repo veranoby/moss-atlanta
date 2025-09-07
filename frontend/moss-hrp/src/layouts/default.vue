@@ -52,7 +52,9 @@ const showAdminLayout = computed(() => route.meta.requiresAuth);
 // List of navigation items for the admin sidebar.
 const navItems = [
   { title: 'Dashboard', to: '/admin', icon: 'mdi-view-dashboard' },
+
   { title: 'Reconciliation', to: '/admin/reconciliation', icon: 'mdi-compare' },
+
   { title: 'Entidades Legales', to: '/admin/legal-entities', icon: 'mdi-office-building' },
   { title: 'Hoteles', to: '/admin/hotels', icon: 'mdi-domain' },
   { title: 'Departamentos', to: '/admin/departments', icon: 'mdi-google-circles-communities' },

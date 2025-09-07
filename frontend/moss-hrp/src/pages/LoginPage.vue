@@ -7,7 +7,9 @@
             <v-toolbar-title>Login</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
+
             <v-form ref="form" @submit.prevent="handleLogin">
+
               <v-alert
                 v-if="errorMessage"
                 type="error"
@@ -25,6 +27,7 @@
                 prepend-icon="mdi-account"
                 type="email"
                 :rules="[rules.required, rules.email]"
+
                 :disabled="loading"
                 variant="underlined"
               ></v-text-field>
@@ -36,6 +39,7 @@
                 prepend-icon="mdi-lock"
                 type="password"
                 :rules="[rules.required, rules.minLength]"
+
                 :disabled="loading"
                 variant="underlined"
               ></v-text-field>
@@ -46,7 +50,10 @@
                   type="submit"
                   color="primary"
                   :loading="loading"
-                  :disabled="loading"
+
+
+                  :disabled="loading || !email || !password"
+
                 >
                   Login
                 </v-btn>
@@ -65,6 +72,7 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 
 const form = ref(null);
+
 const email = ref('');
 const password = ref('');
 const loading = ref(false);
@@ -72,6 +80,7 @@ const errorMessage = ref(null);
 
 const authStore = useAuthStore();
 const router = useRouter();
+
 
 // Validation rules for the form fields
 const rules = {
@@ -93,11 +102,13 @@ const handleLogin = async () => {
   try {
     await authStore.login(email.value, password.value);
 
+
     // Redirect after successful login
     router.push('/admin');
   } catch (error) {
     console.error('Login failed:', error);
     errorMessage.value = error.data?.message || 'Credenciales inválidas o error del servidor.';
+
   } finally {
     loading.value = false;
   }

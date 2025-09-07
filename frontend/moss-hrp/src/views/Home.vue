@@ -1,97 +1,108 @@
 <template>
-  <!-- Header -->
-  <v-app-bar elevation="0" color="surface" class="border-b">
-    <v-container>
-      <div class="d-flex align-center justify-space-between">
-        <div class="d-flex align-center">
-          <a
-            href="#hero"
-            class="text-h5 font-weight-bold"
-            style="color:#424242; text-decoration:none; cursor:pointer;"
-            aria-label="Go to top"
-            @click.prevent="scrollToSection('hero')"
-          >
-            MOSS
-          </a>
-          <div class="ms-2 text-body-2" style="color:#757575">Atlanta Staffing Services</div>
-        </div>
+  <div class="home-page">
+    <!-- Header -->
+    <v-app-bar elevation="0" color="surface" class="border-b">
+      <v-container>
+        <div class="d-flex align-center justify-space-between">
+          <div class="d-flex align-center">
+            <a
+              href="#hero"
+              class="text-h5 font-weight-bold"
+              style="color:#424242; text-decoration:none; cursor:pointer;"
+              aria-label="Go to top"
+              @click.prevent="scrollToSection('hero')"
+            >
+              MOSS
+            </a>
+            <div class="ms-2 text-body-2" style="color:#757575">Atlanta Staffing Services</div>
+          </div>
 
-        <div class="d-none d-md-flex align-center" style="gap: 24px;">
-          <a href="#services" class="text-body-2 nav-link" @click.prevent="scrollToSection('services')">{{ $t('nav.services') }}</a>
-          <a href="#about" class="text-body-2 nav-link" @click.prevent="scrollToSection('about')">{{ $t('nav.about') }}</a>
-          <a href="#contact" class="text-body-2 nav-link" @click.prevent="scrollToSection('contact')">{{ $t('nav.contact') }}</a>
-        </div>
+          <div class="d-none d-md-flex align-center" style="gap: 24px;">
+            <a href="#services" class="text-body-2 nav-link" @click.prevent="scrollToSection('services')">{{ $t('nav.services') }}</a>
+            <a href="#about" class="text-body-2 nav-link" @click.prevent="scrollToSection('about')">{{ $t('nav.about') }}</a>
 
-        <div class="d-flex align-center" style="gap: 12px;">
-          <LanguageSwitch />
-          <v-btn
-            color="accent"
-            class="text-black"
-            rounded="lg"
-            elevation="1"
-            @click="scrollToSection('apply')"
-          >
-            {{ $t('nav.apply') }}
-          </v-btn>
-        </div>
-      </div>
-    </v-container>
-  </v-app-bar>
+            <a href="#contact" class="text-body-2 nav-link" @click.prevent="scrollToSection('contact')">{{ $t('nav.contact') }}</a>
+              </div>
 
-  <v-main>
-    <!-- ✅ Lazy loaded components with Suspense -->
-    <Suspense>
-      <template #default>
-        <div>
-          <HeroSection />
-          <ServicesGrid />
-          <AboutSection />
-          <CallToAction />
-        </div>
-      </template>
-      <template #fallback>
-        <div class="d-flex justify-center align-center" style="height: 400px;">
-          <v-progress-circular
-            indeterminate
-            color="primary"
-            size="64"
-          />
-        </div>
-      </template>
-    </Suspense>
-
-    <!-- Footer -->
-    <footer id="contact" style="background:#424242; color:#FFFFFF;">
-      <v-container class="py-10">
-        <v-row class="ga-6">
-          <v-col cols="12" md="4">
-            <div class="text-h6 font-weight-bold mb-2">MOSS</div>
-            <div class="mb-2" style="color:#E0E0E0;">Atlanta Staffing Services</div>
-            <div style="color:#E0E0E0;">Professional hotel staffing solutions for the Atlanta metro area.</div>
-          </v-col>
-
-          <v-col cols="12" md="4">
-            <div class="text-subtitle-1 font-weight-semibold mb-3">{{ $t('footer.contact.title') }}</div>
-            <div style="color:#E0E0E0;">{{ $t('footer.contact.phone') }}</div>
-            <div style="color:#E0E0E0;">{{ $t('footer.contact.email') }}</div>
-            <div style="color:#E0E0E0;">{{ $t('footer.contact.location') }}</div>
-          </v-col>
-
-          <v-col cols="12" md="4">
-            <div class="text-subtitle-1 font-weight-semibold mb-3">{{ $t('footer.legal.title') }}</div>
-            <div class="d-flex flex-column">
-              <a href="#" class="footer-link">{{ $t('footer.legal.privacy') }}</a>
-              <a href="#" class="footer-link">{{ $t('footer.legal.terms') }}</a>
+          <div class="d-flex align-center" style="gap: 12px;">
+            <LanguageSwitch />
+              <v-btn
+              color="accent"
+              class="text-black"
+              rounded="lg"
+              elevation="1"
+              @click="scrollToSection('apply')"
+            >
+              {{ $t('nav.apply') }}
+              </v-btn>
             </div>
-          </v-col>
-        </v-row>
+          </div>
+        </v-container>
+    </v-app-bar>
 
-        <div class="text-center mt-8" style="color:#E0E0E0; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 16px;">
-          © 2024 MOSS Atlanta Staffing Services. {{ $t('footer.rights') }}
-        </div>
-      </v-container>
-    </footer>
-  </v-main>
+    <v-main>
+      <!-- ✅ Lazy loaded components with Suspense -->
+      <Suspense>
+        <template #default>
+          <div>
+            <HeroSection />
+            <ServicesGrid />
+            <AboutSection />
+            <CallToAction />
+                  </div>
+        </template>
+        <template #fallback>
+          <div class="d-flex justify-center align-center" style="height: 400px;">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+              size="64"
+            />
+                      </div>
+        </template>
+      </Suspense>
+
+      <!-- Footer -->
+      <footer id="contact" style="background:#424242; color:#FFFFFF;">
+        <v-container class="py-10">
+          <v-row class="ga-6">
+            <v-col cols="12" md="4">
+              <div class="text-h6 font-weight-bold mb-2">MOSS</div>
+              <div class="mb-2" style="color:#E0E0E0;">Atlanta Staffing Services</div>
+              <div style="color:#E0E0E0;">Professional hotel staffing solutions for the Atlanta metro area.</div>
+                </v-col>
+
+            <v-col cols="12" md="4">
+              <div class="text-subtitle-1 font-weight-semibold mb-3">{{ $t('footer.contact.title') }}</div>
+              <div style="color:#E0E0E0;">{{ $t('footer.contact.phone') }}</div>
+
+
+
+              <a
+                :href="'mailto:careers@mossatlanta.com'"
+                class="footer-link"
+                style="color:#E0E0E0;"
+              >
+              Email: careers@mossatlanta.com              </a>
+              <div style="color:#E0E0E0;">{{ $t('footer.contact.location') }}</div>
+                </v-col>
+
+            <v-col cols="12" md="4">
+              <div class="text-subtitle-1 font-weight-semibold mb-3">{{ $t('footer.legal.title') }}</div>
+              <div class="d-flex flex-column">
+                <a href="#" class="footer-link">{{ $t('footer.legal.privacy') }}</a>
+                <a href="#" class="footer-link">{{ $t('footer.legal.terms') }}</a>
+                  </div>
+                </v-col>
+              </v-row>
+
+          <div class="text-center mt-8" style="color:#E0E0E0; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 16px;">
+            © 2024 MOSS Atlanta Staffing Services. {{ $t('footer.rights') }}
+          </div>
+            </v-container>
+          </footer>
+    </v-main>
+    </div>
 </template>
 
 <script setup lang="ts">

@@ -7,10 +7,11 @@
         </h2>
       </div>
 
-      <v-row class="ga-6">
+      <v-row  align="stretch">
         <v-col
           cols="12"
-          md="6"
+          sm="6"
+          md="4"
           lg="3"
           v-for="(service, index) in services"
           :key="index"
@@ -82,7 +83,7 @@ const services = computed(() => [
 
 @media (min-width: 960px) {
   .section {
-    padding: 96px 0;
+    padding: 64px 0;
   }
 }
 
