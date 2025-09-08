@@ -1,11 +1,11 @@
 {
-  "task": "MOSS - Open Positions + Applications & Hiring + Employee Portal",
+  "task": "MOSS - Open Positions + Applications & Hiring Workflow",
   "session_metadata": {
     "session_id": "moss_hiring_workflow_2025",
-    "phase": "4-6",
+    "phase": "4-5",
     "tool_primary": "jules",
-    "estimated_duration": "20 hours",
-    "complexity": "HIGH"
+    "estimated_duration": "15 hours",
+    "complexity": "MEDIUM"
   },
 
   "context_injection": {
@@ -13,37 +13,33 @@
     "existing_code": [
       "src/views/Admin/Employees.vue",
       "src/components/DataTable.vue",
-      "src/components/FormModal.vue", 
-      "src/components/forms/EmployeeForm.vue",
-      "src/composables/usePocketbase.js"
+      "src/components/FormModal.vue",
+      "src/components/forms/EmployeeForm.vue"
     ],
     "pocketbase_collections": ["open_positions", "applications", "employees", "hotels", "departments", "positions"],
     "moss_business_rules": [
       "Area display (no specific hotel names for privacy)",
       "WhatsApp hiring chaos → formal digital workflow",
-      "Document storage in OneDrive + metadata in Pocketbase",
-      "Role-based access for hiring process"
+      "Document storage in OneDrive + metadata in Pocketbase"
     ],
     "constraints": [
-      "Mobile responsive design mandatory",
-      "Virtual scrolling for large datasets",
-      "Vuetify 3 components only",
-      "Employee portal for 400+ users (no Microsoft 365 licenses)"
+      "No dependencies on mobile app or n8n workflows",
+      "Standalone hiring workflow",
+      "Mobile responsive design"
     ]
   },
 
   "tdd_specification": {
-    "purpose": "Complete hiring workflow from job posting to employee onboarding, eliminating WhatsApp chaos",
+    "purpose": "Complete hiring workflow independent of timesheet/punch systems",
     "inputs": "Job postings, applications, candidate documents, hiring decisions",
-    "outputs": "Structured hiring process, candidate tracking, employee portal access",
+    "outputs": "Structured hiring process, candidate tracking, new employee records",
     "test_criteria": [
       "unit_test: Open position CRUD operations work correctly",
       "integration_test: Application submission → hiring → employee creation flow",
       "e2e_test: Complete hiring workflow from posting to onboarding",
-      "performance_test: Employee portal loads <3 seconds for 400+ users",
       "security_test: Role-based access controls enforced"
     ],
-    "success_definition": "Formal hiring process replaces informal WhatsApp coordination"
+    "success_definition": "Formal hiring process replaces WhatsApp coordination completely"
   },
 
   "implementation_spec": {
@@ -52,176 +48,86 @@
       "components_needed": [
         "src/views/Admin/OpenPositions.vue - Main positions list",
         "src/components/forms/OpenPositionForm.vue - Create/edit position",
-        "src/components/PositionCard.vue - Display position info",
-        "src/composables/useOpenPositions.js - Business logic"
+        "src/components/PositionCard.vue - Display position info"
       ],
       "features": [
         "CRUD operations with area display (not hotel names)",
         "Status workflow (open → filled → closed)",
         "Salary range management",
         "Requirements and qualifications",
-        "Posting type (informal_optimized vs formal_corporate)"
+        "Application count tracking"
       ]
     },
 
     "phase_2_applications_hiring": {
-      "duration": "3 days", 
+      "duration": "3 days",
       "components_needed": [
         "src/views/Admin/Applications.vue - Applications dashboard",
-        "src/components/ApplicationCard.vue - Candidate summary",
-        "src/components/forms/ApplicationForm.vue - Application details",
-        "src/components/HiringWorkflow.vue - Status transitions",
+        "src/components/ApplicationsList.vue - Filterable applications",
         "src/components/CandidateProfile.vue - Complete candidate view",
-        "src/composables/useApplications.js - Hiring logic"
+        "src/components/HiringActions.vue - Hire/reject decisions",
+        "src/composables/useHiringWorkflow.js - Business logic"
       ],
       "features": [
-        "Application status workflow (applied → interview → hired → rejected)",
+        "Application status workflow (applied → reviewed → interviewed → hired/rejected)",
         "Candidate document management (OneDrive links)",
         "Bulk hiring operations",
-        "Interview scheduling integration",
-        "Automatic employee creation on hire"
-      ]
-    },
-
-    "phase_3_employee_portal": {
-      "duration": "2 days",
-      "components_needed": [
-        "src/views/Employee/Dashboard.vue - Employee home page",
-        "src/views/Employee/Profile.vue - Personal information",
-        "src/views/Employee/Timesheet.vue - Personal punch history",
-        "src/views/Employee/Documents.vue - W9/W4/I9 management",
-        "src/components/TimesheetSummary.vue - Hours overview",
-        "src/composables/useEmployeePortal.js - Portal logic"
-      ],
-      "features": [
-        "Personal dashboard for 400+ employees",
-        "Timesheet history with work_date logic",
-        "Document upload/update capability", 
-        "Internal job applications",
-        "No Microsoft 365 license required"
+        "Automatic employee creation on hire",
+        "Email notifications (placeholder for future)"
       ]
     }
+  },
+
+  "removed_dependencies": {
+    "employee_portal": "Postponed until mobile app and n8n are ready",
+    "timesheet_data": "Not needed for hiring workflow",
+    "punch_history": "Independent of hiring process",
+    "n8n_workflows": "Hiring works without automation initially"
   },
 
   "file_tests_required": {
     "src/views/Admin/OpenPositions.vue": [
-      "Renders positions list with area display (no hotel names)",
-      "Create/edit position form works correctly",
-      "Status filtering (open, filled, closed) functions",
-      "Salary range validation works",
-      "Mobile responsive design"
-    ],
-    "src/components/forms/OpenPositionForm.vue": [
-      "Area selection instead of specific hotel",
-      "Salary range validation (min < max)",
-      "Requirements field accepts array input",
-      "Posting type selection works",
-      "Form validation prevents invalid submissions"
+      "Renders positions list with area display only",
+      "Create/edit position form validation works",
+      "Status filtering functions correctly",
+      "Application count displays accurately"
     ],
     "src/views/Admin/Applications.vue": [
-      "Displays applications grouped by position",
-      "Status workflow transitions work correctly",
-      "Bulk operations (approve multiple) function",
-      "Candidate search and filtering work",
+      "Groups applications by position correctly",
+      "Status workflow transitions work",
+      "Candidate search and filtering function",
       "Document links display properly"
     ],
-    "src/components/HiringWorkflow.vue": [
-      "Status transitions follow business rules",
-      "Automatic employee creation on hire",
-      "Email notifications sent on status change",
-      "Audit trail records all decisions",
-      "Bulk hiring operations work"
-    ],
-    "src/views/Employee/Dashboard.vue": [
-      "Loads personal data correctly for logged employee",
-      "Timesheet summary displays work_date logic",
-      "Recent punch history shows correctly",
-      "Internal job postings display (if any)",
-      "Mobile responsive for 400+ users"
-    ],
-    "src/composables/useOpenPositions.js": [
-      "CRUD operations handle area logic correctly",
-      "Status workflow validation works",
-      "Salary range calculations correct",
-      "Error handling for invalid operations",
-      "Caching optimizes performance"
+    "src/components/HiringActions.vue": [
+      "Hire action creates employee record automatically",
+      "Reject action updates status correctly",
+      "Bulk operations work for multiple candidates",
+      "Status change audit trail created"
     ]
-  },
-
-  "moss_specific_patterns": {
-    "area_display_privacy": {
-      "rule": "Never show specific hotel names in public postings",
-      "implementation": "Use area/zone descriptions like 'Downtown Atlanta'",
-      "reason": "Privacy and security requirements"
-    },
-    "hiring_workflow_states": {
-      "application_states": ["applied", "reviewed", "interview_scheduled", "interviewed", "hired", "rejected"],
-      "position_states": ["open", "filled", "closed", "on_hold"],
-      "transitions": "Only super_admin and operations_hr can hire/reject"
-    },
-    "employee_portal_access": {
-      "authentication": "Pocketbase JWT with employee role",
-      "data_scope": "Employees see only their own data",
-      "features": "No admin functions, readonly timesheet, document upload only"
-    },
-    "document_management": {
-      "storage": "OneDrive structured folders by employee",
-      "metadata": "Pocketbase tracks document types and status",
-      "security": "Role-based access to document links"
-    }
-  },
-
-  "ui_specifications": {
-    "open_positions_card": {
-      "layout": "v-card with area, position, salary, requirements",
-      "styling": "Color-coded by status, responsive grid",
-      "actions": "Edit, View Applications, Close Position"
-    },
-    "application_workflow": {
-      "layout": "Kanban-style status columns or detailed list",
-      "features": "Drag-drop status changes, bulk selection",
-      "candidate_view": "Modal with documents, interview notes"
-    },
-    "employee_portal": {
-      "design": "Simple, mobile-first interface",
-      "navigation": "Bottom tabs: Dashboard, Timesheet, Profile, Documents",
-      "performance": "Virtual scrolling for large datasets"
-    }
   },
 
   "deliverables": {
     "primary_files": [
       "src/views/Admin/OpenPositions.vue",
-      "src/views/Admin/Applications.vue", 
-      "src/views/Employee/Dashboard.vue",
-      "src/views/Employee/Profile.vue",
-      "src/views/Employee/Timesheet.vue",
+      "src/views/Admin/Applications.vue",
       "src/components/forms/OpenPositionForm.vue",
-      "src/components/HiringWorkflow.vue",
-      "src/composables/useOpenPositions.js",
-      "src/composables/useApplications.js"
+      "src/components/CandidateProfile.vue",
+      "src/components/HiringActions.vue",
+      "src/composables/useHiringWorkflow.js"
     ],
     "integration_points": [
       "Router: /admin/open-positions, /admin/applications",
-      "Router: /employee/dashboard, /employee/profile", 
       "Navigation menu updates",
-      "Role-based route protection"
-    ],
-    "documentation": [
-      "Hiring workflow process documentation",
-      "Employee portal user guide"
+      "Employee creation integration"
     ]
   },
 
   "success_criteria": [
-    "Open positions CRUD fully functional with area privacy",
-    "Complete hiring workflow from application to employee creation",
+    "Open positions CRUD fully functional",
+    "Complete hiring workflow from application to employee creation", 
     "Applications status tracking and bulk operations",
-    "Employee portal accessible to 400+ users without MS365",
     "Document management integrated with OneDrive",
-    "Role-based access controls enforced",
-    "Mobile responsive design across all components",
-    "Performance targets met (<3s load times)",
-    "WhatsApp hiring process replaced with formal digital workflow"
+    "WhatsApp hiring process replaced with formal digital workflow",
+    "No dependencies on mobile app or n8n workflows"
   ]
 }
