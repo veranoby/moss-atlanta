@@ -58,6 +58,7 @@ const navItems = [
   { title: 'Hoteles', to: '/admin/hotels', icon: 'mdi-domain' },
   { title: 'Departamentos', to: '/admin/departments', icon: 'mdi-google-circles-communities' },
   { title: 'Puestos', to: '/admin/positions', icon: 'mdi-briefcase' },
+  { title: 'Posiciones Abiertas', to: '/admin/open-positions', icon: 'mdi-briefcase-search' },
   { title: 'Configuración', to: '/admin/settings', icon: 'mdi-cog' },
 ];
 

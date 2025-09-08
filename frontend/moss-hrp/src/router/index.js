@@ -64,6 +64,12 @@ const routes = [
     meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
   },
   {
+    path: '/admin/open-positions',
+    name: 'AdminOpenPositions',
+    component: () => import('@/views/Admin/OpenPositions.vue'),
+    meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
+  },
+  {
     path: '/employee',
     name: 'Employee',
     component: () => import('@/views/Employee/Profile.vue'),

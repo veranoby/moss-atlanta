@@ -27,6 +27,7 @@ declare module 'vue' {
     LanguageSwitch: typeof import('./src/components/LanguageSwitch.vue')['default']
     LazyImage: typeof import('./src/components/LazyImage.vue')['default']
     LegalEntityForm: typeof import('./src/components/forms/LegalEntityForm.vue')['default']
+    OpenPositionForm: typeof import('./src/components/forms/OpenPositionForm.vue')['default']
     PayrollPeriodsList: typeof import('./src/components/PayrollPeriodsList.vue')['default']
     PositionForm: typeof import('./src/components/forms/PositionForm.vue')['default']
     ReconciliationModal: typeof import('./src/components/ReconciliationModal.vue')['default']
