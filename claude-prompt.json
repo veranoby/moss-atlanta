@@ -1,10 +1,10 @@
 {
-  "task": "MOSS - Fase 5: Reconciliation Dashboard",
+  "task": "MOSS - Open Positions + Applications & Hiring + Employee Portal",
   "session_metadata": {
-    "session_id": "moss_phase5_reconciliation_2025",
-    "phase": "5", 
-    "tool_primary": "claude_code",
-    "estimated_duration": "24 hours",
+    "session_id": "moss_hiring_workflow_2025",
+    "phase": "4-6",
+    "tool_primary": "jules",
+    "estimated_duration": "20 hours",
     "complexity": "HIGH"
   },
 
@@ -13,160 +13,215 @@
     "existing_code": [
       "src/views/Admin/Employees.vue",
       "src/components/DataTable.vue",
-      "src/components/FormModal.vue",
+      "src/components/FormModal.vue", 
+      "src/components/forms/EmployeeForm.vue",
       "src/composables/usePocketbase.js"
     ],
-    "pocketbase_collections": ["payroll_periods", "hotel_reports", "punches", "reconciliations", "audit_logs"],
+    "pocketbase_collections": ["open_positions", "applications", "employees", "hotels", "departments", "positions"],
     "moss_business_rules": [
-      "3-column reconciliation modal (Hotel|MOSS|Final) is critical",
-      "Johanna's 3-day manual process → 4 hours automated",
-      "Missing hours detection and resolution",
-      "SSE for real-time updates"
+      "Area display (no specific hotel names for privacy)",
+      "WhatsApp hiring chaos → formal digital workflow",
+      "Document storage in OneDrive + metadata in Pocketbase",
+      "Role-based access for hiring process"
     ],
     "constraints": [
-      "3-column layout mandatory",
-      "Real-time updates via SSE only", 
-      "Role-based access (operations_hr, super_admin)",
-      "Mobile responsive design"
+      "Mobile responsive design mandatory",
+      "Virtual scrolling for large datasets",
+      "Vuetify 3 components only",
+      "Employee portal for 400+ users (no Microsoft 365 licenses)"
     ]
   },
 
   "tdd_specification": {
-    "purpose": "Automate 3-day manual reconciliation process to 4 hours with AI assistance",
-    "inputs": "Hotel reports, MOSS punch data, manual adjustments",
-    "outputs": "3-column comparison interface, discrepancy resolution, audit trail",
+    "purpose": "Complete hiring workflow from job posting to employee onboarding, eliminating WhatsApp chaos",
+    "inputs": "Job postings, applications, candidate documents, hiring decisions",
+    "outputs": "Structured hiring process, candidate tracking, employee portal access",
     "test_criteria": [
-      "unit_test: 3-column data comparison logic works correctly",
-      "integration_test: Hotel reports vs punch data matching algorithm",
-      "e2e_test: Complete reconciliation workflow (upload → process → approve)",
-      "performance_test: <5 seconds reconciliation modal load time",
-      "sse_test: Real-time updates when hotel reports processed"
+      "unit_test: Open position CRUD operations work correctly",
+      "integration_test: Application submission → hiring → employee creation flow",
+      "e2e_test: Complete hiring workflow from posting to onboarding",
+      "performance_test: Employee portal loads <3 seconds for 400+ users",
+      "security_test: Role-based access controls enforced"
     ],
-    "success_definition": "Operations team can reconcile weekly payroll in 4 hours vs current 3 days"
+    "success_definition": "Formal hiring process replaces informal WhatsApp coordination"
   },
 
   "implementation_spec": {
-    "components_needed": [
-      "src/views/Admin/Reconciliation.vue - Main reconciliation dashboard",
-      "src/components/PayrollPeriodsList.vue - Periods by hotel/week", 
-      "src/components/ReconciliationModal.vue - 3-column comparison (CRITICAL)",
-      "src/components/DiscrepancyCard.vue - Individual discrepancy display",
-      "src/components/BulkReconciliation.vue - Approve <5% discrepancies auto",
-      "src/components/AuditTrail.vue - Who approved what changes",
-      "src/composables/useReconciliation.js - Business logic",
-      "src/composables/useSSE.js - Real-time updates"
-    ],
-    "api_endpoints": [
-      "payroll_periods (workflow orchestrator)",
-      "reconciliations (Hotel vs MOSS comparison)", 
-      "hotel_reports (AI processed data)",
-      "punches (MOSS Time app data)",
-      "audit_logs (approval tracking)"
-    ],
-    "business_logic": [
-      "3-column reconciliation modal (Hotel|MOSS|Final)",
-      "Discrepancy calculation and categorization",
-      "Bulk approval for <5% discrepancies",
-      "Manual justification for >5% changes",
-      "Real-time status updates via SSE"
-    ],
-    "ui_requirements": [
-      "3-column layout with data comparison",
-      "Status chips (Hotel✅/⏳, MOSS✅/❌, Discrepancy%)",
-      "Bulk selection and approval",
-      "Excel export functionality",
-      "Mobile responsive 3-column design"
-    ],
-    "performance_targets": [
-      "<5 seconds reconciliation modal load",
-      "<3 seconds payroll periods list",
-      "<1 second SSE update response"
-    ]
-  },
+    "phase_1_open_positions": {
+      "duration": "2 days",
+      "components_needed": [
+        "src/views/Admin/OpenPositions.vue - Main positions list",
+        "src/components/forms/OpenPositionForm.vue - Create/edit position",
+        "src/components/PositionCard.vue - Display position info",
+        "src/composables/useOpenPositions.js - Business logic"
+      ],
+      "features": [
+        "CRUD operations with area display (not hotel names)",
+        "Status workflow (open → filled → closed)",
+        "Salary range management",
+        "Requirements and qualifications",
+        "Posting type (informal_optimized vs formal_corporate)"
+      ]
+    },
 
-  "critical_3_column_design": {
-    "layout": "v-row with three v-col cols='4'",
-    "column_1": {
-      "title": "Hotel Report",
-      "content": "AI extracted timesheet data",
-      "styling": "border-right, hotel brand colors"
+    "phase_2_applications_hiring": {
+      "duration": "3 days", 
+      "components_needed": [
+        "src/views/Admin/Applications.vue - Applications dashboard",
+        "src/components/ApplicationCard.vue - Candidate summary",
+        "src/components/forms/ApplicationForm.vue - Application details",
+        "src/components/HiringWorkflow.vue - Status transitions",
+        "src/components/CandidateProfile.vue - Complete candidate view",
+        "src/composables/useApplications.js - Hiring logic"
+      ],
+      "features": [
+        "Application status workflow (applied → interview → hired → rejected)",
+        "Candidate document management (OneDrive links)",
+        "Bulk hiring operations",
+        "Interview scheduling integration",
+        "Automatic employee creation on hire"
+      ]
     },
-    "column_2": {
-      "title": "MOSS Time", 
-      "content": "App punch data",
-      "styling": "border-right, moss brand colors"
-    },
-    "column_3": {
-      "title": "Final Hours",
-      "content": "Reconciled/approved hours",
-      "styling": "highlight approved changes"
-    },
-    "comparison_logic": "Row-by-row employee comparison with diff highlighting"
+
+    "phase_3_employee_portal": {
+      "duration": "2 days",
+      "components_needed": [
+        "src/views/Employee/Dashboard.vue - Employee home page",
+        "src/views/Employee/Profile.vue - Personal information",
+        "src/views/Employee/Timesheet.vue - Personal punch history",
+        "src/views/Employee/Documents.vue - W9/W4/I9 management",
+        "src/components/TimesheetSummary.vue - Hours overview",
+        "src/composables/useEmployeePortal.js - Portal logic"
+      ],
+      "features": [
+        "Personal dashboard for 400+ employees",
+        "Timesheet history with work_date logic",
+        "Document upload/update capability", 
+        "Internal job applications",
+        "No Microsoft 365 license required"
+      ]
+    }
   },
 
   "file_tests_required": {
-    "src/views/Admin/Reconciliation.vue": [
-      "Renders payroll periods list correctly",
-      "Filters by hotel and date range work",
-      "Opens reconciliation modal on period click",
-      "Shows correct status indicators"
+    "src/views/Admin/OpenPositions.vue": [
+      "Renders positions list with area display (no hotel names)",
+      "Create/edit position form works correctly",
+      "Status filtering (open, filled, closed) functions",
+      "Salary range validation works",
+      "Mobile responsive design"
     ],
-    "src/components/ReconciliationModal.vue": [
-      "Displays 3 columns with correct data",
-      "Highlights discrepancies > 5%", 
-      "Bulk approval functionality works",
-      "Manual justification field required for >5%",
-      "Mobile responsive 3-column layout"
+    "src/components/forms/OpenPositionForm.vue": [
+      "Area selection instead of specific hotel",
+      "Salary range validation (min < max)",
+      "Requirements field accepts array input",
+      "Posting type selection works",
+      "Form validation prevents invalid submissions"
     ],
-    "src/components/PayrollPeriodsList.vue": [
-      "Groups periods by hotel correctly",
-      "Shows status chips with accurate states",
-      "Pagination works for large datasets",
-      "Export to Excel functionality"
+    "src/views/Admin/Applications.vue": [
+      "Displays applications grouped by position",
+      "Status workflow transitions work correctly",
+      "Bulk operations (approve multiple) function",
+      "Candidate search and filtering work",
+      "Document links display properly"
     ],
-    "src/composables/useReconciliation.js": [
-      "Discrepancy calculation algorithm correct",
-      "Bulk approval logic validates permissions",
-      "Audit trail creation on all changes",
-      "Error handling for failed reconciliations"
+    "src/components/HiringWorkflow.vue": [
+      "Status transitions follow business rules",
+      "Automatic employee creation on hire",
+      "Email notifications sent on status change",
+      "Audit trail records all decisions",
+      "Bulk hiring operations work"
     ],
-    "src/composables/useSSE.js": [
-      "Establishes SSE connection correctly",
-      "Handles reconnection on connection loss",
-      "Updates reconciliation status in real-time",
-      "Cleans up connections on component unmount"
+    "src/views/Employee/Dashboard.vue": [
+      "Loads personal data correctly for logged employee",
+      "Timesheet summary displays work_date logic",
+      "Recent punch history shows correctly",
+      "Internal job postings display (if any)",
+      "Mobile responsive for 400+ users"
+    ],
+    "src/composables/useOpenPositions.js": [
+      "CRUD operations handle area logic correctly",
+      "Status workflow validation works",
+      "Salary range calculations correct",
+      "Error handling for invalid operations",
+      "Caching optimizes performance"
     ]
+  },
+
+  "moss_specific_patterns": {
+    "area_display_privacy": {
+      "rule": "Never show specific hotel names in public postings",
+      "implementation": "Use area/zone descriptions like 'Downtown Atlanta'",
+      "reason": "Privacy and security requirements"
+    },
+    "hiring_workflow_states": {
+      "application_states": ["applied", "reviewed", "interview_scheduled", "interviewed", "hired", "rejected"],
+      "position_states": ["open", "filled", "closed", "on_hold"],
+      "transitions": "Only super_admin and operations_hr can hire/reject"
+    },
+    "employee_portal_access": {
+      "authentication": "Pocketbase JWT with employee role",
+      "data_scope": "Employees see only their own data",
+      "features": "No admin functions, readonly timesheet, document upload only"
+    },
+    "document_management": {
+      "storage": "OneDrive structured folders by employee",
+      "metadata": "Pocketbase tracks document types and status",
+      "security": "Role-based access to document links"
+    }
+  },
+
+  "ui_specifications": {
+    "open_positions_card": {
+      "layout": "v-card with area, position, salary, requirements",
+      "styling": "Color-coded by status, responsive grid",
+      "actions": "Edit, View Applications, Close Position"
+    },
+    "application_workflow": {
+      "layout": "Kanban-style status columns or detailed list",
+      "features": "Drag-drop status changes, bulk selection",
+      "candidate_view": "Modal with documents, interview notes"
+    },
+    "employee_portal": {
+      "design": "Simple, mobile-first interface",
+      "navigation": "Bottom tabs: Dashboard, Timesheet, Profile, Documents",
+      "performance": "Virtual scrolling for large datasets"
+    }
   },
 
   "deliverables": {
     "primary_files": [
-      "src/views/Admin/Reconciliation.vue",
-      "src/components/ReconciliationModal.vue", 
-      "src/components/PayrollPeriodsList.vue",
-      "src/components/DiscrepancyCard.vue",
-      "src/composables/useReconciliation.js",
-      "src/composables/useSSE.js"
+      "src/views/Admin/OpenPositions.vue",
+      "src/views/Admin/Applications.vue", 
+      "src/views/Employee/Dashboard.vue",
+      "src/views/Employee/Profile.vue",
+      "src/views/Employee/Timesheet.vue",
+      "src/components/forms/OpenPositionForm.vue",
+      "src/components/HiringWorkflow.vue",
+      "src/composables/useOpenPositions.js",
+      "src/composables/useApplications.js"
     ],
     "integration_points": [
-      "Router: /admin/reconciliation",
-      "Navigation menu integration",
-      "SSE endpoint configuration"
+      "Router: /admin/open-positions, /admin/applications",
+      "Router: /employee/dashboard, /employee/profile", 
+      "Navigation menu updates",
+      "Role-based route protection"
     ],
     "documentation": [
-      "3-column reconciliation workflow",
-      "SSE real-time update patterns"
+      "Hiring workflow process documentation",
+      "Employee portal user guide"
     ]
   },
 
   "success_criteria": [
-    "3-column reconciliation modal functional (CRITICAL)",
-    "Hotel vs MOSS data comparison working",
-    "Bulk approval for <5% discrepancies",
-    "Manual justification for >5% changes", 
-    "Real-time updates via SSE",
-    "Audit trail captures all changes",
-    "Excel export functionality",
-    "Mobile responsive design",
-    "Performance targets met (<5s modal load)"
+    "Open positions CRUD fully functional with area privacy",
+    "Complete hiring workflow from application to employee creation",
+    "Applications status tracking and bulk operations",
+    "Employee portal accessible to 400+ users without MS365",
+    "Document management integrated with OneDrive",
+    "Role-based access controls enforced",
+    "Mobile responsive design across all components",
+    "Performance targets met (<3s load times)",
+    "WhatsApp hiring process replaced with formal digital workflow"
   ]
 }
