@@ -2,8 +2,11 @@
     "nav": {
       "services": "Servicios",
       "about": "Acerca de",
+      "openPositions": "Posiciones Abiertas",
       "contact": "Contacto",
-      "apply": "Aplicar"
+      "apply": "Aplicar",
+      "login": "Iniciar Sesión",
+      "logout": "Cerrar Sesión"
     },
     "hero": {
       "title": "Soluciones Profesionales de Personal Hotelero en Atlanta",
@@ -63,10 +66,33 @@
         "button": "Contáctanos"
       }
     },
+    "openPositions": {
+      "title": "Posiciones Abiertas",
+      "subtitle": "Descubre las oportunidades disponibles en MOSS Atlanta.",
+      "department": "Departamento",
+      "salary": "Salario",
+      "type": "Tipo",
+      "formal": "Formal",
+      "informal": "Informal",
+      "applyNow": "Aplicar Ahora",
+      "noPositions": "Actualmente no hay posiciones abiertas. Por favor, revisa más tarde."
+    },
+    "contact": {
+      "title": "Contáctanos",
+      "subtitle": "¿Tienes preguntas? Estamos aquí para ayudarte.",
+      "email": "Email",
+      "emailDescription": "Para consultas generales y soporte:",
+      "phone": "Teléfono",
+      "phoneDescription": "Para asistencia inmediata:",
+      "office": "Oficina Principal",
+      "hours": "Horario de Atención",
+      "weekdays": "Lunes a Viernes",
+      "weekends": "Sábados y Domingos",
+      "closed": "Cerrado"
+    },
     "footer": {
       "contact": {
         "title": "Contacto",
-        "phone": "Teléfono: (404) XXX-XXXX",
         "location": "Ubicación: Atlanta, GA"
       },
       "legal": {
@@ -75,5 +101,45 @@
         "terms": "Términos de Servicio"
       },
       "rights": "Todos los derechos reservados."
-    }
+    },
+    "admin": {
+      "dashboard": "Panel de Control",
+      "hotels": "Hoteles",
+      "departments": "Departamentos",
+      "positions": "Posiciones",
+      "employees": "Empleados",
+      "openPositions": "Posiciones Abiertas",
+      "applications": "Aplicaciones",
+      "reconciliation": "Reconciliación",
+      "settings": "Configuraciones",
+      "masterData": "Datos Maestros",
+      "employeeManagement": "Gestión de Empleados",
+      "hiringProcess": "Proceso de Contratación",
+      "operations": "Operaciones",
+      "system": "Sistema",
+      "managementPanel": "Panel de Gestión",
+      "totalHotels": "Total de Hoteles",
+      "activeEmployees": "Empleados Activos",
+      "pendingReports": "Reportes Pendientes",
+      "recentActivity": "Actividad Reciente",
+      "users": "Usuarios",
+      "usersSubtitle": "Gestionar usuarios de la plataforma y permisos",
+      "createUser": "Crear Usuario",
+      "editUser": "Editar Usuario",
+      "deleteUser": "Eliminar Usuario",
+      "deleteUserConfirm": "¿Está seguro de que desea eliminar este usuario?",
+      "filterByRole": "Filtrar por Rol",
+      "role": "Rol"
+    },
+  "common": {
+    "search": "Buscar",
+    "name": "Nombre",
+    "email": "Correo",
+    "password": "Contraseña",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "verified": "Verificado",
+    "pending": "Pendiente"
   }
+}

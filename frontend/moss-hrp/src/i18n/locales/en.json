@@ -2,8 +2,11 @@
   "nav": {
     "services": "Services",
     "about": "About",
+    "openPositions": "Open Positions",
     "contact": "Contact",
-    "apply": "Apply"
+    "apply": "Apply",
+    "login": "Login",
+    "logout": "Logout"
   },
   "hero": {
     "title": "Professional Hotel Staffing Solutions in Atlanta",
@@ -63,10 +66,33 @@
       "button": "Contact Us"
     }
   },
+  "openPositions": {
+    "title": "Open Positions",
+    "subtitle": "Discover opportunities available at MOSS Atlanta.",
+    "department": "Department",
+    "salary": "Salary",
+    "type": "Type",
+    "formal": "Formal",
+    "informal": "Informal",
+    "applyNow": "Apply Now",
+    "noPositions": "There are currently no open positions. Please check back later."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Have questions? We're here to help.",
+    "email": "Email",
+    "emailDescription": "For general inquiries and support:",
+    "phone": "Phone",
+    "phoneDescription": "For immediate assistance:",
+    "office": "Main Office",
+    "hours": "Business Hours",
+    "weekdays": "Monday to Friday",
+    "weekends": "Saturday and Sunday",
+    "closed": "Closed"
+  },
   "footer": {
     "contact": {
       "title": "Contact",
-      "phone": "Phone: (404) XXX-XXXX",
       "location": "Location: Atlanta, GA"
     },
     "legal": {
@@ -75,5 +101,45 @@
       "terms": "Terms of Service"
     },
     "rights": "All rights reserved."
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "hotels": "Hotels",
+    "departments": "Departments",
+    "positions": "Positions",
+    "employees": "Employees",
+    "openPositions": "Open Positions",
+    "applications": "Applications",
+    "reconciliation": "Reconciliation",
+    "settings": "Settings",
+    "masterData": "Master Data",
+    "employeeManagement": "Employee Management",
+    "hiringProcess": "Hiring Process",
+    "operations": "Operations",
+    "system": "System",
+    "managementPanel": "Management Panel",
+    "totalHotels": "Total Hotels",
+    "activeEmployees": "Active Employees",
+    "pendingReports": "Pending Reports",
+    "recentActivity": "Recent Activity",
+    "users": "Users",
+    "usersSubtitle": "Manage platform users and permissions",
+    "createUser": "Create User",
+    "editUser": "Edit User",
+    "deleteUser": "Delete User",
+    "deleteUserConfirm": "Are you sure you want to delete this user?",
+    "filterByRole": "Filter by Role",
+    "role": "Role"
+  },
+  "common": {
+    "search": "Search",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "verified": "Verified",
+    "pending": "Pending"
   }
 }

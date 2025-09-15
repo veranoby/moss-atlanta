@@ -15,6 +15,54 @@
         />
       </v-overlay>
 
+      <!-- ✅ App Bar for all pages except Home -->
+      <v-app-bar v-if="$route.name !== 'Home'" app color="surface" class="border-b" elevation="0">
+        <v-container class="d-flex align-center justify-space-between pa-0">
+          <div class="d-flex align-center">
+            <router-link
+              :to="{ name: 'Home' }"
+              class="text-h5 font-weight-bold text-decoration-none"
+              style="color:#424242;"
+              aria-label="Go to top"
+            >
+              MOSS
+            </router-link>
+            <div class="ms-2 text-body-2" style="color:#757575">Atlanta Staffing Services</div>
+          </div>
+
+          <div class="d-none d-md-flex align-center" style="gap: 24px;">
+            <router-link :to="{ name: 'Home' }" class="text-body-2 nav-link">{{ $t('nav.services') }}</router-link>
+            <router-link :to="{ name: 'Home' }" class="text-body-2 nav-link">{{ $t('nav.about') }}</router-link>
+            <router-link :to="{ name: 'OpenPositions' }" class="text-body-2 nav-link">{{ $t('nav.openPositions') }}</router-link>
+            <router-link :to="{ name: 'Contact' }" class="text-body-2 nav-link">{{ $t('nav.contact') }}</router-link>
+          </div>
+
+          <div class="d-flex align-center" style="gap: 12px;">
+            <LanguageSwitch />
+            <!-- Login button - show only if not authenticated -->
+            <v-btn
+              v-if="!authStore.isAuthenticated && $route.name !== 'Login'"
+              :to="{ name: 'Login' }"
+              color="primary"
+              rounded="lg"
+              variant="flat"
+            >
+              {{ $t('nav.login') }}
+            </v-btn>
+            <!-- Logout button - show only if authenticated -->
+            <v-btn
+              v-if="authStore.isAuthenticated"
+              @click="handleLogout"
+              color="error"
+              rounded="lg"
+              variant="outlined"
+            >
+              {{ $t('nav.logout') }}
+            </v-btn>
+          </div>
+        </v-container>
+      </v-app-bar>
+
       <!-- ✅ Main router view with transition -->
       <router-view v-slot="{ Component, route }">
         <transition name="page" mode="out-in">
@@ -28,15 +76,23 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import ErrorBoundary from '@/components/ErrorBoundary.vue'
+import LanguageSwitch from '@/components/LanguageSwitch.vue'
 
 // ✅ Reactive state
 const isLoading = ref(false)
 const router = useRouter()
+const authStore = useAuthStore()
 
 // ✅ Methods
 const handleLoading = (loading: boolean) => {
   isLoading.value = loading
+}
+
+const handleLogout = () => {
+  authStore.logout()
+  router.push({ name: 'Home' })
 }
 
 // ✅ Router navigation guards for loading states
@@ -145,5 +201,16 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+/* ✅ Navigation link styles to match Home.vue */
+.nav-link {
+  color:#424242;
+  text-decoration:none;
+  transition: color .2s ease;
+}
+
+.nav-link:hover {
+  color:#1a1a1a;
 }
 </style>

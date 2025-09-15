@@ -48,8 +48,8 @@ const totalItems = ref(0);
 
 const headers = [
   { title: 'Hotel', key: 'hotel', sortable: false },
-  { title: 'Start Date', key: 'start_date' },
-  { title: 'End Date', key: 'end_date' },
+  { title: 'Start Date', key: 'period_start' },
+  { title: 'End Date', key: 'period_end' },
   { title: 'Status', key: 'status', sortable: false },
   { title: 'Actions', key: 'actions', sortable: false, align: 'end' },
 ];
@@ -78,22 +78,28 @@ async function fetchData(options) {
       const { page, itemsPerPage, sortBy } = options;
       
       try {
+        // Check if user is authenticated
+        if (!pb.authStore.isValid) {
+          console.error('User not authenticated for payroll periods');
+          return;
+        }
+
         const filterParts = Object.entries(props.filters)
           .filter(([, value]) => value)
           .map(([key, value]) => `${key}="${value}"`);
 
         const pbFilter = filterParts.join(' && ');
-        const sortOption = sortBy && sortBy.length ? `${sortBy[0].order === 'desc' ? '-' : '+'}${sortBy[0].key}` : '-start_date';
+        const sortOption = sortBy && sortBy.length ? `${sortBy[0].order === 'desc' ? '-' : '+'}${sortBy[0].key}` : '-period_start';
 
         // Performance: Limit initial page size and use selective expand
         const optimizedPageSize = Math.min(itemsPerPage, 50); // Cap at 50 for performance
-        
+
         const result = await pb.collection('payroll_periods').getList(page, optimizedPageSize, {
           filter: pbFilter,
           sort: sortOption,
-          expand: 'hotel,reconciliation_status',
-          // Performance: Request only essential fields
-          fields: 'id,start_date,end_date,hotel,reconciliation_status,expand.hotel.name,expand.reconciliation_status.name',
+          expand: 'hotel',
+          // Performance: Request only essential fields that exist in schema
+          fields: 'id,period_start,period_end,hotel,status,expand.hotel.name',
         });
 
         payrollPeriods.value = result.items;

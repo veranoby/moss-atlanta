@@ -1,5 +1,6 @@
 <template>
-  <v-container fluid>
+  <AdminLayout>
+    <v-container fluid>
     <v-row>
       <v-col>
         <DataTable
@@ -43,12 +44,14 @@
     >
       <PositionForm ref="positionForm" v-model="editedItem" />
     </FormModal>
-  </v-container>
+    </v-container>
+  </AdminLayout>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
 import { pb } from '@/composables/usePocketbase';
+import AdminLayout from '@/layouts/AdminLayout.vue';
 import DataTable from '@/components/DataTable.vue';
 import FormModal from '@/components/FormModal.vue';
 import PositionForm from '@/components/forms/PositionForm.vue';
@@ -78,12 +81,27 @@ async function loadItems(options) {
   tableOptions = options;
   const { page, itemsPerPage, sortBy } = options;
   try {
+    // Check authentication before API call
+    if (!pb.authStore.isValid) {
+      console.error('User not authenticated for positions');
+      return;
+    }
+
     const sortOption = sortBy && sortBy.length ? `${sortBy[0].order === 'desc' ? '-' : '+'}${sortBy[0].key}` : '+name';
     const result = await pb.collection('positions').getList(page, itemsPerPage, { sort: sortOption });
     items.value = result.items;
     totalItems.value = result.totalItems;
+    console.log(`Loaded ${result.items.length} positions successfully`);
   } catch (error) {
     console.error("Failed to load positions:", error);
+    if (error.status === 403) {
+      console.error('Access denied - user may not have permission to view positions');
+    } else if (error.status === 404) {
+      console.error('Positions collection not found');
+    }
+    // Set empty arrays on error to prevent component crashes
+    items.value = [];
+    totalItems.value = 0;
   } finally {
     loading.value = false;
   }

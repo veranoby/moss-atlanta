@@ -20,22 +20,29 @@
           <div class="d-none d-md-flex align-center" style="gap: 24px;">
             <a href="#services" class="text-body-2 nav-link" @click.prevent="scrollToSection('services')">{{ $t('nav.services') }}</a>
             <a href="#about" class="text-body-2 nav-link" @click.prevent="scrollToSection('about')">{{ $t('nav.about') }}</a>
-
-            <a href="#contact" class="text-body-2 nav-link" @click.prevent="scrollToSection('contact')">{{ $t('nav.contact') }}</a>
-              </div>
+            <router-link :to="{ name: 'OpenPositions' }" class="text-body-2 nav-link">{{ $t('nav.openPositions') }}</router-link>
+            <router-link :to="{ name: 'Contact' }" class="text-body-2 nav-link">{{ $t('nav.contact') }}</router-link>
+          </div>
 
           <div class="d-flex align-center" style="gap: 12px;">
             <LanguageSwitch />
-              <v-btn
-              color="accent"
-              class="text-black"
+            <v-btn
+              :to="{ name: 'Login' }"
+              color="primary"
               rounded="lg"
-              elevation="1"
+              variant="flat"
+            >
+              {{ $t('nav.login') }}
+            </v-btn>
+            <v-btn
+              color="accent"
+              rounded="lg"
+              variant="flat"
               @click="scrollToSection('apply')"
             >
               {{ $t('nav.apply') }}
-              </v-btn>
-            </div>
+            </v-btn>
+          </div>
           </div>
         </v-container>
     </v-app-bar>
@@ -74,8 +81,15 @@
 
             <v-col cols="12" md="4">
               <div class="text-subtitle-1 font-weight-semibold mb-3">{{ $t('footer.contact.title') }}</div>
-              <div style="color:#E0E0E0;">{{ $t('footer.contact.phone') }}</div>
-
+              <div style="color:#E0E0E0;">Phone: +1 (678) 779-4753</div>
+              <v-btn
+                variant="text"
+                icon="mdi-whatsapp"
+                :href="'https://wa.me/16787794753'"
+                target="_blank"
+                class="ms-2"
+                style="color:#E0E0E0;"
+              ></v-btn>
 
 
               <a
@@ -90,14 +104,16 @@
             <v-col cols="12" md="4">
               <div class="text-subtitle-1 font-weight-semibold mb-3">{{ $t('footer.legal.title') }}</div>
               <div class="d-flex flex-column">
+                <router-link :to="{ name: 'Contact' }" class="footer-link">{{ $t('nav.contact') }}</router-link>
                 <a href="#" class="footer-link">{{ $t('footer.legal.privacy') }}</a>
                 <a href="#" class="footer-link">{{ $t('footer.legal.terms') }}</a>
-                  </div>
+              </div>
                 </v-col>
               </v-row>
 
           <div class="text-center mt-8" style="color:#E0E0E0; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 16px;">
-            © 2024 MOSS Atlanta Staffing Services. {{ $t('footer.rights') }}
+            <div>© 2025 MOSS Atlanta Staffing Services. {{ $t('footer.rights') }}</div>
+            <div class="text-caption" style="color:#BDBDBD; font-size: 0.7rem;">desarrollado por VQ</div>
           </div>
             </v-container>
           </footer>

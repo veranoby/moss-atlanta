@@ -1,0 +1,57 @@
+[
+  {
+    "id": "user_admin_001",
+    "email": "admin@moss.com",
+    "password": "MossAdmin2025!",
+    "passwordConfirm": "MossAdmin2025!", 
+    "name": "Luis Moncayo",
+    "system_role": "super_admin",
+    "verified": true,
+    "created": "2025-01-01 10:00:00.000Z",
+    "updated": "2025-01-01 10:00:00.000Z"
+  },
+  {
+    "id": "user_ops_001", 
+    "email": "operations@moss.com",
+    "password": "MossOps2025!",
+    "passwordConfirm": "MossOps2025!",
+    "name": "Edny Rodriguez", 
+    "system_role": "operations_hr",
+    "verified": true,
+    "created": "2025-01-01 10:00:00.000Z",
+    "updated": "2025-01-01 10:00:00.000Z"
+  },
+  {
+    "id": "user_finance_001",
+    "email": "finance@moss.com", 
+    "password": "MossFinance2025!",
+    "passwordConfirm": "MossFinance2025!",
+    "name": "Walter Moncayo",
+    "system_role": "finance", 
+    "verified": true,
+    "created": "2025-01-01 10:00:00.000Z",
+    "updated": "2025-01-01 10:00:00.000Z"
+  },
+  {
+    "id": "user_employee_001",
+    "email": "maria.employee@moss.com",
+    "password": "Employee2025!",
+    "passwordConfirm": "Employee2025!",
+    "name": "Maria Velasquez",
+    "system_role": "employee",
+    "verified": true,
+    "created": "2025-01-01 10:00:00.000Z", 
+    "updated": "2025-01-01 10:00:00.000Z"
+  },
+  {
+    "id": "user_employee_002",
+    "email": "carlos.employee@moss.com",
+    "password": "Employee2025!",
+    "passwordConfirm": "Employee2025!",
+    "name": "Carlos Elias",
+    "system_role": "employee", 
+    "verified": true,
+    "created": "2025-01-01 10:00:00.000Z",
+    "updated": "2025-01-01 10:00:00.000Z"
+  }
+]

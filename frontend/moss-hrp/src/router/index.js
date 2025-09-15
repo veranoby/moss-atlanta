@@ -10,6 +10,18 @@ const routes = [
     component: Home
   },
   {
+    path: '/open-positions',
+    name: 'OpenPositions',
+    component: () => import('@/views/OpenPositions.vue'),
+    meta: { requiresAuth: false } // Public route
+  },
+  {
+    path: '/contact',
+    name: 'Contact',
+    component: () => import('@/views/Contact.vue'),
+    meta: { requiresAuth: false } // Public route
+  },
+  {
     path: '/login',
     name: 'Login',
     component: LoginPage,
@@ -17,7 +29,7 @@ const routes = [
   },
   {
     path: '/admin',
-    name: 'Admin',
+    name: 'AdminDashboard',
     component: () => import('@/views/Admin/Dashboard.vue'),
     meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
   },
@@ -74,6 +86,12 @@ const routes = [
     name: 'AdminApplications',
     component: () => import('@/views/Admin/Applications.vue'),
     meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
+  },
+  {
+    path: '/admin/users',
+    name: 'AdminUsers',
+    component: () => import('@/views/Admin/Users.vue'),
+    meta: { requiresAuth: true, roles: ['super_admin'] }
   },
   {
     path: '/employee',

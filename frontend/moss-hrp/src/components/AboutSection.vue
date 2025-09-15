@@ -18,8 +18,7 @@
         >
           <div class="text-center h-100 d-flex flex-column justify-space-between">
             <div
-              class="w-16 h-16 rounded-circle d-flex align-center justify-center mx-auto mb-4"
-              style="background:#FFF9C4;"
+              class="w-16 h-16 rounded-circle d-flex align-center justify-center mx-auto mb-4 bg-primary-lighten-1"
             >
               <v-icon color="black" size="34">{{ benefit.icon }}</v-icon>
             </div>

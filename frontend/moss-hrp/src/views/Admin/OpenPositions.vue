@@ -1,5 +1,6 @@
 <template>
-  <v-container fluid>
+  <AdminLayout>
+    <v-container fluid>
     <div class="d-flex justify-space-between align-center mb-4">
       <h2 class="text-h4">Gestión de Posiciones Abiertas</h2>
       <v-btn
@@ -69,12 +70,14 @@
       />
     </FormModal>
 
-  </v-container>
+    </v-container>
+  </AdminLayout>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useOpenPositions } from '@/composables/useOpenPositions';
+import AdminLayout from '@/layouts/AdminLayout.vue';
 import FormModal from '@/components/FormModal.vue';
 import OpenPositionForm from '@/components/forms/OpenPositionForm.vue';
 

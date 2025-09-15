@@ -1,5 +1,6 @@
 <template>
-  <v-container fluid>
+  <AdminLayout>
+    <v-container fluid>
     <v-row>
       <v-col>
         <DataTable
@@ -47,12 +48,14 @@
     >
       <LegalEntityForm ref="legalEntityForm" v-model="editedItem" />
     </FormModal>
-  </v-container>
+    </v-container>
+  </AdminLayout>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
 import { pb } from '@/composables/usePocketbase';
+import AdminLayout from '@/layouts/AdminLayout.vue';
 import DataTable from '@/components/DataTable.vue';
 import FormModal from '@/components/FormModal.vue';
 import LegalEntityForm from '@/components/forms/LegalEntityForm.vue';

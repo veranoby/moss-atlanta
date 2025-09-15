@@ -44,10 +44,15 @@ export function useSSE(url) {
     };
 
     es.onerror = (err) => {
-      console.error('SSE Error:', err);
+      console.warn('SSE connection failed - endpoint may not be configured:', url);
       status.value = 'closed';
       error.value = err;
-      // The browser's EventSource API will automatically attempt to reconnect.
+
+      // Don't spam console with SSE errors if endpoint doesn't exist
+      // This is expected until Pocketbase SSE endpoints are configured
+      if (url.includes('/api/sse/')) {
+        console.info('SSE endpoints not configured in Pocketbase - real-time updates disabled');
+      }
     };
 
     // Attach all registered listeners to the new EventSource instance.

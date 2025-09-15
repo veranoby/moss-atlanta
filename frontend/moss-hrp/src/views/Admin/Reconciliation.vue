@@ -1,5 +1,6 @@
 <template>
-  <v-container fluid>
+  <AdminLayout>
+    <v-container fluid>
     <div class="d-flex justify-space-between align-center mb-4">
       <h2 class="text-h4">Dashboard de Reconciliación</h2>
     </div>
@@ -34,13 +35,15 @@
       :period-id="selectedPeriodId"
       @save="handleSaveReconciliation"
     />
-  </v-container>
+    </v-container>
+  </AdminLayout>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { pb } from '@/composables/usePocketbase';
 import { useSSE } from '@/composables/useSSE';
+import AdminLayout from '@/layouts/AdminLayout.vue';
 import PayrollPeriodsList from '@/components/PayrollPeriodsList.vue';
 import ReconciliationModal from '@/components/ReconciliationModal.vue';
 

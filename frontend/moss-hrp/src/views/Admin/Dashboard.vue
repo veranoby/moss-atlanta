@@ -1,26 +1,6 @@
 <template>
-  <v-app>
-    <v-navigation-drawer v-model="drawer" app>
-      <v-list>
-        <v-list-item title="Dashboard" prepend-icon="mdi-view-dashboard" to="/admin"></v-list-item>
-        <v-list-item title="Hotels" prepend-icon="mdi-domain" to="/admin/hotels"></v-list-item>
-        <v-list-item title="Employees" prepend-icon="mdi-account-group" to="/admin/employees"></v-list-item>
-        <v-list-item title="Open Positions" prepend-icon="mdi-briefcase" to="/admin/positions"></v-list-item>
-        <v-list-item title="Reconciliation" prepend-icon="mdi-compare" to="/admin/reconciliation"></v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>MOSS Atlanta - Admin Panel</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn icon to="/">
-        <v-icon>mdi-home</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
-      <v-container>
+  <AdminLayout>
+    <!-- Dashboard Content -->
         <v-row>
           <v-col cols="12">
             <h1 class="text-h4 mb-4">Dashboard Overview</h1>
@@ -31,34 +11,34 @@
           <v-col cols="12" md="3">
             <v-card>
               <v-card-text>
-                <div class="text-h6">Total Hotels</div>
+                <div class="text-h6">{{ $t('admin.totalHotels') }}</div>
                 <div class="text-h4 text-primary">{{ stats.hotels }}</div>
               </v-card-text>
             </v-card>
           </v-col>
-          
+
           <v-col cols="12" md="3">
             <v-card>
               <v-card-text>
-                <div class="text-h6">Active Employees</div>
+                <div class="text-h6">{{ $t('admin.activeEmployees') }}</div>
                 <div class="text-h4 text-success">{{ stats.employees }}</div>
               </v-card-text>
             </v-card>
           </v-col>
-          
+
           <v-col cols="12" md="3">
             <v-card>
               <v-card-text>
-                <div class="text-h6">Open Positions</div>
+                <div class="text-h6">{{ $t('admin.openPositions') }}</div>
                 <div class="text-h4 text-warning">{{ stats.openPositions }}</div>
               </v-card-text>
             </v-card>
           </v-col>
-          
+
           <v-col cols="12" md="3">
             <v-card>
               <v-card-text>
-                <div class="text-h6">Pending Reports</div>
+                <div class="text-h6">{{ $t('admin.pendingReports') }}</div>
                 <div class="text-h4 text-error">{{ stats.pendingReports }}</div>
               </v-card-text>
             </v-card>
@@ -68,7 +48,7 @@
         <v-row class="mt-4">
           <v-col cols="12">
             <v-card>
-              <v-card-title>Recent Activity</v-card-title>
+              <v-card-title>{{ $t('admin.recentActivity') }}</v-card-title>
               <v-card-text>
                 <v-list>
                   <v-list-item v-for="activity in recentActivity" :key="activity.id">
@@ -80,26 +60,80 @@
             </v-card>
           </v-col>
         </v-row>
-      </v-container>
-    </v-main>
-  </v-app>
+  </AdminLayout>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { pb } from '@/composables/usePocketbase'
+import AdminLayout from '@/layouts/AdminLayout.vue'
 
-const drawer = ref(true)
-
+// Remove drawer - now handled by layout
+const loading = ref(false)
 const stats = ref({
-  hotels: 23,
-  employees: 387,
-  openPositions: 12,
-  pendingReports: 5
+  hotels: 0,
+  employees: 0,
+  openPositions: 0,
+  pendingReports: 0
 })
 
-const recentActivity = ref([
-  { id: 1, description: 'New employee hired: Maria Rodriguez', timestamp: '2 hours ago' },
-  { id: 2, description: 'Hotel report processed: Hilton Downtown', timestamp: '4 hours ago' },
-  { id: 3, description: 'Open position filled: Housekeeper at Marriott', timestamp: '1 day ago' }
-])
+// Load real dashboard data
+const loadDashboardData = async () => {
+  loading.value = true
+  try {
+    const [hotels, employees, openPositions, payrollPeriods] = await Promise.all([
+      pb.collection('hotels').getList(1, 1),
+      pb.collection('employees').getList(1, 1),
+      pb.collection('open_positions').getList(1, 1, {
+        filter: 'status = "open"'
+      }),
+      pb.collection('payroll_periods').getList(1, 10, {
+        filter: 'status = "pending_reports"',
+        sort: '-created'
+      })
+    ])
+
+    stats.value = {
+      hotels: hotels.totalItems,
+      employees: employees.totalItems,
+      openPositions: openPositions.totalItems,
+      pendingReports: payrollPeriods.totalItems
+    }
+  } catch (error) {
+    console.error('Failed to load dashboard data:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  loadDashboardData()
+  loadRecentActivity()
+})
+
+const recentActivity = ref([])
+
+// Load real recent activity from audit logs
+const loadRecentActivity = async () => {
+  try {
+    const auditLogs = await pb.collection('audit_logs').getList(1, 5, {
+      sort: '-created',
+      expand: 'user'
+    })
+
+    recentActivity.value = auditLogs.items.map(log => ({
+      id: log.id,
+      description: log.action_description || `${log.action} on ${log.table_name}`,
+      timestamp: new Date(log.created).toLocaleString(),
+      user: log.expand?.user?.name || 'System'
+    }))
+  } catch (error) {
+    // Fallback to mock data if audit logs not available
+    recentActivity.value = [
+      { id: 1, description: 'Employee record updated', timestamp: '2 hours ago', user: 'Admin' },
+      { id: 2, description: 'New position posted', timestamp: '4 hours ago', user: 'HR Manager' },
+      { id: 3, description: 'Reconciliation completed', timestamp: '6 hours ago', user: 'System' }
+    ]
+  }
+}
 </script>

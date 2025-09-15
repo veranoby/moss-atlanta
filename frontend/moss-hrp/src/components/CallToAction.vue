@@ -1,5 +1,5 @@
 <template>
-  <section id="apply" class="section" :style="{ background: '#FFF9C4' }">
+  <section id="apply" class="section bg-primary-lighten-1">
     <v-container>
       <v-row  align="center" justify="space-between">
         <v-col cols="12" sm="6" md="6">
@@ -7,12 +7,12 @@
             {{ $t('cta.employee.title') }}
           </h3>
           <v-btn
+            :to="{ name: 'OpenPositions' }"
             color="white"
             class="text-black mt-4 px-8 "
             rounded="lg"
             size="large"
             elevation="2"
-            @click="scrollToSection('contact')"
           >
             {{ $t('cta.employee.button') }}
           </v-btn>
@@ -23,12 +23,12 @@
             {{ $t('cta.employer.title') }}
           </h3>
           <v-btn
+            :to="{ name: 'Contact' }"
             color="white"
             class="text-black mt-4 px-8 "
             rounded="lg"
             size="large"
             elevation="2"
-            @click="scrollToSection('contact')"
           >
             {{ $t('cta.employer.button') }}
           </v-btn>
@@ -39,13 +39,7 @@
 </template>
 
 <script setup lang="ts">
-// ✅ Methods
-const scrollToSection = (sectionId: string) => {
-  const element = document.getElementById(sectionId)
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' })
-  }
-}
+// No methods needed as we're using router-links now
 </script>
 
 <style scoped>

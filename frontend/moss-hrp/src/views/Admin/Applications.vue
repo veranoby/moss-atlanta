@@ -1,5 +1,6 @@
 <template>
-  <v-container fluid>
+  <AdminLayout>
+    <v-container fluid>
     <div class="d-flex justify-space-between align-center mb-4">
       <h2 class="text-h4">Gestión de Aplicaciones</h2>
       <div class="d-flex align-center gap-3">
@@ -404,12 +405,14 @@
       v-model="profileDialog"
       :candidate-email="selectedCandidateEmail"
     />
-  </v-container>
+    </v-container>
+  </AdminLayout>
 </template>
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { useHiringWorkflow } from '@/composables/useHiringWorkflow';
+import AdminLayout from '@/layouts/AdminLayout.vue';
 import HiringActions from '@/components/HiringActions.vue';
 import CandidateProfile from '@/components/CandidateProfile.vue';
 

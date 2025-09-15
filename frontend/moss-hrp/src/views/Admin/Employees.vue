@@ -1,6 +1,19 @@
 <template>
-  <v-container fluid>
-    <h2 class="text-h4 mb-4">Gestión de Empleados</h2>
+  <AdminLayout>
+    <v-container fluid class="pa-0">
+    <div class="d-flex justify-space-between align-center mb-6">
+      <div>
+        <h2 class="text-h4 mb-2">Gestión de Empleados</h2>
+        <p class="text-body-1 text-medium-emphasis">Administrar empleados del sistema MOSS</p>
+      </div>
+      <v-btn
+        color="primary"
+        prepend-icon="mdi-account-plus"
+        @click="openCreateModal"
+      >
+        Crear Empleado
+      </v-btn>
+    </div>
 
     <AdvancedSearch
       :hotels="hotels"
@@ -19,12 +32,16 @@
 
     <v-card variant="outlined">
       <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
-      <VirtualScrollTable
-        v-if="!loading"
+
+      <!-- Using v-data-table with pagination for better compatibility -->
+      <v-data-table
+        v-if="!loading && employees.length > 0"
         :items="employees"
         :headers="headers"
-        :item-height="55"
-        style="height: 65vh;"
+        class="elevation-0"
+        :items-per-page="50"
+        :items-per-page-options="[25, 50, 100, -1]"
+        show-current-page
       >
         <template #item.name="{ item }">
           <div>
@@ -44,7 +61,14 @@
           <v-btn icon="mdi-pencil" variant="text" size="small" @click="openEditModal(item)"></v-btn>
           <v-btn icon="mdi-delete" variant="text" size="small" @click="deleteEmployee(item)"></v-btn>
         </template>
-      </VirtualScrollTable>
+      </v-data-table>
+
+      <!-- Fallback if no employees -->
+      <div v-if="!loading && employees.length === 0" class="pa-4 text-center">
+        <v-icon size="48" class="mb-2">mdi-account-off</v-icon>
+        <div class="text-h6">No se encontraron empleados</div>
+        <div class="text-body-2 text-medium-emphasis">Los empleados aparecerán aquí cuando se creen usuarios con rol "employee"</div>
+      </div>
     </v-card>
 
     <FormModal
@@ -56,12 +80,14 @@
       <EmployeeForm ref="employeeForm" v-model="editedItem" />
     </FormModal>
 
-  </v-container>
+    </v-container>
+  </AdminLayout>
 </template>
 
-<script setup>
-import { ref, onMounted, computed } from 'vue';
-import { pb } from '@/composables/usePocketbase';
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue'
+import { pb } from '@/composables/usePocketbase'
+import AdminLayout from '@/layouts/AdminLayout.vue'
 import AdvancedSearch from '@/components/AdvancedSearch.vue';
 import BulkActionBar from '@/components/BulkActionBar.vue';
 import VirtualScrollTable from '@/components/VirtualScrollTable.vue';
@@ -92,30 +118,56 @@ const headers = [
 // --- Data Loading ---
 async function loadFilterData() {
   try {
-    [hotels.value, positions.value] = await Promise.all([
-      pb.collection('hotels').getFullList({ sort: 'name' }),
-      pb.collection('positions').getFullList({ sort: 'name' }),
-    ]);
+    // Only load hotels for now - positions collection may not exist yet
+    hotels.value = await pb.collection('hotels').getFullList({ sort: 'name' });
+
+    // Temporary: Set empty positions array until collection is created
+    positions.value = [];
   } catch (error) {
     console.error("Failed to load filter data:", error);
+    // Set empty arrays on error to prevent component crashes
+    hotels.value = [];
+    positions.value = [];
   }
 }
 
 async function loadEmployees(filters = {}) {
   loading.value = true;
   try {
-    const filterParts = [];
-    if (filters.searchText) {
-      const text = filters.searchText.replace(/"/g, '\\"');
-      filterParts.push(`(first_name~"${text}" || last_name~"${text}" || email~"${text}" || employee_id~"${text}")`);
+    // Check if user is authenticated
+    if (!pb.authStore.isValid) {
+      console.error('User not authenticated')
+      return
     }
-    if (filters.status) filterParts.push(`status="${filters.status}"`);
 
-    const pbFilter = filterParts.join(' && ');
-    const result = await pb.collection('employees').getFullList(500, { filter: pbFilter, sort: '+last_name,+first_name' });
-    employees.value = result;
+    // Use the EXACT same pattern as Users.vue but with inverse filter
+    // Users.vue: 'system_role != "employee"' (exclude employees)
+    // Employees.vue: 'system_role = "employee"' (include only employees)
+
+    const records = await pb.collection('users').getFullList({
+      sort: '-created',
+      filter: 'system_role = "employee"'
+    })
+
+    // Transform users to employee display format
+    employees.value = records.map(user => ({
+      id: user.id,
+      first_name: user.name?.split(' ')[0] || user.name || 'Sin nombre',
+      last_name: user.name?.split(' ').slice(1).join(' ') || '',
+      email: user.email || 'Sin email',
+      status: user.verified ? 'active' : 'pending',
+      hire_date: user.created,
+      system_role: user.system_role,
+      user_id: user.id
+    }));
+
+    console.log(`Loaded ${records.length} employees:`, records.map(u => ({name: u.name, email: u.email, role: u.system_role})))
   } catch (error) {
     console.error("Failed to load employees:", error);
+    if (error.status === 403) {
+      console.error('Access denied - user may not have permission to view employees')
+    }
+    employees.value = [];
   } finally {
     loading.value = false;
   }
@@ -145,9 +197,23 @@ async function saveEmployee() {
   try {
     const dataToSave = { ...editedItem.value };
     if (isEditing.value) {
-      await pb.collection('employees').update(dataToSave.id, dataToSave);
+      // Update user in users collection (same as Users.vue pattern)
+      await pb.collection('users').update(dataToSave.id, {
+        name: `${dataToSave.first_name} ${dataToSave.last_name}`,
+        email: dataToSave.email,
+        verified: dataToSave.status === 'active',
+        system_role: 'employee'
+      });
     } else {
-      await pb.collection('employees').create(dataToSave);
+      // Create user in users collection (same as Users.vue pattern)
+      await pb.collection('users').create({
+        name: `${dataToSave.first_name} ${dataToSave.last_name}`,
+        email: dataToSave.email,
+        password: 'TempPassword123!', // Temporary password
+        passwordConfirm: 'TempPassword123!',
+        system_role: 'employee',
+        verified: dataToSave.status === 'active'
+      });
     }
     dialogVisible.value = false;
     await loadEmployees();
@@ -162,7 +228,8 @@ async function deleteEmployee(item) {
   if (window.confirm(`Are you sure you want to delete ${item.first_name} ${item.last_name}?`)) {
     loading.value = true;
     try {
-      await pb.collection('employees').delete(item.id);
+      // Delete user from users collection (same as Users.vue pattern)
+      await pb.collection('users').delete(item.id);
       await loadEmployees();
     } catch (error) {
       console.error('Failed to delete employee:', error);

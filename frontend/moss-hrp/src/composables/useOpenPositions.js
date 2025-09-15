@@ -88,6 +88,12 @@ export function useOpenPositions() {
    */
   const fetchFormData = async () => {
     try {
+      // Check authentication before API calls
+      if (!pb.authStore.isValid) {
+        console.error('User not authenticated for fetchFormData');
+        return { areas: [], departments: [], positions: [] };
+      }
+
       const [hotels, departments, positions] = await Promise.all([
         pb.collection('hotels').getFullList({ sort: 'name', fields: 'area' }),
         pb.collection('departments').getFullList({ sort: 'name' }),

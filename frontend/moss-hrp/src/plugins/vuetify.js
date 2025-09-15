@@ -28,7 +28,8 @@ export default createVuetify({
       light: {
         dark: false,
         colors: {
-          primary: '#FFF9C4',
+          primary: '#1A1A1A', // Dark text/buttons for better contrast
+          'primary-lighten-1': '#FFF9C4', // Original yellow for backgrounds
           secondary: '#F5F5F5',
           accent: '#424242',
           error: '#FF5252',
@@ -46,7 +47,8 @@ export default createVuetify({
       dark: {
         dark: true,
         colors: {
-          primary: '#FFF9C4',
+          primary: '#FFF9C4', // Keep yellow for dark theme
+          'primary-darken-1': '#1A1A1A',
           secondary: '#424242',
           accent: '#FF4081',
           error: '#FF5252',
