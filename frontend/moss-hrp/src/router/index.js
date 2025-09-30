@@ -93,6 +93,25 @@ const routes = [
     component: () => import('@/views/Admin/Users.vue'),
     meta: { requiresAuth: true, roles: ['super_admin'] }
   },
+  // Historical views - TODO [JULES]: Create these view components
+  {
+    path: '/admin/payroll-history',
+    name: 'AdminPayrollHistory',
+    component: () => import('@/views/Admin/PayrollHistory.vue'),
+    meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr', 'financial'] }
+  },
+  {
+    path: '/admin/hotel-billing',
+    name: 'AdminHotelBilling',
+    component: () => import('@/views/Admin/HotelBilling.vue'),
+    meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr', 'financial'] }
+  },
+  {
+    path: '/admin/reconciliation-archive',
+    name: 'AdminReconciliationArchive',
+    component: () => import('@/views/Admin/ReconciliationArchive.vue'),
+    meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }
+  },
   {
     path: '/employee',
     name: 'Employee',

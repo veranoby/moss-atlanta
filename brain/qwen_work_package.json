@@ -1,0 +1,398 @@
+{
+  "work_package": {
+    "agent_type": "qwen_cli_coder",
+    "session_id": "2025-09-30-composables",
+    "priority": "CRITICAL",
+    "estimated_duration": "2-3 hours",
+    "blocks": ["jules_frontend_views"],
+
+    "agent_instructions": {
+      "recommended_agent": "Use Qwen CLI Coder for fast bulk operations",
+      "alternative_agent": "Claude can do this but slower and more expensive",
+      "why_qwen": "Fast at repetitive composable creation, good at following patterns"
+    },
+
+    "required_reads_before_start": {
+      "order": "READ IN THIS EXACT ORDER",
+      "files": [
+        {
+          "path": "brain/api_reference.json",
+          "purpose": "API endpoints, Pocketbase patterns, naming conventions",
+          "sections_to_focus": ["critical_collections", "pocketbase_rest_api_patterns", "pocketbase_filter_syntax", "common_expand_patterns"],
+          "read_time": "10 minutes"
+        },
+        {
+          "path": "brain/pb_schema.json",
+          "purpose": "Database schema - authoritative source of truth",
+          "sections_to_focus": ["ALL collections you'll use: payroll, payroll_items, punches, employee_assignments"],
+          "read_time": "5 minutes"
+        },
+        {
+          "path": "brain/ai_coordination_rules.json",
+          "purpose": "Your safety constraints and forbidden operations",
+          "sections_to_focus": ["ai_agents.qwen_cli_coder", "parallel_execution_rules.file_conflict_prevention"],
+          "read_time": "5 minutes"
+        },
+        {
+          "path": "CLAUDE.md",
+          "purpose": "Project patterns and business logic rules",
+          "sections_to_focus": ["BUSINESS LOGIC CRÍTICO (work_date logic, 4-punch cycle)", "COMPONENT PATTERNS"],
+          "read_time": "5 minutes"
+        },
+        {
+          "path": "frontend/moss-hrp/src/composables/useReconciliation.js",
+          "purpose": "PATTERN REFERENCE - Your composables MUST follow this structure",
+          "sections_to_focus": ["Entire file - this is your template"],
+          "read_time": "10 minutes"
+        }
+      ],
+      "total_read_time": "35 minutes",
+      "validation": "You MUST read these before writing ANY code. No exceptions."
+    },
+
+    "safety_rules": {
+      "forbidden_operations": {
+        "NEVER_modify": [
+          "src/components/**/*.vue",
+          "src/views/**/*.vue",
+          "brain/*.json",
+          "pocketbase/pb_schema.json",
+          "src/router/*.js"
+        ],
+        "NEVER_delete": ["ANY files without explicit permission"],
+        "NEVER_touch": ["Authentication logic", "Database schema", "Core UI components"]
+      },
+      "allowed_operations": {
+        "CREATE": ["src/composables/*.js", "src/utils/*.js", "tests/**/*"],
+        "READ": ["ALL files for reference"],
+        "TEST": ["Your composables with real Pocketbase"]
+      },
+      "required_validations_before_commit": [
+        "Run ESLint: npm run lint (MUST pass with zero errors)",
+        "Test with real Pocketbase data (not mocks)",
+        "Verify JSDoc comments on all exported functions",
+        "Check naming follows brain/api_reference.json conventions"
+      ]
+    },
+
+    "tasks": [
+      {
+        "task_id": "QWEN-001",
+        "name": "Create usePayrollHistory composable",
+        "file_path": "frontend/moss-hrp/src/composables/usePayrollHistory.js",
+        "estimated_time": "60 minutes",
+        "priority": 1,
+
+        "requirements": {
+          "purpose": "Query and manage historical payroll data for completed periods",
+          "collection": "payroll",
+          "expand_pattern": "hotel,approved_by",
+          "fields_to_fetch": "id,hotel,week_start,week_end,total_hours,total_amount,status,quickbooks_batch_id,generated_at",
+          "default_filter": "status='approved' || status='sent_to_quickbooks' || status='paid'",
+          "sort_order": "-week_start"
+        },
+
+        "functions_to_implement": {
+          "fetchPayrollHistory": {
+            "params": ["filterParams = {hotel, startDate, endDate, status}"],
+            "returns": "Promise<Array<PayrollRecord>>",
+            "description": "Fetch historical payroll records with optional filters",
+            "pocketbase_query": {
+              "method": "pb.collection('payroll').getList(page, perPage, options)",
+              "filter_building": "Combine default_filter with user filters using && operator",
+              "expand": "hotel,approved_by",
+              "fields": "Use requirements.fields_to_fetch",
+              "sort": "-week_start",
+              "pagination": {"page": 1, "perPage": 50}
+            },
+            "error_handling": "Wrap in try/catch, set error.value, return empty array on failure",
+            "loading_state": "Set loading.value = true before call, = false in finally block"
+          },
+
+          "fetchPayrollDetails": {
+            "params": ["payrollId"],
+            "returns": "Promise<{payroll: Object, items: Array}>",
+            "description": "Fetch specific payroll with all payroll_items",
+            "queries": [
+              "Get payroll: pb.collection('payroll').getOne(payrollId, {expand: 'hotel,approved_by'})",
+              "Get items: pb.collection('payroll_items').getList(1, 200, {filter: `payroll='${payrollId}'`, expand: 'assignment.employee,assignment.position'})"
+            ]
+          },
+
+          "getPayrollSummary": {
+            "params": ["hotelId", "year"],
+            "returns": "Promise<{totalHours, totalAmount, avgWeekly, periodCount}>",
+            "description": "Calculate YTD aggregated stats for a hotel",
+            "logic": "Fetch all payroll for hotel in year, aggregate in JavaScript (NOT database)"
+          }
+        },
+
+        "state_to_export": {
+          "payrollHistory": "ref([]) - Array of payroll records",
+          "loading": "ref(false) - Loading state",
+          "error": "ref(null) - Error object if query fails",
+          "filters": "ref({hotel: null, startDate: null, endDate: null, status: [...]}) - Current filter state"
+        },
+
+        "pattern_reference": {
+          "file": "src/composables/useReconciliation.js",
+          "copy_structure": [
+            "Import statements (Vue 3 + Pocketbase)",
+            "State management with ref()",
+            "Function structure with try/catch",
+            "Loading state management",
+            "Return destructured object"
+          ]
+        },
+
+        "validation_checklist": [
+          "ESLint passes with zero errors",
+          "JSDoc on all exported functions",
+          "All Pocketbase calls optimized (filter, fields, expand)",
+          "Error handling on all async functions",
+          "Loading states managed correctly",
+          "Tested with real Pocketbase data",
+          "Empty results handled gracefully",
+          "Console.log statements removed"
+        ]
+      },
+
+      {
+        "task_id": "QWEN-002",
+        "name": "Create useEmployeeTimesheet composable",
+        "file_path": "frontend/moss-hrp/src/composables/useEmployeeTimesheet.js",
+        "estimated_time": "60 minutes",
+        "priority": 2,
+
+        "requirements": {
+          "purpose": "Individual employee timesheet aggregation and payroll history",
+          "collections": ["punches", "employee_assignments", "payroll_items"],
+          "critical_business_logic": {
+            "work_date_calculation": {
+              "rule": "work_date = clock_in date (even if clock_out is next day)",
+              "implementation": "const date = new Date(clockInTime); return date.toISOString().split('T')[0]"
+            },
+            "4_punch_sequence": ["clock_in", "break_start", "break_end", "clock_out"],
+            "daily_hours_calculation": "(break_start - clock_in) + (clock_out - break_end)"
+          }
+        },
+
+        "functions_to_implement": {
+          "fetchEmployeePunches": {
+            "params": ["employeeId", "dateRange = {startDate, endDate}"],
+            "returns": "Promise<Array<PunchRecord>>",
+            "pocketbase_query": {
+              "collection": "punches",
+              "filter": "assignment.employee='{employeeId}' && timestamp>='{startDate}' && timestamp<='{endDate}'",
+              "expand": "assignment.employee,assignment.hotel,assignment.position",
+              "sort": "+timestamp"
+            }
+          },
+
+          "calculateDailyHours": {
+            "params": ["punches"],
+            "returns": "Array<{date, totalHours, details}>",
+            "logic": [
+              "Group punches by work_date (use clock_in date)",
+              "For each date, find 4 punches: clock_in, break_start, break_end, clock_out",
+              "Calculate: (break_start - clock_in) + (clock_out - break_end) in hours",
+              "Handle missing punches: return partial data with warning flag"
+            ]
+          },
+
+          "fetchEmployeePayrollHistory": {
+            "params": ["employeeId", "year"],
+            "returns": "Promise<Array<PayrollItemRecord>>",
+            "pocketbase_query": {
+              "collection": "payroll_items",
+              "filter": "assignment.employee='{employeeId}' && payroll.week_start>='{year}-01-01' && payroll.week_start<='{year}-12-31'",
+              "expand": "payroll.hotel,assignment.position",
+              "sort": "-payroll.week_start"
+            }
+          },
+
+          "getWeeklySummary": {
+            "params": ["employeeId", "weekStart"],
+            "returns": "Promise<{totalHours, daysWorked, estimatedPay, overtimeHours}>",
+            "logic": "Fetch punches for week, calculate daily hours, sum totals, detect overtime (>40 hours)"
+          }
+        },
+
+        "validation_checklist": [
+          "work_date calculation implemented correctly",
+          "4-punch sequence validation logic included",
+          "Daily hours calculation handles incomplete punches",
+          "All date calculations use ISO format (YYYY-MM-DD)",
+          "Timezone handling considered (use UTC or local consistently)"
+        ]
+      },
+
+      {
+        "task_id": "QWEN-003",
+        "name": "Create useHotelBilling composable",
+        "file_path": "frontend/moss-hrp/src/composables/useHotelBilling.js",
+        "estimated_time": "45 minutes",
+        "priority": 3,
+
+        "requirements": {
+          "purpose": "Hotel-specific financial reporting and billing data aggregation",
+          "collection": "payroll",
+          "aggregation_logic": "Aggregate in JavaScript after fetching, NOT in database"
+        },
+
+        "functions_to_implement": {
+          "fetchHotelPayrollHistory": {
+            "params": ["hotelId", "dateRange = {startDate, endDate}"],
+            "returns": "Promise<Array<PayrollRecord>>",
+            "pocketbase_query": {
+              "filter": "hotel='{hotelId}' && week_start>='{startDate}' && week_end<='{endDate}' && status!='draft'",
+              "expand": "hotel,approved_by",
+              "sort": "-week_start"
+            }
+          },
+
+          "getMonthlyAggregation": {
+            "params": ["hotelId", "year", "month"],
+            "returns": "Promise<{totalHours, totalAmount, weekCount, avgWeeklyHours}>",
+            "logic": [
+              "Fetch all payroll for hotel in month",
+              "Sum total_hours and total_amount",
+              "Calculate averages"
+            ]
+          },
+
+          "getYTDSummary": {
+            "params": ["hotelId", "year"],
+            "returns": "Promise<{totalHours, totalAmount, monthlyBreakdown}>",
+            "logic": "Fetch all payroll for year, group by month, calculate totals"
+          }
+        },
+
+        "validation_checklist": [
+          "Date range filters work correctly",
+          "Aggregation math is accurate",
+          "Handles hotels with no payroll data gracefully"
+        ]
+      }
+    ],
+
+    "deliverable_format": {
+      "file_structure": {
+        "imports": [
+          "import { ref, computed } from 'vue'",
+          "import { pb } from '@/plugins/pocketbase'"
+        ],
+        "jsdoc": "Required on EVERY exported function with @param, @returns, @description",
+        "exports": {
+          "pattern": "export function use[Name]() { ... return { state, ...functions } }",
+          "default": "export default use[Name]"
+        }
+      },
+      "code_style": {
+        "naming": "camelCase for variables/functions, PascalCase for component imports",
+        "quotes": "Single quotes for strings",
+        "semicolons": "Required at end of statements",
+        "indentation": "2 spaces (match project .editorconfig)"
+      }
+    },
+
+    "completion_protocol": {
+      "after_each_task": {
+        "steps": [
+          "Run: npm run lint (must pass)",
+          "Test manually with real Pocketbase",
+          "Git add: git add frontend/moss-hrp/src/composables/[file].js",
+          "Git commit: git commit -m '[QWEN] Create [composable_name] with [feature_summary]'",
+          "Create status file: Create QWEN_TASK_[N]_COMPLETE.json in root with summary"
+        ]
+      },
+      "status_file_format": {
+        "example": {
+          "task_id": "QWEN-001",
+          "file": "src/composables/usePayrollHistory.js",
+          "status": "complete",
+          "commit_hash": "abc1234",
+          "tested": true,
+          "eslint_passed": true,
+          "notes": "All functions work with real data, filters validated"
+        }
+      },
+      "when_all_complete": {
+        "create_file": "QWEN_ALL_COMPLETE.json",
+        "update_file": "brain/ai_work_status.json (mark qwen_cli_coder status as 'completed')",
+        "notify": "Jules is now UNBLOCKED and can start frontend views"
+      }
+    },
+
+    "blocker_protocol": {
+      "if_stuck": {
+        "create_file": "QWEN_BLOCKER.json in root",
+        "format": {
+          "task_id": "QWEN-00X",
+          "issue": "Description of problem",
+          "attempted_solutions": ["What you tried"],
+          "question_for_claude": "Specific question",
+          "blocking_time": "How long you've been stuck"
+        }
+      }
+    },
+
+    "reference_files_usage": {
+      "brain/api_reference.json": {
+        "when_to_check": "Before EVERY Pocketbase query",
+        "what_to_verify": [
+          "Collection name is correct (no hallucinations)",
+          "Expand pattern matches schema relations",
+          "Filter syntax is valid Pocketbase format",
+          "Field names exist in collection"
+        ]
+      },
+      "brain/pb_schema.json": {
+        "when_to_check": "When unsure about field names or relations",
+        "what_to_verify": [
+          "Field exists in collection schema",
+          "Field type matches what you're querying",
+          "Relation field names for expand"
+        ]
+      },
+      "brain/ai_coordination_rules.json": {
+        "when_to_check": "Before modifying ANY file",
+        "what_to_verify": [
+          "File is in your allowed_operations list",
+          "Operation type is permitted",
+          "No conflicts with other AI agents"
+        ]
+      }
+    },
+
+    "common_mistakes_to_avoid": {
+      "hallucinated_collection_names": {
+        "wrong": "pb.collection('payroll_history')",
+        "correct": "pb.collection('payroll')",
+        "prevention": "ALWAYS check brain/pb_schema.json for exact collection names"
+      },
+      "missing_filters": {
+        "wrong": "pb.collection('payroll').getFullList()",
+        "correct": "pb.collection('payroll').getList(1, 50, {filter: \"status='approved'\"})",
+        "prevention": "NEVER use getFullList() without filters on large collections"
+      },
+      "incorrect_expand": {
+        "wrong": "expand: 'employee,hotel_name'",
+        "correct": "expand: 'hotel,approved_by'",
+        "prevention": "Check brain/api_reference.json common_expand_patterns"
+      },
+      "ui_logic_in_composable": {
+        "wrong": "import { VDataTable } from 'vuetify'",
+        "correct": "Only import Vue 3 core and Pocketbase",
+        "prevention": "Composables = pure logic, NO UI components"
+      }
+    },
+
+    "success_criteria": {
+      "all_tasks_complete": "3 composables created, tested, committed",
+      "quality_gates_passed": "ESLint zero errors, JSDoc complete, tests pass",
+      "jules_unblocked": "Jules can now import and use your composables",
+      "estimated_total_time": "2-3 hours for all three tasks"
+    }
+  }
+}

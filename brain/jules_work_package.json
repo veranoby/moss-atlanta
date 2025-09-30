@@ -1,0 +1,534 @@
+{
+  "work_package": {
+    "agent_type": "jules",
+    "session_id": "2025-09-30-historical-views",
+    "priority": "HIGH",
+    "estimated_duration": "6-8 hours",
+    "blocked_by": "qwen_composables_completion",
+
+    "agent_instructions": {
+      "recommended_agent": "Jules - Structured task executor specialized in Vue component generation",
+      "why_jules": "JSON-driven, follows patterns exactly, good at Vuetify 3 components",
+      "activation_timing": "WAIT until Qwen completes all 3 composables (check QWEN_ALL_COMPLETE.json)"
+    },
+
+    "required_reads_before_start": {
+      "order": "READ IN THIS EXACT ORDER",
+      "files": [
+        {
+          "path": "brain/api_reference.json",
+          "purpose": "API patterns, expand patterns, naming conventions",
+          "sections": ["common_expand_patterns", "naming_conventions"],
+          "read_time": "10 minutes"
+        },
+        {
+          "path": "brain/ai_coordination_rules.json",
+          "purpose": "Your safety constraints and allowed operations",
+          "sections": ["ai_agents.jules"],
+          "read_time": "5 minutes"
+        },
+        {
+          "path": "frontend/moss-hrp/src/views/Admin/Reconciliation.vue",
+          "purpose": "PATTERN REFERENCE for admin views",
+          "sections": ["Full file - this is your layout template"],
+          "read_time": "15 minutes"
+        },
+        {
+          "path": "frontend/moss-hrp/src/components/ReconciliationModal.vue",
+          "purpose": "PATTERN REFERENCE for modals and data tables",
+          "sections": ["v-dialog structure, v-data-table configuration"],
+          "read_time": "10 minutes"
+        },
+        {
+          "path": "CLAUDE.md",
+          "purpose": "Vue 3 patterns and Vuetify 3 conventions",
+          "sections": ["Vue.js 3 Conventions", "Component Patterns"],
+          "read_time": "5 minutes"
+        }
+      ],
+      "total_read_time": "45 minutes"
+    },
+
+    "safety_rules": {
+      "forbidden_operations": {
+        "NEVER_modify": [
+          "Existing components without explicit permission",
+          "brain/*.json files",
+          "pocketbase/pb_schema.json",
+          "src/composables/*.js (Qwen's territory)"
+        ],
+        "NEVER_delete": ["ANY existing files"],
+        "NEVER_add": ["Business logic in components - use composables instead"]
+      },
+      "allowed_operations": {
+        "CREATE": ["src/views/Admin/*.vue (new views)", "src/components/*.vue (new components)", "src/router additions"],
+        "READ": ["ALL files for pattern reference"]
+      },
+      "mandatory_patterns": {
+        "composition_api": "MUST use <script setup> syntax",
+        "vuetify_3": "ONLY Vuetify 3 components (v-data-table, v-dialog, v-card, etc.)",
+        "no_inline_logic": "Business logic in composables, UI logic only in components",
+        "expand_patterns": "Use brain/api_reference.json expand patterns EXACTLY"
+      }
+    },
+
+    "tasks": [
+      {
+        "task_id": "JULES-001",
+        "name": "PayrollHistory View",
+        "file_path": "frontend/moss-hrp/src/views/Admin/PayrollHistory.vue",
+        "estimated_time": "2-2.5 hours",
+        "priority": 1,
+        "depends_on": ["QWEN-001 complete (usePayrollHistory.js)"],
+
+        "component_specification": {
+          "purpose": "Historical payroll periods query and management for completed periods",
+          "layout": "Full-page admin view with sidebar navigation (copy from Reconciliation.vue)",
+          "composable_usage": "import { usePayrollHistory } from '@/composables/usePayrollHistory'",
+
+          "sections": {
+            "page_header": {
+              "title": "Payroll History",
+              "description": "View and export completed payroll periods"
+            },
+            "filters_panel": {
+              "components": [
+                {
+                  "type": "v-select",
+                  "v-model": "selectedHotel",
+                  "label": "Filter by Hotel",
+                  "items_source": "hotels collection via Pocketbase",
+                  "item_value": "id",
+                  "item_title": "name",
+                  "clearable": true,
+                  "multiple": false
+                },
+                {
+                  "type": "v-text-field",
+                  "v-model": "dateRange.startDate",
+                  "label": "Week Start - From",
+                  "type_attribute": "date",
+                  "hint": "YYYY-MM-DD format"
+                },
+                {
+                  "type": "v-text-field",
+                  "v-model": "dateRange.endDate",
+                  "label": "Week Start - To",
+                  "type_attribute": "date"
+                },
+                {
+                  "type": "v-btn",
+                  "action": "@click='applyFilters'",
+                  "text": "Apply Filters",
+                  "color": "primary"
+                },
+                {
+                  "type": "v-btn",
+                  "action": "@click='clearFilters'",
+                  "text": "Clear",
+                  "variant": "outlined"
+                }
+              ]
+            },
+            "data_table": {
+              "component": "v-data-table",
+              "v-model:items": "payrollHistory",
+              "v-model:loading": "loading",
+              "headers": [
+                {"title": "Hotel", "key": "expand.hotel.name", "sortable": true},
+                {"title": "Week Start", "key": "week_start", "sortable": true},
+                {"title": "Week End", "key": "week_end", "sortable": true},
+                {"title": "Total Hours", "key": "total_hours", "align": "end"},
+                {"title": "Total Amount", "key": "total_amount", "align": "end"},
+                {"title": "Status", "key": "status", "sortable": true},
+                {"title": "QB Batch ID", "key": "quickbooks_batch_id"},
+                {"title": "Actions", "key": "actions", "sortable": false}
+              ],
+              "items_per_page": 50,
+              "sort_by": [{"key": "week_start", "order": "desc"}]
+            },
+            "detail_modal": {
+              "trigger": "Click Actions > View Details button",
+              "component": "v-dialog",
+              "v-model": "detailDialog",
+              "max_width": "1000px",
+              "content": "Show payroll_items breakdown for selected payroll",
+              "nested_table": {
+                "headers": [
+                  {"title": "Employee", "key": "expand.assignment.expand.employee.first_name"},
+                  {"title": "Position", "key": "expand.assignment.expand.position.title"},
+                  {"title": "Hours", "key": "hours_worked", "align": "end"},
+                  {"title": "Rate", "key": "hourly_rate", "align": "end"},
+                  {"title": "Gross Pay", "key": "gross_pay", "align": "end"}
+                ]
+              }
+            }
+          },
+
+          "script_setup_structure": {
+            "imports": [
+              "import { ref, onMounted } from 'vue'",
+              "import { usePayrollHistory } from '@/composables/usePayrollHistory'",
+              "import { pb } from '@/plugins/pocketbase'"
+            ],
+            "composable_destructuring": "const { payrollHistory, loading, error, fetchPayrollHistory, fetchPayrollDetails } = usePayrollHistory()",
+            "local_state": [
+              "const selectedHotel = ref(null)",
+              "const dateRange = ref({ startDate: null, endDate: null })",
+              "const detailDialog = ref(false)",
+              "const selectedPayroll = ref(null)",
+              "const payrollItems = ref([])"
+            ],
+            "functions": [
+              {
+                "name": "applyFilters",
+                "logic": "Call fetchPayrollHistory({ hotel: selectedHotel.value, startDate: dateRange.value.startDate, endDate: dateRange.value.endDate })"
+              },
+              {
+                "name": "clearFilters",
+                "logic": "Reset selectedHotel and dateRange to null, call fetchPayrollHistory() with no params"
+              },
+              {
+                "name": "viewDetails",
+                "params": ["payroll"],
+                "logic": "Set selectedPayroll = payroll, call fetchPayrollDetails(payroll.id), open detailDialog"
+              }
+            ],
+            "lifecycle": "onMounted(() => { fetchPayrollHistory() })"
+          }
+        },
+
+        "pattern_reference": {
+          "layout": "Copy structure from src/views/Admin/Reconciliation.vue",
+          "table": "Copy v-data-table pattern from Reconciliation.vue",
+          "modal": "Copy v-dialog pattern from ReconciliationModal.vue",
+          "filters": "Similar to Reconciliation filters but simplified"
+        },
+
+        "validation_checklist": [
+          "Uses <script setup> syntax",
+          "Only Vuetify 3 components",
+          "Business logic in composable (not component)",
+          "Proper expand patterns from api_reference.json",
+          "Loading state bound to v-data-table :loading",
+          "Error handling with v-alert if error exists",
+          "Responsive design (works on desktop + tablet)",
+          "No console.log statements"
+        ]
+      },
+
+      {
+        "task_id": "JULES-002",
+        "name": "HotelBilling View",
+        "file_path": "frontend/moss-hrp/src/views/Admin/HotelBilling.vue",
+        "estimated_time": "2-2.5 hours",
+        "priority": 2,
+        "depends_on": ["QWEN-003 complete (useHotelBilling.js)"],
+
+        "component_specification": {
+          "purpose": "Hotel-specific financial reporting with monthly aggregation",
+          "layout": "Full-page admin view with hotel selector and summary cards",
+          "composable_usage": "import { useHotelBilling } from '@/composables/useHotelBilling'",
+
+          "sections": {
+            "page_header": {
+              "title": "Hotel Billing & Financial Reports",
+              "description": "View financial summaries and export billing data"
+            },
+            "hotel_selector": {
+              "type": "v-select",
+              "v-model": "selectedHotel",
+              "label": "Select Hotel",
+              "items_source": "hotels collection",
+              "required": true,
+              "hint": "Select a hotel to view financial data"
+            },
+            "summary_cards": {
+              "layout": "v-row with v-col cols='12' md='3' for each card",
+              "cards": [
+                {"title": "YTD Total Hours", "value": "summary.totalHours", "icon": "mdi-clock"},
+                {"title": "YTD Total Amount", "value": "summary.totalAmount", "format": "currency", "icon": "mdi-currency-usd"},
+                {"title": "Avg Weekly Hours", "value": "summary.avgWeeklyHours", "format": "decimal", "icon": "mdi-chart-line"},
+                {"title": "Period Count", "value": "summary.periodCount", "icon": "mdi-calendar"}
+              ]
+            },
+            "monthly_breakdown": {
+              "component": "v-data-table",
+              "headers": [
+                {"title": "Month", "key": "month"},
+                {"title": "Total Hours", "key": "totalHours", "align": "end"},
+                {"title": "Total Amount", "key": "totalAmount", "align": "end"},
+                {"title": "Week Count", "key": "weekCount", "align": "end"}
+              ]
+            },
+            "detail_table": {
+              "title": "Weekly Payroll Detail",
+              "component": "v-data-table",
+              "headers": [
+                {"title": "Week Start", "key": "week_start", "sortable": true},
+                {"title": "Week End", "key": "week_end"},
+                {"title": "Total Hours", "key": "total_hours", "align": "end"},
+                {"title": "Total Amount", "key": "total_amount", "align": "end"},
+                {"title": "Status", "key": "status"}
+              ]
+            }
+          },
+
+          "script_setup_structure": {
+            "imports": [
+              "import { ref, onMounted, watch } from 'vue'",
+              "import { useHotelBilling } from '@/composables/useHotelBilling'",
+              "import { pb } from '@/plugins/pocketbase'"
+            ],
+            "composable_usage": "const { billingData, summary, loading, fetchHotelPayrollHistory, getYTDSummary, getMonthlyAggregation } = useHotelBilling()",
+            "local_state": [
+              "const selectedHotel = ref(null)",
+              "const selectedYear = ref(new Date().getFullYear())",
+              "const monthlyBreakdown = ref([])"
+            ],
+            "watchers": [
+              {
+                "watch": "selectedHotel",
+                "action": "When hotel changes, call getYTDSummary(selectedHotel.value, selectedYear.value) and fetchHotelPayrollHistory()"
+              }
+            ]
+          }
+        },
+
+        "pattern_reference": {
+          "layout": "Copy from Reconciliation.vue but add summary cards section",
+          "summary_cards": "Use v-card with v-card-title and v-card-text for metrics",
+          "tables": "Same v-data-table pattern as PayrollHistory"
+        },
+
+        "validation_checklist": [
+          "Hotel selector is required before showing data",
+          "Summary cards display correct aggregated values",
+          "Currency formatting using Intl.NumberFormat",
+          "Monthly breakdown table works",
+          "Responsive grid (cards stack on mobile)"
+        ]
+      },
+
+      {
+        "task_id": "JULES-003",
+        "name": "ReconciliationArchive View",
+        "file_path": "frontend/moss-hrp/src/views/Admin/ReconciliationArchive.vue",
+        "estimated_time": "2-2.5 hours",
+        "priority": 3,
+        "depends_on": ["None - uses existing useReconciliation composable"],
+
+        "component_specification": {
+          "purpose": "Search and view completed reconciliations for audit trail",
+          "layout": "Full-page admin view with advanced filters",
+          "composable_usage": "import { useReconciliation } from '@/composables/useReconciliation'",
+
+          "sections": {
+            "page_header": {
+              "title": "Reconciliation Archive",
+              "description": "Search completed reconciliations for audit and compliance"
+            },
+            "advanced_filters": {
+              "components": [
+                {"type": "v-select", "label": "Hotel", "v-model": "filters.hotel"},
+                {"type": "v-text-field", "label": "Date From", "type": "date", "v-model": "filters.dateFrom"},
+                {"type": "v-text-field", "label": "Date To", "type": "date", "v-model": "filters.dateTo"},
+                {"type": "v-select", "label": "Status", "items": ["match", "discrepancy", "resolved"], "multiple": true, "v-model": "filters.status"},
+                {"type": "v-select", "label": "Discrepancy Level", "items": ["Exact Match (<1%)", "Low (1-5%)", "High (>5%)"], "v-model": "filters.discrepancyLevel"}
+              ]
+            },
+            "results_table": {
+              "component": "v-data-table",
+              "headers": [
+                {"title": "Date", "key": "date", "sortable": true},
+                {"title": "Employee", "key": "expand.employee.first_name"},
+                {"title": "Hotel Hours", "key": "hotel_hours", "align": "end"},
+                {"title": "App Hours", "key": "app_hours", "align": "end"},
+                {"title": "Final Hours", "key": "final_hours", "align": "end"},
+                {"title": "Discrepancy", "key": "discrepancy", "align": "end"},
+                {"title": "Status", "key": "status"},
+                {"title": "Approved By", "key": "expand.approved_by.name"},
+                {"title": "Actions", "key": "actions"}
+              ],
+              "features": {
+                "search": false,
+                "sort_by": [{"key": "date", "order": "desc"}],
+                "items_per_page": 50
+              }
+            },
+            "detail_modal": {
+              "content": "Show full reconciliation details including resolution_notes and approval metadata"
+            }
+          },
+
+          "script_setup_structure": {
+            "imports": [
+              "import { ref, onMounted } from 'vue'",
+              "import { useReconciliation } from '@/composables/useReconciliation'",
+              "import { pb } from '@/plugins/pocketbase'"
+            ],
+            "local_state": [
+              "const filters = ref({ hotel: null, dateFrom: null, dateTo: null, status: ['resolved'], discrepancyLevel: null })",
+              "const reconciliations = ref([])",
+              "const loading = ref(false)"
+            ],
+            "functions": [
+              {
+                "name": "searchReconciliations",
+                "logic": "Build Pocketbase filter from filters.value, call pb.collection('reconciliations').getList() with filter and expand"
+              }
+            ]
+          }
+        },
+
+        "pocketbase_query": {
+          "collection": "reconciliations",
+          "filter_building": "Combine multiple filter conditions: hotel, date range, status",
+          "expand": "hotel_report.hotel,employee,approved_by",
+          "sort": "-date"
+        },
+
+        "validation_checklist": [
+          "All filters work correctly",
+          "Date range filtering validated",
+          "Discrepancy level filter calculates correctly",
+          "Export functionality (optional stretch goal)",
+          "Resolution notes displayed in detail modal"
+        ]
+      },
+
+      {
+        "task_id": "JULES-004",
+        "name": "Employee Profile - Real Data Connection",
+        "file_path": "frontend/moss-hrp/src/views/Employee/Profile.vue",
+        "estimated_time": "1.5 hours",
+        "priority": 4,
+        "depends_on": ["QWEN-002 complete (useEmployeeTimesheet.js)"],
+
+        "component_specification": {
+          "purpose": "Replace mock data with real Pocketbase data using useEmployeeTimesheet composable",
+          "existing_file": true,
+          "modification_type": "Replace mock data, keep UI structure",
+
+          "changes_required": {
+            "remove_mock_data": {
+              "current": "Hardcoded recentTimeEntries and weekSummary objects",
+              "replace_with": "Data from useEmployeeTimesheet composable"
+            },
+            "add_composable_import": "import { useEmployeeTimesheet } from '@/composables/useEmployeeTimesheet'",
+            "add_composable_usage": "const { timesheetData, fetchEmployeePunches, getWeeklySummary } = useEmployeeTimesheet()",
+            "connect_data": {
+              "recentTimeEntries": "Bind to timesheetData.value from fetchEmployeePunches()",
+              "weekSummary": "Bind to result from getWeeklySummary(employeeId, currentWeekStart)"
+            },
+            "add_lifecycle": "onMounted(() => { const employeeId = /* get from auth */; fetchEmployeePunches(employeeId, last30Days); getWeeklySummary(employeeId, currentWeekStart) })"
+          }
+        },
+
+        "validation_checklist": [
+          "Mock data completely removed",
+          "Real Pocketbase data displayed",
+          "Employee sees their own punches only",
+          "Weekly summary calculates correctly",
+          "Loading states work",
+          "No console errors"
+        ]
+      }
+    ],
+
+    "route_integration": {
+      "file_to_modify": "frontend/moss-hrp/src/router/index.js",
+      "routes_to_add": [
+        {
+          "path": "/admin/payroll-history",
+          "name": "PayrollHistory",
+          "component": "() => import('@/views/Admin/PayrollHistory.vue')",
+          "meta": {"requiresAuth": true, "roles": ["super_admin", "administrator", "finance"]}
+        },
+        {
+          "path": "/admin/hotel-billing",
+          "name": "HotelBilling",
+          "component": "() => import('@/views/Admin/HotelBilling.vue')",
+          "meta": {"requiresAuth": true, "roles": ["super_admin", "administrator", "finance"]}
+        },
+        {
+          "path": "/admin/reconciliation-archive",
+          "name": "ReconciliationArchive",
+          "component": "() => import('@/views/Admin/ReconciliationArchive.vue')",
+          "meta": {"requiresAuth": true, "roles": ["super_admin", "administrator", "operations_hr"]}
+        }
+      ],
+      "navigation_to_update": {
+        "file": "frontend/moss-hrp/src/layouts/AdminLayout.vue or similar",
+        "add_menu_items": [
+          {"title": "Payroll History", "icon": "mdi-history", "to": "/admin/payroll-history"},
+          {"title": "Hotel Billing", "icon": "mdi-file-document-outline", "to": "/admin/hotel-billing"},
+          {"title": "Reconciliation Archive", "icon": "mdi-archive", "to": "/admin/reconciliation-archive"}
+        ]
+      }
+    },
+
+    "completion_protocol": {
+      "after_each_task": {
+        "steps": [
+          "Test component in browser with real Pocketbase data",
+          "Verify responsive design (desktop + tablet)",
+          "Check Vue DevTools for errors",
+          "Git add: git add frontend/moss-hrp/src/views/Admin/[file].vue",
+          "Git commit: git commit -m '[JULES] Create [view_name] with [features]'",
+          "Create status file: JULES_TASK_[N]_COMPLETE.json"
+        ]
+      },
+      "status_file_format": {
+        "task_id": "JULES-00X",
+        "file": "src/views/Admin/[view].vue",
+        "status": "complete",
+        "commit_hash": "xyz7890",
+        "tested_in_browser": true,
+        "responsive": true,
+        "composable_integration": "working",
+        "notes": "All features functional, ready for Claude review"
+      },
+      "when_all_complete": {
+        "create_file": "JULES_ALL_COMPLETE.json",
+        "update_file": "brain/ai_work_status.json (mark jules status as 'completed')",
+        "request_review": "Submit all components for Claude final review"
+      }
+    },
+
+    "blocker_protocol": {
+      "if_stuck": {
+        "create_file": "JULES_BLOCKER.json",
+        "format": {
+          "task_id": "JULES-00X",
+          "issue": "Description",
+          "attempted_solutions": ["What tried"],
+          "question_for_claude": "Specific question"
+        }
+      }
+    },
+
+    "reference_files_usage": {
+      "brain/api_reference.json": {
+        "when_to_check": "Before every Pocketbase query in composable usage",
+        "what_to_verify": ["Expand patterns are correct", "Collection names match", "Field names exist"]
+      },
+      "brain/ai_coordination_rules.json": {
+        "when_to_check": "Before creating or modifying any file",
+        "what_to_verify": ["File is in allowed_operations", "Not modifying Qwen's composables"]
+      },
+      "existing_vue_components": {
+        "when_to_check": "Before starting each task",
+        "what_to_copy": ["Layout structure", "v-data-table configuration", "v-dialog patterns", "Filter panel structure"]
+      }
+    },
+
+    "success_criteria": {
+      "all_views_created": "4 files created/modified",
+      "pattern_adherence": "Matches existing component structure",
+      "composable_integration": "Uses Qwen's composables correctly",
+      "routes_added": "All routes functional and role-protected",
+      "ready_for_production": "Tested, responsive, no errors"
+    }
+  }
+}

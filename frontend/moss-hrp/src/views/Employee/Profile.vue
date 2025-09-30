@@ -118,7 +118,15 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+// TODO [JULES]: Import useEmployeeTimesheet composable (created by Qwen)
+// import { useEmployeeTimesheet } from '@/composables/useEmployeeTimesheet'
 
+// TODO [JULES]: Get authenticated employee from auth store
+// import { storeToRefs } from 'pinia'
+// import { useAuthStore } from '@/stores/auth'
+// const { user } = storeToRefs(useAuthStore())
+
+// TODO [JULES]: Replace with real employee data from Pocketbase
 const employee = ref({
   fullName: 'Maria Rodriguez',
   initials: 'MR',
@@ -127,11 +135,13 @@ const employee = ref({
   employeeId: 'EMP001'
 })
 
+// TODO [JULES]: Replace with real data from useEmployeeTimesheet composable
+// const { weekSummary, timeEntries, loading } = useEmployeeTimesheet(employee.value.employeeId)
 const weekSummary = ref({
-  totalHours: 38.5,
-  daysWorked: 5,
-  estimatedPay: 578,
-  overtime: 2.5
+  totalHours: 0,
+  daysWorked: 0,
+  estimatedPay: 0,
+  overtime: 0
 })
 
 const timeHeaders = [
@@ -142,12 +152,8 @@ const timeHeaders = [
   { title: 'Status', value: 'status' }
 ]
 
-const timeEntries = ref([
-  { date: '2025-08-05', clockIn: '08:00', clockOut: '16:30', hours: 7.5, status: 'approved' },
-  { date: '2025-08-04', clockIn: '08:15', clockOut: '16:45', hours: 7.5, status: 'approved' },
-  { date: '2025-08-03', clockIn: '08:00', clockOut: '17:00', hours: 8.0, status: 'pending' },
-  { date: '2025-08-02', clockIn: '08:00', clockOut: '16:30', hours: 7.5, status: 'approved' }
-])
+// TODO [JULES]: Replace with real data from useEmployeeTimesheet composable
+const timeEntries = ref([])
 
 function getStatusColor(status) {
   switch (status) {

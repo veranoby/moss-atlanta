@@ -60,13 +60,18 @@
               <h3>Hotel Report</h3>
               <v-chip size="small" color="primary">Source: AI Extracted</v-chip>
             </div>
-            <div class="column-content">
-              <div v-for="row in comparisonRows" :key="row.employeeId" class="employee-row">
+            <v-virtual-scroll
+              :items="comparisonRows"
+              :item-height="80"
+              height="calc(100vh - 200px)"
+              class="column-content"
+            >
+              <template v-slot:default="{ item: row }">
                 <v-card :class="getRowClass(row)" class="ma-1 pa-2">
                   <v-row align="center" no-gutters>
                     <v-col cols="auto">
-                      <v-checkbox 
-                        v-model="selectedRows" 
+                      <v-checkbox
+                        v-model="selectedRows"
                         :value="row.employeeId"
                         hide-details
                         density="compact"
@@ -80,8 +85,8 @@
                     </v-col>
                   </v-row>
                 </v-card>
-              </div>
-            </div>
+              </template>
+            </v-virtual-scroll>
           </v-col>
 
           <!-- Column 2: MOSS Time -->
@@ -90,14 +95,19 @@
               <h3>MOSS Time</h3>
               <v-chip size="small" color="secondary">Source: Mobile App</v-chip>
             </div>
-            <div class="column-content">
-              <div v-for="row in comparisonRows" :key="row.employeeId" class="employee-row">
+            <v-virtual-scroll
+              :items="comparisonRows"
+              :item-height="80"
+              height="calc(100vh - 200px)"
+              class="column-content"
+            >
+              <template v-slot:default="{ item: row }">
                 <v-card :class="getRowClass(row)" class="ma-1 pa-2">
                   <div class="employee-info">
                     <div class="font-weight-medium">{{ row.employeeName }}</div>
                     <div class="text-caption text-medium-emphasis">{{ row.mossHours }}h</div>
-                    <v-chip 
-                      v-if="row.discrepancy !== 0" 
+                    <v-chip
+                      v-if="row.discrepancy !== 0"
                       :color="getDiscrepancyColor(row.discrepancyPercent)"
                       size="x-small"
                       class="mt-1"
@@ -106,8 +116,8 @@
                     </v-chip>
                   </div>
                 </v-card>
-              </div>
-            </div>
+              </template>
+            </v-virtual-scroll>
           </v-col>
 
           <!-- Column 3: Final Hours -->
@@ -116,13 +126,18 @@
               <h3>Final Hours</h3>
               <v-chip size="small" color="success">Reconciled</v-chip>
             </div>
-            <div class="column-content">
-              <div v-for="row in comparisonRows" :key="row.employeeId" class="employee-row">
+            <v-virtual-scroll
+              :items="comparisonRows"
+              :item-height="80"
+              height="calc(100vh - 200px)"
+              class="column-content"
+            >
+              <template v-slot:default="{ item: row }">
                 <v-card :class="getRowClass(row)" class="ma-1 pa-2">
                   <div class="employee-info">
                     <div class="font-weight-medium">{{ row.employeeName }}</div>
                     <div class="text-caption text-medium-emphasis">
-                      <v-text-field 
+                      <v-text-field
                         v-model.number="row.finalHours"
                         type="number"
                         step="0.5"
@@ -133,7 +148,7 @@
                         class="final-hours-input"
                       />
                     </div>
-                    <v-textarea 
+                    <v-textarea
                       v-if="row.discrepancyPercent > 5"
                       v-model="row.justification"
                       placeholder="Justification required for >5% changes"
@@ -145,8 +160,8 @@
                     />
                   </div>
                 </v-card>
-              </div>
-            </div>
+              </template>
+            </v-virtual-scroll>
           </v-col>
         </v-row>
       </v-container>

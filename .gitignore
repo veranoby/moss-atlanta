@@ -43,28 +43,25 @@ logs/
 tmp/
 temp/
 
-# Claude/Cursor
+# Claude
+CLAUDE.md
 .claude/
-claude_workspace/
-*.claude
-*.claude-desktop-arch/
-claude-desktop-arch/
+claude-prompt.json
+
+# CURSOR
 .cursor/
 cursor_workspace/
-.gemini-session/
+
+# GEMINI
 .gemini/
-.ai-context/
-
-
-# Brain system
-.brain/
-.brain/*
-brain/
-brain/*
-README-brain-setup.md
-especificacion_completa_optimizada.md
-uix_blueprint_moss.md
-CLAUDE.md
 GEMINI.md
+
+#SERENA
+.serena/
+
+# QWEN
+.qwen/
+QWEN*
+qwen-prompt.json
 QWEN.md
-claude-prompt.json
+

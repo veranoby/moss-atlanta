@@ -1,0 +1,360 @@
+{
+  "metadata": {
+    "purpose": "MOSS Atlanta - Lessons learned for Vue.js + Pocketbase development",
+    "updated": "2025-09-14",
+    "version": "1.0-MOSS",
+    "project_context": "Vue.js 3 + Vuetify 3 + Pocketbase + n8n workflow automation"
+  },
+
+  "critical_lessons": {
+    "ui_ux_completeness_priority": {
+      "error_description": "Missing login button on landing page - users cannot access implemented platform",
+      "correct_approach": "Always complete user journey flows before moving to new features",
+      "prevention_strategy": {
+        "before_new_features": [
+          "CRITICAL: Test complete user flows (landing → login → dashboard)",
+          "Verify all navigation pathways exist and are accessible",
+          "Check mobile responsive design on all entry points"
+        ]
+      }
+    },
+    "implementation_analysis_first": {
+      "rule": "ALWAYS analyze and optimize existing implementations before adding new features",
+      "approach": [
+        "Review all completed Vue components for consistency",
+        "Verify Pocketbase collections match frontend expectations", 
+        "Test performance with realistic data volumes (400+ employees)",
+        "Validate role-based access controls work correctly"
+      ]
+    }
+  },
+
+  "development_principles_moss": {
+    "dependency_first_principle": {
+      "rule": "ALWAYS verify npm dependencies before code implementation",
+      "implementation": [
+        "Run 'npm install' after git pull",
+        "Check package.json for missing dependencies",
+        "Verify Vuetify 3 and Pocketbase client versions"
+      ]
+    },
+    "pocketbase_integration_patterns": {
+      "rule": "Always use usePocketbase.js composable for API calls",
+      "verification": [
+        "Check collections exist in Pocketbase before frontend work",
+        "Verify role-based permissions in Pocketbase admin",
+        "Test API endpoints with actual data"
+      ]
+    },
+    "vue_component_quality": {
+      "rule": "Maintain consistent Vue 3 Composition API patterns",
+      "standards": [
+        "Use <script setup> syntax exclusively", 
+        "Vuetify 3 components only",
+        "Proper error handling in try/catch blocks",
+        "Loading states for all async operations"
+      ]
+    }
+  },
+
+  "implementation_patterns_moss": {
+    "moss_component_structure": {
+      "pattern": "View → Form → Composable → Pocketbase",
+      "example": "Employees.vue → EmployeeForm.vue → useEmployees.js → pb.collection('employees')",
+      "benefits": ["Reusable logic", "Testable components", "Clear separation"]
+    },
+    "role_based_ui": {
+      "pattern": "Route-level role checking with conditional UI",
+      "implementation": "meta: { requiresAuth: true, roles: ['super_admin', 'operations_hr'] }",
+      "ui_elements": "v-if=\"authStore.hasRole('super_admin')\" for conditional features"
+    }
+  },
+
+  "quality_gates_moss": {
+    "before_new_development": [
+      "✅ Git pull latest changes",
+      "✅ npm install dependencies", 
+      "✅ npm run dev starts without errors",
+      "✅ Pocketbase server running on :8080",
+      "✅ Login flow works with test users",
+      "✅ All existing routes accessible"
+    ],
+    "ui_ux_verification": [
+      "✅ Landing page has clear login access",
+      "✅ Mobile responsive design tested",
+      "✅ Navigation intuitive for 400+ employee scale",
+      "✅ Loading states prevent user confusion",
+      "✅ Error messages user-friendly"
+    ],
+    "moss_specific_testing": [
+      "✅ Virtual scrolling performs well with 400+ records",
+      "✅ Role-based access prevents unauthorized actions",
+      "✅ Document management (OneDrive) links work",
+      "✅ 3-column reconciliation modal displays correctly"
+    ]
+  },
+
+  "claude_prompt_template_moss": {
+    "task_0_analysis_verification": {
+      "execution": "MANDATORY_FIRST_STEP",
+      "description": "Analyze and optimize existing implementations before new development",
+      "analysis_areas": [
+        "UI/UX completeness (login button, navigation flows)",
+        "Vue component consistency and performance",
+        "Pocketbase API integration verification",
+        "Mobile responsive design validation"
+      ],
+      "optimization_priorities": [
+        "Complete missing user journey elements",
+        "Improve component reusability",
+        "Enhance error handling and loading states",
+        "Optimize performance for 400+ employee scale"
+      ]
+    },
+    "moss_implementation_standards": {
+      "vue_requirements": "Vue 3 Composition API + Vuetify 3 + TypeScript",
+      "api_pattern": "usePocketbase.js composable for all database operations",
+      "performance": "Virtual scrolling for large datasets mandatory",
+      "security": "Role-based access controls at route and component level"
+    }
+  },
+
+  "gemini_cli_lessons_2025_09_14": {
+    "issues_encountered": {
+      "incomplete_implementation": [
+        "❌ AdminLayout pattern not applied to all admin pages",
+        "❌ Mock data left in Dashboard instead of Pocketbase connections",
+        "❌ LanguageSwitch missing from admin areas",
+        "❌ Color contrast fixes incomplete in Vuetify theme",
+        "❌ Browser back button functionality missing"
+      ],
+      "claude_prompt_gaps": [
+        "📝 Tasks too high-level, needed atomic instructions",
+        "📝 Missing validation checkpoints after each change",
+        "📝 No specific file paths provided",
+        "📝 Insufficient before/after code examples"
+      ]
+    },
+    "solutions_implemented": {
+      "ui_ux_systematic_fixes": {
+        "admin_layout_universal": "Applied AdminLayout + AdminSidebar to all admin pages",
+        "color_theme_fix": "Updated Vuetify primary color from #FFF9C4 to #1A1A1A for readability",
+        "i18n_admin_integration": "Added LanguageSwitch + admin translations to all admin areas",
+        "navigation_complete": "Implemented browser back + UI back button functionality",
+        "real_data_migration": "Connected Dashboard to actual Pocketbase collections"
+      }
+    },
+    "improved_patterns_for_future": {
+      "atomic_task_breakdown": [
+        "One file modification per task",
+        "Specific line numbers or code patterns to change",
+        "Before/after code examples for complex modifications"
+      ],
+      "validation_checkpoints": [
+        "npm run dev validation after every 2-3 changes",
+        "Browser testing requirements specified",
+        "Expected outcomes defined for each checkpoint"
+      ],
+      "error_prevention": [
+        "Explicit import patterns and component usage",
+        "Rollback steps for each major modification",
+        "Dependency requirements clearly stated"
+      ]
+    }
+  },
+
+  "database_permissions_analysis_2025_09_14": {
+    "critical_discovery": {
+      "root_cause_identification": "pb_schema.json analysis revealed users collection 'listRule': 'id = @request.auth.id' blocked admin user management",
+      "systematic_approach": [
+        "🔍 Read complete pb_schema.json (21 collections verified)",
+        "🔍 Analyzed permission rules for each collection",
+        "🔍 Mapped console 400 errors to specific permission restrictions",
+        "🔍 Identified user→employee relationship gaps"
+      ]
+    },
+    "claude_code_success_patterns": {
+      "deep_analysis_before_code": [
+        "✅ Schema analysis identified ALL collections exist (not missing)",
+        "✅ Permission rule analysis explained 400 errors",
+        "✅ Console error mapping to specific collections",
+        "✅ Relationship analysis (users.id → employees.user_id)"
+      ],
+      "systematic_debugging": [
+        "✅ Read pb_schema.json completely before assumptions",
+        "✅ Console error analysis prioritized by impact",
+        "✅ Permission rules mapped to API access patterns",
+        "✅ Test API endpoints directly via curl for verification"
+      ]
+    },
+    "gemini_cli_failure_patterns": {
+      "assumption_driven_development": [
+        "❌ Assumed collections were missing (they existed)",
+        "❌ Created workarounds instead of fixing root permissions",
+        "❌ Implemented UI without verifying data access",
+        "❌ Did not analyze pb_schema.json systematically"
+      ],
+      "surface_level_fixes": [
+        "❌ Fixed UI symptoms not database permission causes",
+        "❌ Added error handling instead of fixing permissions",
+        "❌ Created empty fallbacks instead of enabling data access",
+        "❌ Did not verify user→employee record creation workflow"
+      ]
+    },
+    "lessons_for_future_claude_prompts": {
+      "mandatory_analysis_phase": [
+        "🎯 Phase 0: ALWAYS analyze pb_schema.json for permission rules",
+        "🎯 Phase 0: Map console errors to specific collections",
+        "🎯 Phase 0: Test API endpoints directly before UI work",
+        "🎯 Phase 0: Verify relationships between collections"
+      ],
+      "atomic_debugging_tasks": [
+        "📋 One collection permission fix per task",
+        "📋 Before/after permission rules specified",
+        "📋 API test commands provided for validation",
+        "📋 Expected console error resolution described"
+      ]
+    }
+  },
+
+  "user_employee_relationship_lessons_2025_09_14": {
+    "current_status_confirmed": {
+      "permissions_fixed": "✅ User reports admin/users now shows ALL users including employees",
+      "relationship_broken": "❌ admin/employees shows nothing despite createEmployeeRecord() function exists",
+      "code_analysis": "✅ Users.vue line 365-367 calls createEmployeeRecord for system_role='employee'"
+    },
+    "debugging_approach_needed": {
+      "verification_steps": [
+        "🔍 Check browser console when creating employee user",
+        "🔍 Verify employees collection permissions in Pocketbase admin",
+        "🔍 Test createEmployeeRecord function execution",
+        "🔍 Check Employees.vue loading logic and filters"
+      ],
+      "potential_root_causes": [
+        "employees collection permission restricts admin access",
+        "createEmployeeRecord function failing silently",
+        "Employees.vue query filtering out records incorrectly",
+        "user_id relationship not established properly"
+      ]
+    },
+    "information_gathering_for_claude": [
+      "Browser console logs when creating employee user",
+      "Current employees collection permission rules",
+      "Count of users with system_role='employee' in admin/users",
+      "Any error logs from createEmployeeRecord execution"
+    ],
+    "root_cause_confirmed_2025_09_14": {
+      "error_identified": "POST employees/records 400 (Bad Request) - createEmployeeRecord failing",
+      "schema_analysis_completed": "pb_schema.json employees collection analyzed",
+      "missing_required_field": "phone field is required: true but not sent in createEmployeeRecord",
+      "user_feedback_details": [
+        "admin/users shows 7 users including 3 employees",
+        "admin/employees shows 0 employees (Loaded 0 employees: [])",
+        "createEmployeeRecord 400 error confirmed in console",
+        "employees collection permissions confirmed as open access"
+      ]
+    },
+    "fix_implemented": {
+      "missing_phone_field": "Added phone: '000-000-0000' placeholder to createEmployeeRecord",
+      "improved_last_name": "Added fallback 'Apellido' for empty last_name splits",
+      "create_button_added": "Added 'Crear Empleado' button to admin/employees page header"
+    }
+  },
+
+  "schema_analysis_lessons_2025_09_14": {
+    "critical_importance": "ALWAYS read complete pb_schema.json before implementing collection operations",
+    "required_fields_analysis": {
+      "employees_collection_required": [
+        "employee_id (text, required: true, unique: true)",
+        "first_name (text, required: true)",
+        "last_name (text, required: true)",
+        "phone (text, required: true) ← MISSED IN ORIGINAL IMPLEMENTATION"
+      ],
+      "employees_collection_relations": [
+        "user_id (relation to _pb_users_auth_, required: false)",
+        "email (email, required: false, unique: true)"
+      ]
+    },
+    "systematic_debugging_success": [
+      "✅ Console error analysis: POST 400 → missing required field",
+      "✅ Schema verification: pb_schema.json → phone required: true",
+      "✅ Code comparison: createEmployeeRecord vs schema requirements",
+      "✅ Immediate fix: Add missing required field with placeholder"
+    ],
+    "future_prevention": [
+      "🎯 Phase 0: Always map createRecord() calls to schema required fields",
+      "🎯 Validate all required fields before implementation",
+      "🎯 Use schema as source of truth, not assumptions",
+      "🎯 Test API calls immediately after implementation"
+    ]
+  },
+
+  "users_vs_employees_collections_2025_09_14": {
+    "critical_architectural_understanding": {
+      "users_collection": "PRIMARY collection for all system users with system_role field",
+      "employees_collection": "EXTENDED information collection for users with role='employee'",
+      "relationship": "users.id → employees.user_id (optional extension)",
+      "admin_interface_logic": [
+        "admin/users: 'system_role != \"employee\"' → Shows admins, managers, etc.",
+        "admin/employees: 'system_role = \"employee\"' → Shows only employee users"
+      ]
+    },
+    "critical_error_corrected": {
+      "wrong_approach": "❌ admin/employees trying to load from employees collection",
+      "correct_approach": "✅ admin/employees loads from users collection with role filter",
+      "code_pattern_users": "pb.collection('users').getFullList({ filter: 'system_role != \"employee\"' })",
+      "code_pattern_employees": "pb.collection('users').getFullList({ filter: 'system_role = \"employee\"' })",
+      "crud_operations": "Both admin/users and admin/employees work with users collection only"
+    },
+    "implementation_fix_2025_09_14": {
+      "loadEmployees_corrected": "Uses exact same pattern as Users.vue with inverse filter",
+      "crud_operations_corrected": "saveEmployee/deleteEmployee work with users collection",
+      "data_transformation": "Transform users data to employee display format in frontend",
+      "filter_consistency": "Same query pattern ensures consistency between admin interfaces"
+    },
+    "lessons_for_future_development": [
+      "🎯 NEVER assume collection names match UI functionality",
+      "🎯 Understand data architecture: users (primary) vs employees (extended)",
+      "🎯 Copy working patterns exactly: Users.vue filter logic → Employees.vue",
+      "🎯 Test both admin interfaces in parallel to verify correct separation"
+    ]
+  },
+
+  "virtualscrolltable_vs_datatable_2025_09_14": {
+    "issue_discovered": {
+      "problem": "VirtualScrollTable component not displaying data despite correct data loading",
+      "symptoms": [
+        "Console shows 'Loaded 3 employees' with correct data",
+        "employees.value array populated correctly",
+        "Table appears empty in UI"
+      ],
+      "debugging_approach": [
+        "✅ Added debug logs to confirm data transformation",
+        "✅ Added visual debug info in template",
+        "✅ Replaced VirtualScrollTable with v-data-table temporarily",
+        "✅ Confirmed v-data-table works correctly"
+      ]
+    },
+    "solution_implemented": {
+      "component_replacement": "VirtualScrollTable → v-data-table with pagination",
+      "performance_optimization": [
+        ":items-per-page='50' for reasonable page sizes",
+        ":items-per-page-options='[25, 50, 100, -1]' for flexibility",
+        "show-current-page for better navigation"
+      ],
+      "data_handling": "Same data transformation works perfectly with v-data-table"
+    },
+    "lessons_learned": [
+      "🎯 When table shows empty despite data loading, try standard v-data-table first",
+      "🎯 VirtualScrollTable may have compatibility issues in certain scenarios",
+      "🎯 v-data-table with pagination is reliable for moderate datasets (< 1000 items)",
+      "🎯 Always add debug visual indicators when troubleshooting table issues",
+      "🎯 Test component replacement systematically to isolate problems"
+    ],
+    "performance_considerations": {
+      "small_datasets": "v-data-table with pagination (< 500 items)",
+      "large_datasets": "VirtualScrollTable if working, or server-side pagination",
+      "fallback_strategy": "Always have v-data-table as tested fallback option"
+    }
+  }
+}

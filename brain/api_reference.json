@@ -1,0 +1,415 @@
+{
+  "api_reference": {
+    "version": "1.0.0",
+    "created": "2025-09-30",
+    "purpose": "Unified API reference for all AI agents to prevent hallucinations and ensure consistency",
+    "pocketbase_base_url": "http://localhost:8080/api",
+
+    "collections_summary": {
+      "total_collections": 21,
+      "categories": {
+        "configuration_master": ["app_settings", "legal_entities", "hotels", "departments", "positions", "hotel_locations"],
+        "hr_operations": ["employees", "open_positions", "applications", "application_documents", "employee_assignments", "punches"],
+        "financial_audit": ["hotel_reports", "payroll_periods", "reconciliations", "payroll", "payroll_items", "audit_logs", "quickbooks_transactions"],
+        "authentication": ["users"]
+      }
+    },
+
+    "critical_collections": {
+      "users": {
+        "id": "_pb_users_auth_",
+        "type": "auth",
+        "key_fields": ["email", "username", "password", "name", "avatar", "system_role"],
+        "system_roles": ["super_admin", "administrator", "operations_hr", "finance", "field_manager", "employee"],
+        "endpoints": {
+          "POST /api/collections/users/auth-with-password": "Login",
+          "POST /api/collections/users/refresh": "Refresh JWT token",
+          "GET /api/collections/users/records": "List users (authenticated)"
+        }
+      },
+
+      "employees": {
+        "id": "5k15vrn4szm0u5o",
+        "type": "base",
+        "key_fields": ["employee_id", "first_name", "last_name", "email", "phone", "status", "system_role", "quickbooks_id", "qb_sync_status"],
+        "status_values": ["pending_approval", "active", "inactive", "terminated"],
+        "qb_sync_status_values": ["pending", "synced", "error"],
+        "relations": {
+          "user_id": "users (optional link to auth account)",
+          "assignments": "employee_assignments (via employee field)"
+        },
+        "endpoints": {
+          "GET /api/collections/employees/records": "List employees",
+          "GET /api/collections/employees/records/{id}": "Get employee details",
+          "POST /api/collections/employees/records": "Create employee",
+          "PATCH /api/collections/employees/records/{id}": "Update employee",
+          "DELETE /api/collections/employees/records/{id}": "Delete employee"
+        },
+        "expand_patterns": ["user_id", "assignments.hotel", "assignments.position"]
+      },
+
+      "employee_assignments": {
+        "id": "6l26wso5t0n1v6p",
+        "type": "base",
+        "key_fields": ["employee", "hotel", "department", "position", "hourly_rate", "start_date", "end_date", "is_active"],
+        "relations": {
+          "employee": "employees",
+          "hotel": "hotels",
+          "department": "departments",
+          "position": "positions"
+        },
+        "endpoints": {
+          "GET /api/collections/employee_assignments/records": "List assignments",
+          "POST /api/collections/employee_assignments/records": "Create assignment"
+        },
+        "expand_patterns": ["employee", "hotel", "department", "position"]
+      },
+
+      "punches": {
+        "id": "7m37xtp6u1o2w7q",
+        "type": "base",
+        "key_fields": ["assignment", "type", "timestamp", "location", "selfie_onedrive_url", "source", "verified"],
+        "type_values": ["clock_in", "break_start", "break_end", "clock_out"],
+        "source_values": ["moss_app", "manual_entry"],
+        "4_punch_sequence": "clock_in → break_start → break_end → clock_out",
+        "work_date_logic": "work_date = clock_in date (even if clock_out is next day)",
+        "relations": {
+          "assignment": "employee_assignments"
+        },
+        "endpoints": {
+          "GET /api/collections/punches/records": "List punches",
+          "POST /api/collections/punches/records": "Create punch (mobile app)",
+          "PATCH /api/collections/punches/records/{id}": "Update punch (admin only)"
+        },
+        "expand_patterns": ["assignment.employee", "assignment.hotel"],
+        "performance_note": "High volume collection (1M+ records/month) - ALWAYS use filters and indexes"
+      },
+
+      "hotels": {
+        "id": "2h92spk1pxjzr2l",
+        "type": "base",
+        "key_fields": ["name", "code", "address", "legal_entity", "time_system", "week_start", "week_end", "active"],
+        "time_system_values": ["workrecords", "homebase", "hotel_effectiveness", "timesheets_only"],
+        "week_days": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+        "relations": {
+          "legal_entity": "legal_entities",
+          "locations": "hotel_locations (via hotel field)"
+        },
+        "endpoints": {
+          "GET /api/collections/hotels/records": "List hotels",
+          "GET /api/collections/hotels/records/{id}": "Get hotel details"
+        }
+      },
+
+      "hotel_locations": {
+        "id": "hl20wso5t0n1v6p",
+        "type": "base",
+        "key_fields": ["hotel", "latitude", "longitude", "radius_meters", "area_display", "validation_strict"],
+        "radius_constraints": {"min": 50, "max": 500},
+        "privacy_pattern": "area_display shows 'Downtown' not specific hotel name",
+        "relations": {
+          "hotel": "hotels"
+        }
+      },
+
+      "departments": {
+        "id": "3i93tql2qykzs3m",
+        "type": "base",
+        "key_fields": ["hotel", "name", "code", "manager_name", "active"],
+        "relations": {
+          "hotel": "hotels"
+        }
+      },
+
+      "positions": {
+        "id": "4j04uqm3rylzt4n",
+        "type": "base",
+        "key_fields": ["title", "description", "department_type", "base_rate", "active"],
+        "department_type_values": ["housekeeping", "food_beverage", "front_desk", "maintenance", "banquet"]
+      },
+
+      "open_positions": {
+        "id": "0p60awt9x4r5z0t",
+        "type": "base",
+        "key_fields": ["hotel", "department", "position", "hourly_rate", "slots_needed", "status", "source"],
+        "status_values": ["open", "in_progress", "filled", "cancelled"],
+        "source_values": ["whatsapp", "teams", "email", "portal"],
+        "relations": {
+          "hotel": "hotels",
+          "department": "departments",
+          "position": "positions",
+          "created_by": "users"
+        }
+      },
+
+      "applications": {
+        "id": "1q71bxu0y5s6a1u",
+        "type": "base",
+        "key_fields": ["open_position", "first_name", "last_name", "email", "phone", "status", "reviewed_by"],
+        "status_values": ["submitted", "reviewing", "approved", "rejected", "hired"],
+        "relations": {
+          "open_position": "open_positions",
+          "created_employee": "employees (when hired)",
+          "reviewed_by": "users",
+          "documents": "application_documents (via application field)"
+        }
+      },
+
+      "application_documents": {
+        "id": "ad21wso5t0n1v6p",
+        "type": "base",
+        "key_fields": ["application", "document_type", "file_url", "status", "is_critical", "expiration_date"],
+        "document_type_values": ["w9", "w4", "photo_id", "ssn_verification", "resume", "references"],
+        "status_values": ["required", "uploaded", "under_review", "approved", "rejected", "expired"],
+        "relations": {
+          "application": "applications"
+        }
+      },
+
+      "hotel_reports": {
+        "id": "8n48yuq7v2p3x8r",
+        "type": "base",
+        "key_fields": ["hotel", "week_start", "week_end", "file_onedrive_url", "status", "ai_extracted_data"],
+        "status_values": ["pending", "processing", "processed", "error"],
+        "ai_extracted_data_structure": {
+          "employees": [
+            {
+              "name": "string",
+              "date": "YYYY-MM-DD",
+              "clock_in": "HH:MM",
+              "break_start": "HH:MM",
+              "break_end": "HH:MM",
+              "clock_out": "HH:MM"
+            }
+          ]
+        },
+        "relations": {
+          "hotel": "hotels"
+        }
+      },
+
+      "payroll_periods": {
+        "id": "pp22wso5t0n1v6p",
+        "type": "base",
+        "description": "Central workflow orchestrator - state machine",
+        "key_fields": ["hotel", "period_start", "period_end", "status", "hotel_report_received", "moss_data_complete", "discrepancy_percentage"],
+        "status_values": ["pending", "processing", "reconciled", "approved", "sent_to_payroll"],
+        "state_transitions": "pending → processing → reconciled → approved → sent_to_payroll",
+        "relations": {
+          "hotel": "hotels",
+          "hotel_reports": "hotel_reports (via week dates)",
+          "reconciliations": "reconciliations (via hotel_report)"
+        }
+      },
+
+      "reconciliations": {
+        "id": "9o59zvr8w3q4y9s",
+        "type": "base",
+        "key_fields": ["hotel_report", "employee", "date", "hotel_hours", "app_hours", "discrepancy", "status", "final_hours"],
+        "status_values": ["match", "discrepancy", "missing_hotel", "missing_app", "resolved"],
+        "3_column_pattern": "Hotel Report (hotel_hours) | MOSS Time (app_hours) | Final Hours (final_hours)",
+        "auto_approval_rule": "discrepancy < 5% → auto-eligible",
+        "justification_required": "discrepancy > 5% → resolution_notes mandatory",
+        "relations": {
+          "hotel_report": "hotel_reports",
+          "employee": "employees",
+          "approved_by": "users"
+        }
+      },
+
+      "payroll": {
+        "id": "2r82cyt1z6t7b2v",
+        "type": "base",
+        "key_fields": ["hotel", "week_start", "week_end", "total_hours", "total_amount", "status", "quickbooks_batch_id"],
+        "status_values": ["draft", "approved", "sent_to_quickbooks", "paid"],
+        "retention_policy": "7 years (financial compliance)",
+        "relations": {
+          "hotel": "hotels",
+          "approved_by": "users",
+          "payroll_items": "payroll_items (via payroll field)"
+        }
+      },
+
+      "payroll_items": {
+        "id": "3s93dzu2a7u8c3w",
+        "type": "base",
+        "key_fields": ["payroll", "assignment", "hours_worked", "hourly_rate", "gross_pay"],
+        "calculation": "gross_pay = hours_worked * hourly_rate",
+        "retention_policy": "7 years (linked to payroll parent)",
+        "relations": {
+          "payroll": "payroll",
+          "assignment": "employee_assignments"
+        }
+      },
+
+      "audit_logs": {
+        "id": "4t04eav3b8v9d4x",
+        "type": "base",
+        "key_fields": ["collection_name", "record_id", "user", "action", "old_data", "new_data", "timestamp", "ip_address"],
+        "action_values": ["create", "update", "delete"],
+        "immutable": true,
+        "retention_policy": "Permanent (compliance requirement)",
+        "critical_actions": ["manual_hours_adjustment", "approval_actions", "system_changes"],
+        "relations": {
+          "user": "users"
+        }
+      },
+
+      "quickbooks_transactions": {
+        "id": "o7j7p2ft35t3xnv",
+        "type": "base",
+        "key_fields": ["qb_transaction_id", "transaction_type", "moss_record_id", "status", "qb_response_data", "error_message"],
+        "transaction_type_values": ["payroll", "invoice", "employee_create", "timesheet_entry", "timesheet_batch"],
+        "status_values": ["pending", "completed", "failed"],
+        "retention_policy": "7 years (financial compliance)",
+        "audit_trail": "Every QB API call logged here"
+      },
+
+      "app_settings": {
+        "id": "as23wso5t0n1v6p",
+        "type": "base",
+        "key_fields": ["key", "value", "category", "description"],
+        "category_values": ["system", "ui", "integration", "business_rules"],
+        "value_type": "json (flexible structure)"
+      },
+
+      "legal_entities": {
+        "id": "1d81rok9owixr1k",
+        "type": "base",
+        "key_fields": ["name", "quickbooks_id", "tax_id", "active"]
+      }
+    },
+
+    "pocketbase_rest_api_patterns": {
+      "base_url": "http://localhost:8080/api",
+      "authentication": {
+        "login": "POST /api/collections/users/auth-with-password",
+        "body": {"identity": "email or username", "password": "string"},
+        "response": {"token": "JWT", "record": "user object"}
+      },
+      "list_records": {
+        "method": "GET",
+        "url": "/api/collections/{collection_name}/records",
+        "query_params": {
+          "page": "number (default: 1)",
+          "perPage": "number (default: 30, max: 500)",
+          "sort": "string (e.g., '-created', '+name')",
+          "filter": "string (PB filter syntax)",
+          "expand": "string (comma-separated relation fields)",
+          "fields": "string (comma-separated fields to return)"
+        },
+        "example": "/api/collections/employees/records?page=1&perPage=50&sort=-created&filter=(status='active')&expand=user_id,assignments"
+      },
+      "get_record": {
+        "method": "GET",
+        "url": "/api/collections/{collection_name}/records/{id}",
+        "query_params": {
+          "expand": "string",
+          "fields": "string"
+        }
+      },
+      "create_record": {
+        "method": "POST",
+        "url": "/api/collections/{collection_name}/records",
+        "body": "object (collection fields)",
+        "headers": {"Authorization": "Bearer {token}"}
+      },
+      "update_record": {
+        "method": "PATCH",
+        "url": "/api/collections/{collection_name}/records/{id}",
+        "body": "object (fields to update)",
+        "headers": {"Authorization": "Bearer {token}"}
+      },
+      "delete_record": {
+        "method": "DELETE",
+        "url": "/api/collections/{collection_name}/records/{id}",
+        "headers": {"Authorization": "Bearer {token}"}
+      }
+    },
+
+    "pocketbase_filter_syntax": {
+      "equality": "field='value'",
+      "inequality": "field!='value'",
+      "comparison": "field>10, field<=20",
+      "like": "field~'search'",
+      "array_contains": "field?='value'",
+      "logical_and": "field1='a' && field2='b'",
+      "logical_or": "field1='a' || field2='b'",
+      "grouping": "(field1='a' || field2='b') && field3='c'",
+      "date_comparison": "created>'2025-01-01'",
+      "relation_filter": "expand.relation_field.name='value'"
+    },
+
+    "performance_optimization": {
+      "always_use_filters": "Never list all records without filters for high-volume collections (punches, reconciliations)",
+      "use_fields_parameter": "Request only needed fields to reduce payload size",
+      "use_expand_wisely": "Only expand relations when needed, avoid deep nesting",
+      "pagination": "Use perPage=50 for tables, adjust based on use case",
+      "indexes_needed": {
+        "punches": ["assignment", "timestamp", "type"],
+        "payroll": ["hotel", "week_start", "status"],
+        "reconciliations": ["hotel_report", "status", "date"],
+        "audit_logs": ["collection_name", "timestamp", "user"],
+        "employee_assignments": ["employee", "hotel", "is_active"]
+      }
+    },
+
+    "business_logic_critical_rules": {
+      "work_date_calculation": "work_date = clock_in date (even if clock_out is next day)",
+      "4_punch_sequence": "MUST enforce: clock_in → break_start → break_end → clock_out",
+      "gps_validation": "Check distance <= hotel_locations.radius_meters, fallback to photo if GPS fails",
+      "reconciliation_auto_approval": "discrepancy_percentage < 5% → auto-eligible",
+      "reconciliation_justification": "discrepancy_percentage > 5% → resolution_notes REQUIRED (min 10 chars)",
+      "virtual_scrolling": "REQUIRED for 400+ records (employees, punches, reconciliations)",
+      "3_column_reconciliation": "Hotel Report | MOSS Time | Final Hours (critical UI pattern)"
+    },
+
+    "ai_agent_safety_rules": {
+      "qwen_constraints": {
+        "allowed_operations": ["read", "test", "simple_crud", "composable_creation"],
+        "forbidden_collections": ["audit_logs", "quickbooks_transactions", "users (modifications)"],
+        "forbidden_operations": ["schema_changes", "auth_modifications", "core_business_logic"],
+        "required_checks": ["ALWAYS read brain/pb_schema.json before edits", "ALWAYS read brain/api_reference.json for endpoints"]
+      },
+      "jules_constraints": {
+        "input": "Structured JSON only (brain/universal_json_prompt.json format)",
+        "output": "Vue components matching existing patterns",
+        "validation": "Claude review before merge",
+        "allowed_dirs": ["src/components/", "src/views/", "src/composables/"],
+        "pattern_adherence": "MUST follow existing component structure"
+      },
+      "gemini_cli_constraints": {
+        "allowed_dirs": ["scripts/", "config/", "docs/"],
+        "forbidden_dirs": ["src/", "brain/", "pocketbase/", "frontend/moss-hrp/src/"],
+        "require_approval": ["systemd", "nginx", "cron", "n8n installation"],
+        "focus": "Bash scripts, configuration files, deployment automation"
+      }
+    },
+
+    "common_expand_patterns": {
+      "employees_full": "user_id,assignments.hotel,assignments.position",
+      "punches_full": "assignment.employee,assignment.hotel,assignment.position",
+      "reconciliations_full": "hotel_report.hotel,employee,approved_by",
+      "payroll_full": "hotel,approved_by",
+      "payroll_items_full": "payroll.hotel,assignment.employee",
+      "applications_full": "open_position.hotel,open_position.position,reviewed_by,created_employee"
+    },
+
+    "naming_conventions": {
+      "collections": "snake_case (e.g., employee_assignments, payroll_periods)",
+      "fields": "snake_case (e.g., first_name, hourly_rate, quickbooks_id)",
+      "vue_components": "PascalCase (e.g., ReconciliationModal, EmployeeCard)",
+      "composables": "camelCase with 'use' prefix (e.g., useReconciliation, useEmployeeTimesheet)",
+      "variables": "camelCase (e.g., isLoading, employeeList, hotelData)"
+    },
+
+    "reference_files": {
+      "schema_source": "brain/pb_schema.json (authoritative source)",
+      "sdd_architecture": "brain/sdd_system.json (technical architecture)",
+      "prd_requirements": "brain/prd_system.json (product requirements)",
+      "ui_patterns": "brain/ui_ux_blueprint.json (design system)",
+      "development_guide": "CLAUDE.md (project instructions)",
+      "api_reference": "brain/api_reference.json (this file)"
+    }
+  }
+}

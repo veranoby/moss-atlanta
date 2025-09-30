@@ -1,0 +1,309 @@
+{
+  "design_philosophy": {
+    "principle": "Simplicity over complexity - overcome technology resistance",
+    "user_priority": "Operations efficiency > visual design",
+    "adoption_strategy": "Intuitive workflows that feel easier than current WhatsApp chaos",
+    "accessibility": "Multi-generational workforce (tech-native to tech-resistant)"
+  },
+
+  "role_based_interfaces": {
+    "super_admin": {
+      "access_level": "Full system + configuration",
+      "primary_users": ["CTO role", "Luis Moncayo"],
+      "interface_complexity": "Advanced - all features exposed",
+      "key_screens": ["System configuration", "User management", "Analytics dashboard"]
+    },
+
+    "operations_hr": {
+      "access_level": "Reconciliation + Audit (readonly)", 
+      "primary_users": ["Edny", "HR team"],
+      "interface_focus": "Task completion efficiency",
+      "key_screens": ["Reconciliation queue", "Employee status", "Audit logs"]
+    },
+
+    "finance": {
+      "access_level": "Payroll + Audit (readonly)",
+      "primary_users": ["Accounting team"],
+      "interface_focus": "Financial accuracy + QB status",
+      "key_screens": ["Payroll approval", "QB dashboard", "Transaction logs"]
+    },
+
+    "employee": {
+      "access_level": "Personal data + timesheet history",
+      "primary_users": ["400 hotel workers"],
+      "interface_focus": "Extreme simplicity",
+      "key_screens": ["Punch buttons", "Personal history", "Pay stubs"]
+    }
+  },
+
+  "mobile_app_design": {
+    "moss_time_app": {
+      "design_principle": "One-handed operation, large buttons, minimal cognitive load",
+      
+      "main_screen": {
+        "layout": "4 large buttons in sequence",
+        "button_states": {
+          "clock_in": {"color": "green", "size": "80% screen width", "icon": "login"},
+          "break_start": {"color": "yellow", "enabled_after": "clock_in", "icon": "pause"},
+          "break_end": {"color": "orange", "enabled_after": "break_start", "icon": "play"},
+          "clock_out": {"color": "red", "enabled_after": "break_end", "icon": "logout"}
+        },
+        "validation": "Only next logical button enabled",
+        "feedback": "Immediate confirmation + photo capture"
+      },
+
+      "secondary_screens": {
+        "history": "Simple list view, date + hours worked",
+        "profile": "Basic info, no editing capabilities", 
+        "help": "Visual guides for 4-punch cycle"
+      },
+
+      "offline_ux": {
+        "indicator": "Clear offline/online status",
+        "queue": "Show pending syncs count",
+        "feedback": "Success confirmation when synced"
+      }
+    }
+  },
+
+  "admin_portal_design": {
+    "overall_layout": {
+      "framework": "Vue.js + Vuetify (Material Design)",
+      "navigation": "Top tabbed interface",
+      "responsiveness": "Desktop-first (admin users on computers)",
+      "theme": "Professional blue/gray palette"
+    },
+
+    "tabbed_navigation": {
+      "tab_visibility": "Role-based (canView() logic)",
+      "tabs": [
+        {
+          "name": "Reconciliación",
+          "visible_to": ["operations_hr", "administrator", "super_admin"],
+          "icon": "mdi-compare",
+          "primary_function": "Process pending payroll periods"
+        },
+        {
+          "name": "Nómina", 
+          "visible_to": ["finance", "administrator", "super_admin"],
+          "icon": "mdi-currency-usd",
+          "primary_function": "Generate payroll batches"
+        },
+        {
+          "name": "Auditoría",
+          "visible_to": ["administrator", "super_admin"], 
+          "icon": "mdi-shield-check",
+          "primary_function": "View system logs + QB status"
+        },
+        {
+          "name": "Configuración",
+          "visible_to": ["super_admin"],
+          "icon": "mdi-cog",
+          "primary_function": "System settings + user management"
+        }
+      ]
+    },
+
+    "reconciliation_interface": {
+      "main_table": {
+        "component": "v-data-table with grouping",
+        "grouping": "By hotel.name", 
+        "columns": ["Hotel", "Period", "Status Chips", "Actions"],
+        "sorting": "Newest periods first",
+        "filtering": "By hotel, status, date range"
+      },
+
+      "status_indicators": {
+        "design": "v-chip components with color coding",
+        "hotel_report": {
+          "received": {"color": "success", "text": "Hotel: ✅"},
+          "pending": {"color": "warning", "text": "Hotel: ⏳"}
+        },
+        "moss_data": {
+          "complete": {"color": "success", "text": "MOSS: ✅"},
+          "incomplete": {"color": "error", "text": "MOSS: ❌"}
+        },
+        "discrepancy": {
+          "low": {"color": "success", "text": "< 5%"},
+          "medium": {"color": "warning", "text": "5-15%"}, 
+          "high": {"color": "error", "text": "> 15%"}
+        }
+      },
+
+      "reconciliation_modal": {
+        "trigger": "Click 'Reconciliar' button",
+        "size": "80% screen width, full height",
+        "layout": "3-column comparison table",
+        
+        "columns": {
+          "hotel_hours": {
+            "title": "Horas Hotel (IA)",
+            "editable": false,
+            "source": "hotel_reports.ai_extracted_data"
+          },
+          "moss_hours": {
+            "title": "Horas MOSS (App)", 
+            "editable": false,
+            "source": "punches calculation (breaks deducted)"
+          },
+          "final_hours": {
+            "title": "Horas Finales Aprobadas",
+            "editable": true,
+            "default_value": "moss_hours (preference for app data)",
+            "validation": "Required justification if changed"
+          }
+        },
+
+        "actions": {
+          "primary": {
+            "button": "Aceptar y Finalizar Reconciliación",
+            "style": "Large green button",
+            "action": "Update payroll_period.status = 'reconciled'"
+          },
+          "secondary": {
+            "button": "Exportar Excel para Compartir", 
+            "style": "Secondary button",
+            "action": "Generate Excel file for hotel review"
+          }
+        },
+
+        "audit_requirement": {
+          "trigger": "If any final_hours differs from moss_hours",
+          "ui": "Required text field appears",
+          "label": "Justificación requerida",
+          "validation": "Cannot submit without justification"
+        }
+      }
+    },
+
+    "dashboard_elements": {
+      "key_metrics_cards": [
+        {
+          "title": "Períodos Pendientes",
+          "value": "payroll_periods where status = 'pending'",
+          "color": "info",
+          "trend": "Weekly comparison"
+        },
+        {
+          "title": "Horas Reconciliadas Hoy",
+          "value": "Sum of approved hours today",
+          "color": "success", 
+          "detail": "Breakdown by hotel"
+        },
+        {
+          "title": "Discrepancias Activas",
+          "value": "reconciliations where status = 'discrepancy'",
+          "color": "warning",
+          "action": "Link to reconciliation queue"
+        }
+      ],
+
+      "recent_activity": {
+        "component": "Activity timeline",
+        "source": "audit_logs recent entries",
+        "display": "User + action + timestamp",
+        "filtering": "By user, action type, date"
+      },
+
+      "quickbooks_status": {
+        "component": "Status card",
+        "metrics": [
+          "Employees pending sync",
+          "Last successful payroll batch", 
+          "Recent errors (24h)",
+          "API health check status"
+        ],
+        "actions": ["Force sync", "View detailed logs"]
+      }
+    }
+  },
+
+  "user_experience_flows": {
+    "employee_daily_flow": {
+      "steps": [
+        "Open MOSS Time app",
+        "See large green 'Clock In' button", 
+        "Tap → GPS capture + selfie → confirmation",
+        "Continue work...",
+        "Break time: Yellow 'Break Start' enabled",
+        "Return: Orange 'Break End' enabled", 
+        "End shift: Red 'Clock Out' enabled",
+        "View confirmation: 'Day complete - X hours worked'"
+      ],
+      "pain_point_elimination": "No paper, no confusion, instant feedback"
+    },
+
+    "operations_reconciliation_flow": {
+      "steps": [
+        "Login to admin portal",
+        "Navigate to 'Reconciliación' tab",
+        "See pending periods grouped by hotel",
+        "Click 'Reconciliar' on problem period",
+        "Review 3-column comparison",
+        "Adjust discrepancies with justification",
+        "Click 'Aceptar y Finalizar'",
+        "Period moves to finance queue"
+      ],
+      "time_savings": "3 days → 4 hours process"
+    },
+
+    "finance_payroll_flow": {
+      "steps": [
+        "Login to admin portal", 
+        "Navigate to 'Nómina' tab",
+        "See reconciled periods ready for processing",
+        "Review financial calculations (OT, deductions)",
+        "Click 'Generar Lote de Nómina'",
+        "Automatic QB submission", 
+        "Confirm success in QB dashboard"
+      ],
+      "error_elimination": "Zero manual transcription"
+    }
+  },
+
+  "responsive_design": {
+    "breakpoints": {
+      "mobile": "< 768px (MOSS Time app only)",
+      "tablet": "768px - 1024px (admin portal basic)",
+      "desktop": "> 1024px (admin portal full features)"
+    },
+
+    "mobile_considerations": {
+      "orientation": "Portrait preferred",
+      "touch_targets": "Minimum 44px (Apple guidelines)",
+      "offline_capability": "Full functionality without internet"
+    }
+  },
+
+  "accessibility_requirements": {
+    "color_contrast": "WCAG AA compliance",
+    "font_sizes": "Minimum 16px on mobile, 14px desktop",
+    "keyboard_navigation": "Full tab order for admin portal",
+    "screen_readers": "Semantic HTML + ARIA labels",
+    "language_support": "Spanish primary, English secondary"
+  },
+
+  "design_tokens": {
+    "colors": {
+      "primary": "#1976D2 (blue)",
+      "secondary": "#424242 (gray)",
+      "success": "#4CAF50 (green)",
+      "warning": "#FF9800 (orange)",  
+      "error": "#F44336 (red)",
+      "info": "#2196F3 (light blue)"
+    },
+
+    "typography": {
+      "font_family": "Roboto (Vuetify default)",
+      "headings": "Font weight 500",
+      "body": "Font weight 400",
+      "buttons": "Font weight 500, uppercase"
+    },
+
+    "spacing": {
+      "component_margins": "16px standard",
+      "section_padding": "24px",
+      "button_padding": "12px 24px"
+    }
+  }
+}

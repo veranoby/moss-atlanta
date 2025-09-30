@@ -1,0 +1,307 @@
+{
+  "ai_coordination_framework": {
+    "version": "1.0.0",
+    "created": "2025-09-30",
+    "purpose": "Multi-AI parallel execution safety rules and coordination protocols for MOSS Atlanta project",
+
+    "ai_agents": {
+      "claude_sonnet_45": {
+        "role": "Orchestrator + QA Reviewer + Critical Business Logic",
+        "strengths": ["Architecture", "Planning", "Financial calculations", "Complex business rules"],
+        "responsibilities": [
+          "VPS deployment planning and execution",
+          "Reconciliation engine business logic",
+          "Financial calculations and payroll logic",
+          "Database schema validation",
+          "Multi-AI coordination and task delegation",
+          "Final QA review of all deliverables",
+          "Brain system documentation updates"
+        ],
+        "allowed_operations": "ALL (full system access)",
+        "constraints": "None (trusted orchestrator)",
+        "review_required": false
+      },
+
+      "qwen_cli_coder": {
+        "role": "Bulk Operations Executor + Backend Optimization",
+        "strengths": ["Fast execution", "Repetitive tasks", "Backend validation", "Database queries"],
+        "responsibilities": [
+          "Create composables for historical data (usePayrollHistory, useEmployeeTimesheet)",
+          "Backend integration testing",
+          "Database query optimization",
+          "Performance composable creation",
+          "Pocketbase API integration patterns"
+        ],
+        "allowed_operations": {
+          "read": ["ALL collections", "ALL brain files", "ALL source code"],
+          "write": ["src/composables/*.js", "src/utils/*.js", "tests/**/*"],
+          "create": ["Composables", "Utils", "Tests"],
+          "test": ["ALL test suites"]
+        },
+        "forbidden_operations": {
+          "modify": ["src/components/**/*.vue (UI components)", "src/views/**/*.vue (pages)", "brain/*.json (documentation)", "pocketbase/pb_schema.json"],
+          "delete": ["ANY files without explicit permission"],
+          "schema_changes": ["NEVER modify database schema"],
+          "auth_modifications": ["NEVER touch authentication logic"]
+        },
+        "safety_protocols": {
+          "required_reads_before_work": [
+            "brain/api_reference.json (API endpoints and naming)",
+            "brain/pb_schema.json (database schema)",
+            "CLAUDE.md (project patterns)",
+            "existing similar composable (for pattern matching)"
+          ],
+          "validation_gates": [
+            "Run ESLint before committing",
+            "Test composable with real Pocketbase calls",
+            "Document all functions with JSDoc",
+            "Export default and named exports clearly"
+          ],
+          "communication_protocol": "Comment ALL aggressive edits with // QWEN: reason for change",
+          "rollback_strategy": "Git commit after each composable creation for easy revert"
+        },
+        "work_pattern": "Create → Test → Document → Commit → Notify Claude"
+      },
+
+      "jules": {
+        "role": "Structured Task Executor + Vue Component Generator",
+        "strengths": ["JSON-driven execution", "Component generation", "Pattern adherence"],
+        "responsibilities": [
+          "Historical UI views creation (PayrollHistory.vue, HotelBilling.vue, ReconciliationArchive.vue)",
+          "Vue component generation following exact patterns",
+          "Route implementation with proper navigation",
+          "Vuetify 3 component implementation"
+        ],
+        "allowed_operations": {
+          "read": ["src/components/**/*.vue", "src/views/**/*.vue", "brain/ui_ux_blueprint.json", "brain/api_reference.json"],
+          "write": ["src/views/**/*.vue (new views only)", "src/components/**/*.vue (new components only)", "src/router/*.js (route additions)"],
+          "create": ["Vue components", "Vue views", "Routes"]
+        },
+        "forbidden_operations": {
+          "modify": ["Existing components WITHOUT explicit permission", "brain/*.json files", "Pocketbase schema"],
+          "delete": ["ANY existing files"],
+          "business_logic": ["NO core business logic in components - use composables"]
+        },
+        "input_format": "brain/universal_json_prompt.json structure ONLY",
+        "output_validation": "Claude review REQUIRED before merge",
+        "safety_protocols": {
+          "pattern_adherence": "MUST match existing component structure from similar files",
+          "composition_api": "REQUIRED - <script setup> syntax only",
+          "vuetify_3": "ONLY use Vuetify 3 components (v-data-table, v-dialog, v-card)",
+          "no_inline_logic": "Business logic in composables, UI logic only in components",
+          "expand_patterns": "Use brain/api_reference.json expand patterns exactly"
+        },
+        "work_pattern": "Read JSON → Match patterns → Generate component → Submit for review"
+      },
+
+      "gemini_cli": {
+        "role": "Config & Scripts Specialist + Deployment Automation",
+        "strengths": ["Token-efficient", "Bash operations", "System configuration"],
+        "responsibilities": [
+          "n8n installation and configuration scripts",
+          "systemd service creation",
+          "nginx configuration",
+          "deployment scripts for VPS",
+          "cron job setup for automated period creation",
+          "backup scripts"
+        ],
+        "allowed_operations": {
+          "read": ["scripts/", "config/", "docs/", "brain/*.json (reference only)"],
+          "write": ["scripts/**/*", "config/**/*", "docs/**/*.md (deployment docs only)"],
+          "create": ["Bash scripts", "Config files", "Deployment documentation"],
+          "execute": ["Read-only bash commands for discovery"]
+        },
+        "forbidden_operations": {
+          "modify": ["src/** (application code)", "brain/*.json (documentation)", "pocketbase/pb_schema.json", "frontend/**"],
+          "delete": ["ANY application files"],
+          "direct_database": ["NEVER directly manipulate database files"],
+          "system_critical": ["NO modifications to production services without approval"]
+        },
+        "safety_protocols": {
+          "require_approval_before_execution": ["systemd service changes", "nginx modifications", "cron job installation", "n8n configuration"],
+          "dry_run_first": "Always test scripts with --dry-run or echo mode first",
+          "backup_before_changes": "Create backups before modifying any config files",
+          "documentation": "Every script MUST have header comment with purpose, usage, and author"
+        },
+        "work_pattern": "Generate script → Dry run → Submit for approval → Execute with supervision"
+      }
+    },
+
+    "parallel_execution_rules": {
+      "file_conflict_prevention": {
+        "directory_assignments": {
+          "claude": ["ALL (coordination)", "brain/*.json (documentation updates)"],
+          "qwen": ["src/composables/*.js", "src/utils/*.js", "tests/**"],
+          "jules": ["src/views/Admin/PayrollHistory.vue", "src/views/Admin/HotelBilling.vue", "src/views/Admin/ReconciliationArchive.vue"],
+          "gemini_cli": ["scripts/**", "config/**", "docs/deployment/**"]
+        },
+        "coordination_protocol": "NO two AIs work on same file simultaneously",
+        "dependency_management": "Jules waits for Qwen composables before component implementation"
+      },
+
+      "communication_channels": {
+        "status_updates": "Each AI commits with clear message: '[AI_NAME] Task: description'",
+        "blocker_notification": "If blocked, create BLOCKER.md in assigned directory with details",
+        "completion_signal": "Git commit + update brain/ai_work_status.json",
+        "question_protocol": "Create QUESTION_{AI_NAME}.md in brain/ directory for Claude review"
+      },
+
+      "dependency_graph": {
+        "phase_1_foundation": {
+          "parallel_track_a": {
+            "owner": "qwen",
+            "tasks": ["Create usePayrollHistory.js", "Create useEmployeeTimesheet.js", "Create useHotelBilling.js"],
+            "estimated_duration": "2-3 hours",
+            "output_location": "src/composables/",
+            "dependencies": "None (can start immediately)",
+            "validation": "Claude review + manual test"
+          },
+          "parallel_track_b": {
+            "owner": "gemini_cli",
+            "tasks": ["n8n installation script", "systemd service files", "deployment documentation"],
+            "estimated_duration": "3-4 hours",
+            "output_location": "scripts/deployment/",
+            "dependencies": "None (can start immediately)",
+            "validation": "Claude review + dry run"
+          },
+          "parallel_track_c": {
+            "owner": "claude",
+            "tasks": ["Virtual scrolling implementation", "Database index creation", "Mock data removal"],
+            "estimated_duration": "4-5 hours",
+            "output_location": "src/components/, brain/",
+            "dependencies": "None (can start immediately)",
+            "validation": "Self-validated"
+          }
+        },
+
+        "phase_2_integration": {
+          "sequential_track": {
+            "step_1": {
+              "owner": "qwen",
+              "tasks": ["Composables complete and tested"],
+              "blocks": ["jules cannot start without composables"]
+            },
+            "step_2": {
+              "owner": "jules",
+              "tasks": ["PayrollHistory.vue", "HotelBilling.vue", "ReconciliationArchive.vue"],
+              "dependencies": ["usePayrollHistory.js", "useHotelBilling.js from qwen"],
+              "estimated_duration": "4-5 hours",
+              "output_location": "src/views/Admin/"
+            },
+            "step_3": {
+              "owner": "claude",
+              "tasks": ["Route integration", "Navigation updates", "Final QA"],
+              "dependencies": ["Jules components complete"],
+              "estimated_duration": "2 hours"
+            }
+          }
+        }
+      },
+
+      "quality_gates": {
+        "qwen_deliverable_checklist": [
+          "✅ Composable follows existing pattern (check similar files)",
+          "✅ JSDoc comments on all functions",
+          "✅ Error handling with try/catch",
+          "✅ Loading states managed",
+          "✅ Pocketbase calls optimized (filters, fields parameter)",
+          "✅ ESLint passes with no errors",
+          "✅ Manual test with real Pocketbase data",
+          "✅ Git commit with clear message"
+        ],
+        "jules_deliverable_checklist": [
+          "✅ Follows brain/universal_json_prompt.json structure",
+          "✅ Uses Composition API (<script setup>)",
+          "✅ Only Vuetify 3 components",
+          "✅ Business logic in composables (not component)",
+          "✅ Proper expand patterns from api_reference.json",
+          "✅ Responsive design (mobile + desktop)",
+          "✅ Loading states and error handling",
+          "✅ Submitted for Claude review"
+        ],
+        "gemini_cli_deliverable_checklist": [
+          "✅ Script header with purpose, usage, author",
+          "✅ Dry-run mode implemented",
+          "✅ Error handling and validation",
+          "✅ Backup creation before changes",
+          "✅ Documentation in docs/deployment/",
+          "✅ Approval requested before execution",
+          "✅ Tested in isolated environment"
+        ]
+      }
+    },
+
+    "conflict_resolution": {
+      "merge_conflicts": {
+        "prevention": "Use different directories per AI",
+        "resolution": "Claude resolves ALL merge conflicts",
+        "rollback": "Git revert to last stable state if critical"
+      },
+      "logic_conflicts": {
+        "example": "Qwen creates composable pattern X, Jules expects pattern Y",
+        "resolution": "Claude reviews both approaches and decides standard",
+        "documentation": "Winner pattern documented in brain/development_lessons.json"
+      },
+      "naming_conflicts": {
+        "prevention": "brain/api_reference.json naming conventions MANDATORY",
+        "resolution": "Claude enforces snake_case collections, camelCase variables, PascalCase components",
+        "violation_protocol": "AI must rename and recommit"
+      }
+    },
+
+    "emergency_protocols": {
+      "pocketbase_down": {
+        "action": "ALL AIs stop work immediately",
+        "notification": "Create EMERGENCY_POCKETBASE_DOWN.md in root",
+        "recovery": "Claude investigates and restarts services"
+      },
+      "breaking_change_detected": {
+        "detection": "Tests fail, build breaks, runtime errors",
+        "action": "AI responsible creates ROLLBACK_REQUEST.md with details",
+        "resolution": "Claude reviews and executes git revert if needed"
+      },
+      "aggressive_edit_detected": {
+        "detection": "Large file deletions, schema changes, auth modifications",
+        "action": "Git pre-commit hook blocks (if configured) OR Claude manual review",
+        "resolution": "Claude approves/rejects with justification"
+      }
+    },
+
+    "success_metrics": {
+      "time_efficiency": "Target 70% faster than Claude solo execution",
+      "token_cost": "Target 70% reduction via delegation to cheaper models",
+      "quality_maintenance": "Zero breaking changes, all tests pass",
+      "parallel_gains": "Phase 1: 3 parallel tracks complete in 4-5 hours (vs 10-12 hours sequential)"
+    },
+
+    "brain_file_update_protocol": {
+      "after_task_completion": {
+        "owner": "claude",
+        "updates": [
+          "brain/backlog.json (mark tasks complete)",
+          "brain/development_lessons.json (add learnings)",
+          "brain/ai_work_status.json (track AI contributions)",
+          "brain/session_checkpoint_{date}.json (session summary)"
+        ]
+      },
+      "forbidden_updates": {
+        "qwen": "NEVER modify brain/*.json files directly",
+        "jules": "NEVER modify brain/*.json files directly",
+        "gemini_cli": "NEVER modify brain/*.json files directly"
+      },
+      "exception": "AI can READ brain files for reference anytime"
+    },
+
+    "reference_priority": {
+      "hierarchy": [
+        "1. brain/api_reference.json (API truth)",
+        "2. brain/pb_schema.json (database truth)",
+        "3. CLAUDE.md (project patterns)",
+        "4. brain/sdd_system.json (architecture)",
+        "5. brain/ui_ux_blueprint.json (design patterns)",
+        "6. Existing similar code files (implementation patterns)"
+      ],
+      "conflict_resolution": "Higher number wins (api_reference > existing code)"
+    }
+  }
+}
