@@ -100,6 +100,30 @@
         class="mb-1"
       />
 
+      <v-list-item
+        :to="{ name: 'PayrollHistory' }"
+        prepend-icon="mdi-history"
+        title="Payroll History"
+        value="payroll-history"
+        class="mb-1"
+      />
+
+      <v-list-item
+        :to="{ name: 'HotelBilling' }"
+        prepend-icon="mdi-file-document-outline"
+        title="Hotel Billing"
+        value="hotel-billing"
+        class="mb-1"
+      />
+
+      <v-list-item
+        :to="{ name: 'ReconciliationArchive' }"
+        prepend-icon="mdi-archive"
+        title="Reconciliation Archive"
+        value="reconciliation-archive"
+        class="mb-1"
+      />
+
       <!-- System -->
       <v-list-subheader class="text-uppercase text-caption font-weight-bold mt-4">
         {{ $t('admin.system') }}
