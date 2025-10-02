@@ -69,20 +69,30 @@
   },
 
   "database_architecture": {
-    "collections_total": 19,
-    
+    "collections_total": 23,
+    "schema_version": "2025-10-02_verified",
+    "schema_verification": {
+      "last_verified": "2025-10-02",
+      "source": "Pocketbase production export",
+      "status": "✅ All expected collections present"
+    },
+
     "collection_categories": {
       "configuration_master": {
-        "count": 6,
-        "collections": ["app_settings", "legal_entities", "hotels", "departments", "positions", "hotel_position_rates"]
+        "count": 8,
+        "collections": ["app_settings", "legal_entities", "markets", "hotels", "departments", "positions", "hotel_locations", "hotel_position_rates"]
       },
       "hr_operations": {
-        "count": 5, 
-        "collections": ["employees", "open_positions", "applications", "employee_assignments", "punches"]
+        "count": 6,
+        "collections": ["employees", "open_positions", "applications", "application_documents", "employee_assignments", "punches"]
       },
       "financial_audit": {
         "count": 8,
         "collections": ["hotel_reports", "payroll_periods", "reconciliations", "payroll", "payroll_items", "hotel_invoices", "audit_logs", "quickbooks_transactions"]
+      },
+      "authentication": {
+        "count": 1,
+        "collections": ["users"]
       }
     },
 

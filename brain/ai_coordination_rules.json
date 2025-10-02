@@ -23,15 +23,34 @@
       },
 
       "qwen_cli_coder": {
-        "role": "Bulk Operations Executor + Backend Optimization",
-        "strengths": ["Fast execution", "Repetitive tasks", "Backend validation", "Database queries"],
+        "role": "Mechanical String Replacement ONLY + i18n Specialist",
+        "strengths": ["Fast execution", "Repetitive mechanical tasks", "Pattern-based replacements"],
         "responsibilities": [
-          "Create composables for historical data (usePayrollHistory, useEmployeeTimesheet)",
-          "Backend integration testing",
-          "Database query optimization",
-          "Performance composable creation",
-          "Pocketbase API integration patterns"
+          "i18n string replacement (template hardcoded text → {{ $t('key') }})",
+          "Mechanical refactoring (rename variables across files)",
+          "Pattern-based code updates (NOT logic changes)"
         ],
+        "critical_constraints": {
+          "NEVER_MODIFY": [
+            "<script> tag contents (business logic, composables, computed, methods)",
+            "Import statements",
+            "API calls to Pocketbase",
+            "Function implementations",
+            "Routing logic"
+          ],
+          "ONLY_MODIFY": [
+            "<template> hardcoded strings → {{ $t('key') }}",
+            "CSS class names (if explicitly requested)",
+            "Comment updates (if explicitly requested)"
+          ],
+          "FORBIDDEN_ASSUMPTIONS": [
+            "NEVER assume completion - ALWAYS report status explicitly",
+            "NEVER delete work from other AIs",
+            "NEVER restart from zero - continue from current state",
+            "NEVER modify JSON structure - only values",
+            "NEVER touch JavaScript logic"
+          ]
+        },
         "allowed_operations": {
           "read": ["ALL collections", "ALL brain files", "ALL source code"],
           "write": ["src/composables/*.js", "src/utils/*.js", "tests/**/*"],
@@ -95,8 +114,9 @@
       },
 
       "gemini_cli": {
-        "role": "Config & Scripts Specialist + Deployment Automation",
+        "role": "Config & Scripts Specialist + Deployment Automation (HIGH RISK)",
         "strengths": ["Token-efficient", "Bash operations", "System configuration"],
+        "weaknesses": ["Destructive tendencies", "Assumes completion without reporting", "Deletes other AI work"],
         "responsibilities": [
           "n8n installation and configuration scripts",
           "systemd service creation",
@@ -105,6 +125,21 @@
           "cron job setup for automated period creation",
           "backup scripts"
         ],
+        "critical_constraints": {
+          "FORBIDDEN_ASSUMPTIONS": [
+            "NEVER assume completion - ALWAYS report status explicitly with file list",
+            "NEVER delete work from other AIs - verify file ownership first",
+            "NEVER restart from zero when told 'continue' - resume from current state",
+            "NEVER modify files outside assigned directories",
+            "NEVER touch JSON files - they break easily"
+          ],
+          "MANDATORY_PROTOCOLS": [
+            "Before ANY file operation: list files and confirm with user",
+            "After completion: explicitly report 'TASK COMPLETED' with file count",
+            "If stuck in loop: break and report status after 3 iterations",
+            "Read task instructions TWICE before starting"
+          ]
+        },
         "allowed_operations": {
           "read": ["scripts/", "config/", "docs/", "brain/*.json (reference only)"],
           "write": ["scripts/**/*", "config/**/*", "docs/**/*.md (deployment docs only)"],
@@ -246,6 +281,101 @@
         "prevention": "brain/api_reference.json naming conventions MANDATORY",
         "resolution": "Claude enforces snake_case collections, camelCase variables, PascalCase components",
         "violation_protocol": "AI must rename and recommit"
+      }
+    },
+
+    "anti_patterns_and_detection": {
+      "infinite_loop_detection": {
+        "symptoms": [
+          "AI doesn't report completion after expected time",
+          "AI repeats same action multiple times",
+          "AI shows progress but never says 'DONE' or 'COMPLETED'"
+        ],
+        "root_causes": {
+          "qwen": "Missing explicit termination condition in prompt",
+          "gemini": "Waits for user confirmation that never comes",
+          "jules": "Validation loop without break condition"
+        },
+        "mitigation_strategies": {
+          "prompt_structure": "ALWAYS include: 'When complete, explicitly output: TASK COMPLETED - [summary]'",
+          "iteration_limit": "Add to prompt: 'Process maximum N files, then report status'",
+          "progress_markers": "Require: 'Report progress every 5 files: X/Y completed'",
+          "timeout_detection": "User monitors for 10 minutes silence → interrupt and ask status"
+        },
+        "example_prompt_fix": {
+          "BAD": "Internationalize all Vue files in src/views/Admin/",
+          "GOOD": "Internationalize Vue files in src/views/Admin/ (batch 1: 5 files). After completing ALL 5 files, output: 'BATCH 1 COMPLETED - Files: [list]'. If errors, output: 'BATCH 1 ERRORS - [details]'."
+        }
+      },
+
+      "destructive_deletion_prevention": {
+        "gemini_specific_issue": "Deletes other AI work when told 'continue'",
+        "root_cause": "Interprets 'continue' as 'start fresh' instead of 'resume'",
+        "mitigation_strategies": {
+          "explicit_state_reference": "NEVER say just 'continue'. Say: 'Continue from current state - do NOT delete existing files. Current files: [list]'",
+          "file_inventory": "Before starting: 'List all files in your working directory. Preserve ALL files not explicitly marked for deletion.'",
+          "ownership_verification": "Add to prompt: 'Verify file ownership before deletion: qwen-prompt.json = qwen, jules-*.json = jules'",
+          "backup_requirement": "Require: 'Before ANY file deletion, create backup: cp file file.backup'"
+        },
+        "safe_continuation_pattern": {
+          "step_1": "User: 'Show me current files in your workspace'",
+          "step_2": "AI: [lists files]",
+          "step_3": "User: 'Continue with task XYZ. Preserve ALL listed files. Only modify [specific files].'",
+          "step_4": "AI: [works on specific files only]"
+        }
+      },
+
+      "json_corruption_prevention": {
+        "vulnerable_ais": ["qwen", "gemini", "jules"],
+        "common_errors": [
+          "Extra closing braces",
+          "Missing commas between objects",
+          "Unescaped quotes in strings",
+          "Incorrect nesting levels"
+        ],
+        "mitigation_strategies": {
+          "morphllm_for_json": "Use morphllm MCP instead of qwen/gemini for JSON operations",
+          "validation_requirement": "Add to prompt: 'After editing JSON, validate with: python3 -m json.tool file.json'",
+          "incremental_edits": "Edit one section at a time, validate, then move to next",
+          "backup_before_edit": "Require: 'cp file.json file.json.backup before editing'"
+        }
+      },
+
+      "assumption_cascade_prevention": {
+        "problem": "AI assumes task details not explicitly stated",
+        "examples": [
+          "Assumes file structure without checking",
+          "Assumes dependencies exist without verifying",
+          "Assumes completion without validation"
+        ],
+        "mitigation_strategies": {
+          "verification_requirements": "Add to all prompts: 'Before starting, verify: 1) Required files exist 2) Dependencies available 3) Target directory writable'",
+          "explicit_failure_reporting": "Require: 'If ANY assumption fails, STOP and report: BLOCKED - [reason]'",
+          "no_silent_failures": "Forbid: Never silently skip errors or missing dependencies"
+        }
+      }
+    },
+
+    "work_package_template_requirements": {
+      "mandatory_header": {
+        "analysis_phase": "Read task → Identify optimal tools → Activate flags/MCPs → Plan approach",
+        "flags_activation": "Activate: --task-manage (if >3 steps), --token-efficient (always), --uc (if context >75%)",
+        "mcp_activation": "Activate: morphllm (bulk edits), sequential-thinking (complex analysis), context7 (framework docs)",
+        "agent_activation": "Activate: refactoring-expert (code quality), quality-engineer (testing)"
+      },
+      "explicit_termination": {
+        "completion_signal": "REQUIRED: Output 'TASK COMPLETED' with summary at end",
+        "file_list": "REQUIRED: List all files created/modified",
+        "error_reporting": "If ANY errors: Output 'TASK INCOMPLETE - [errors]'"
+      },
+      "brain_file_references": {
+        "required_reads": [
+          "brain/api_reference.json (API patterns, endpoints, naming)",
+          "brain/pb_schema.json (database schema, collections)",
+          "brain/sdd_system.json (architecture, tech stack)",
+          "CLAUDE.md (project-specific patterns)"
+        ],
+        "forbidden_creates": "NEVER create new brain/*.json or *.md files - optimize existing ones"
       }
     },
 

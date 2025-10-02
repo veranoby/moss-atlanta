@@ -131,17 +131,6 @@
       "filterByRole": "Filtrar por Rol",
       "role": "Rol"
     },
-  "common": {
-    "search": "Buscar",
-    "name": "Nombre",
-    "email": "Correo",
-    "password": "Contraseña",
-    "cancel": "Cancelar",
-    "save": "Guardar",
-    "delete": "Eliminar",
-    "verified": "Verificado",
-    "pending": "Pendiente"
-  },
   "admin": {
     "settings": {
       "subtitle": "Configuración del sistema MOSS Atlanta",
@@ -284,7 +273,9 @@
       "editEmployee": "Editar Empleado",
       "deleteConfirmation": "¿Estás seguro de que quieres eliminar a {firstName} {lastName}?"
     },
-    "pleaseSelectHotel": "Por favor seleccione un hotel para ver los reportes financieros.",
+    "billing": {
+      "pleaseSelectHotel": "Por favor seleccione un hotel para ver los reportes financieros."
+    },
     "dashboard": {
       "title": "Resumen del Panel"
     },
@@ -296,5 +287,18 @@
       "resetPasswordConfirmation": "¿Está seguro de que desea restablecer la contraseña para {name}?",
       "passwordResetError": "Error: No se pudo restablecer la contraseña. Verifique los permisos."
     }
+  },
+  "common": {
+    "search": "Buscar",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "verified": "Verificado",
+    "pending": "Pendiente",
+    "active": "Activo",
+    "inactive": "Inactivo"
   }
 }

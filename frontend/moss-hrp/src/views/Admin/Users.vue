@@ -258,12 +258,12 @@ const headers = [
 
 // Validation rules
 const rules = {
-  required: (value: string) => !!value || t(\'common.validations.required\'),
+  required: (value: string) => !!value || t('common.validations.required'),
   email: (value: string) => {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return pattern.test(value) || t(\'common.validations.email\')
+    return pattern.test(value) || t('common.validations.email')
   },
-  minLength: (value: string) => (value && value.length >= 8) || t(\'common.validations.minLength\', { min: 8 })
+  minLength: (value: string) => (value && value.length >= 8) || t('common.validations.minLength', { min: 8 })
 }
 
 // Computed

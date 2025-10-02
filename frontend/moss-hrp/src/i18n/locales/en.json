@@ -131,17 +131,6 @@
     "filterByRole": "Filter by Role",
     "role": "Role"
   },
-  "common": {
-    "search": "Search",
-    "name": "Name",
-    "email": "Email",
-    "password": "Password",
-    "cancel": "Cancel",
-    "save": "Save",
-    "delete": "Delete",
-    "verified": "Verified",
-    "pending": "Pending"
-  },
   "admin": {
     "settings": {
       "subtitle": "MOSS Atlanta system settings",
@@ -284,7 +273,8 @@
       "editEmployee": "Edit Employee",
       "deleteConfirmation": "Are you sure you want to delete {firstName} {lastName}?"
     },
-    "pleaseSelectHotel": "Please select a hotel to view the financial reports."
+    "billing": {
+      "pleaseSelectHotel": "Please select a hotel to view the financial reports."
     },
     "dashboard": {
       "title": "Dashboard Overview"
@@ -297,5 +287,18 @@
       "resetPasswordConfirmation": "Are you sure you want to reset the password for {name}?",
       "passwordResetError": "Error: Could not reset password. Check permissions."
     }
+  },
+  "common": {
+    "search": "Search",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "verified": "Verified",
+    "pending": "Pending",
+    "active": "Active",
+    "inactive": "Inactive"
   }
 }

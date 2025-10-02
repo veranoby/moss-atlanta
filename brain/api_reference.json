@@ -6,12 +6,19 @@
     "pocketbase_base_url": "http://localhost:8080/api",
 
     "collections_summary": {
-      "total_collections": 21,
+      "total_collections": 23,
       "categories": {
-        "configuration_master": ["app_settings", "legal_entities", "hotels", "departments", "positions", "hotel_locations"],
+        "configuration_master": ["app_settings", "legal_entities", "markets", "hotels", "departments", "positions", "hotel_locations", "hotel_position_rates"],
         "hr_operations": ["employees", "open_positions", "applications", "application_documents", "employee_assignments", "punches"],
-        "financial_audit": ["hotel_reports", "payroll_periods", "reconciliations", "payroll", "payroll_items", "audit_logs", "quickbooks_transactions"],
+        "financial_audit": ["hotel_reports", "payroll_periods", "reconciliations", "payroll", "payroll_items", "hotel_invoices", "audit_logs", "quickbooks_transactions"],
         "authentication": ["users"]
+      },
+      "schema_verification": {
+        "last_verified": "2025-10-02",
+        "source": "Pocketbase export from production",
+        "status": "✅ All 23 collections present and correct",
+        "oct_2025_additions": ["hotel_position_rates", "hotel_invoices", "application_documents", "hotel_locations"],
+        "multimarket_additions": ["markets"]
       }
     },
 
@@ -362,6 +369,47 @@
       "reconciliation_justification": "discrepancy_percentage > 5% → resolution_notes REQUIRED (min 10 chars)",
       "virtual_scrolling": "REQUIRED for 400+ records (employees, punches, reconciliations)",
       "3_column_reconciliation": "Hotel Report | MOSS Time | Final Hours (critical UI pattern)"
+    },
+
+    "ai_execution_directives": {
+      "task_initialization_protocol": {
+        "step_1_analysis": {
+          "action": "Read task description completely",
+          "identify": "Task type (CRUD, i18n, refactor, analysis, deployment)",
+          "estimate": "Complexity (simple, moderate, complex)",
+          "dependencies": "List required files, collections, external systems"
+        },
+        "step_2_flag_activation": {
+          "always_active": ["--task-manage", "--token-efficient"],
+          "conditional": {
+            "--uc": "If context usage >75%",
+            "--think": "If analysis required (architecture, debugging)",
+            "--validate": "If production environment or risk score >0.7"
+          }
+        },
+        "step_3_mcp_selection": {
+          "morphllm": "Bulk edits (rename vars, pattern replacements)",
+          "sequential_thinking": "Complex analysis (>3 components, system design)",
+          "context7": "Framework docs (React, Vue, Next.js patterns)",
+          "serena": "Symbol operations (rename functions, extract classes)",
+          "playwright": "Browser testing (E2E, visual, accessibility)"
+        },
+        "step_4_agent_selection": {
+          "refactoring_expert": "Code quality improvements",
+          "quality_engineer": "Testing strategy",
+          "security_engineer": "Security analysis",
+          "performance_engineer": "Optimization needs"
+        },
+        "step_5_execution": "Execute task with selected tools",
+        "step_6_completion": "Output: 'TASK COMPLETED - [summary] Files: [list]'"
+      },
+
+      "completion_reporting_requirements": {
+        "mandatory_output": "TASK COMPLETED - [one-line summary]",
+        "file_manifest": "Files created: [list]\nFiles modified: [list]\nFiles deleted: [list]",
+        "error_reporting": "If errors: 'TASK INCOMPLETE - Errors: [list]'",
+        "next_steps": "If blocked: 'BLOCKED - Reason: [explain] Required: [what's needed]'"
+      }
     },
 
     "ai_agent_safety_rules": {

@@ -60,14 +60,32 @@
             "employee"
           ]
         }
+      },
+      {
+        "system": false,
+        "id": "assgn_mkts",
+        "name": "assigned_markets",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "mkts9x4r5z0t1a2b",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": null,
+          "displayFields": [
+            "name"
+          ]
+        }
       }
     ],
     "indexes": [],
-    "listRule": "id = @request.auth.id",
-    "viewRule": "id = @request.auth.id",
+    "listRule": "",
+    "viewRule": "",
     "createRule": "",
-    "updateRule": "id = @request.auth.id",
-    "deleteRule": "id = @request.auth.id",
+    "updateRule": "",
+    "deleteRule": "",
     "options": {
       "allowEmailAuth": true,
       "allowOAuth2Auth": true,
@@ -395,6 +413,69 @@
       },
       {
         "system": false,
+        "id": "wau010",
+        "name": "work_authorization",
+        "type": "select",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSelect": 1,
+          "values": [
+            "authorized",
+            "visa_required",
+            "pending_verification"
+          ]
+        }
+      },
+      {
+        "system": false,
+        "id": "pye010",
+        "name": "payment_eligible",
+        "type": "bool",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {}
+      },
+      {
+        "system": false,
+        "id": "docc010",
+        "name": "documents_complete",
+        "type": "bool",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {}
+      },
+      {
+        "system": false,
+        "id": "frz010",
+        "name": "freeze_reason",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": 200,
+          "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "cdm010",
+        "name": "critical_documents_missing",
+        "type": "json",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSize": 2000000
+        }
+      },
+      {
+        "system": false,
         "id": "hex010",
         "name": "has_experience",
         "type": "bool",
@@ -472,7 +553,7 @@
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 1000,
           "pattern": ""
         }
       },
@@ -486,8 +567,34 @@
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 500,
           "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "intd010",
+        "name": "interviewed_date",
+        "type": "date",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": "",
+          "max": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "hird010",
+        "name": "hired_date",
+        "type": "date",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": "",
+          "max": ""
         }
       },
       {
@@ -1264,6 +1371,142 @@
     "options": {}
   },
   {
+    "id": "hiv042wso5t0n1v",
+    "name": "hotel_invoices",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "system": false,
+        "id": "inv042",
+        "name": "invoice_number",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": true,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "pp042",
+        "name": "payroll_period",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "pp22wso5t0n1v6p",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "hot042",
+        "name": "hotel",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "2h92spk1pxjzr2l",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "tba042",
+        "name": "total_billing_amount",
+        "type": "number",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "noDecimal": false
+        }
+      },
+      {
+        "system": false,
+        "id": "sta042",
+        "name": "status",
+        "type": "select",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSelect": 1,
+          "values": [
+            "draft",
+            "sent",
+            "paid",
+            "overdue",
+            "cancelled"
+          ]
+        }
+      },
+      {
+        "system": false,
+        "id": "iss042",
+        "name": "issued_date",
+        "type": "date",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": "",
+          "max": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "due042",
+        "name": "due_date",
+        "type": "date",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": "",
+          "max": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "qbi042",
+        "name": "quickbooks_invoice_id",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      }
+    ],
+    "indexes": [
+      "CREATE INDEX IF NOT EXISTS idx_invoice_hotel_period ON hotel_invoices (hotel, payroll_period)"
+    ],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": "",
+    "options": {}
+  },
+  {
     "id": "hl20wso5t0n1v6p",
     "name": "hotel_locations",
     "type": "base",
@@ -1350,9 +1593,136 @@
         "presentable": false,
         "unique": false,
         "options": {}
+      },
+      {
+        "system": false,
+        "id": "fpr020",
+        "name": "fallback_photo_required",
+        "type": "bool",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {}
+      },
+      {
+        "system": false,
+        "id": "bvm020",
+        "name": "backup_validation_method",
+        "type": "select",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSelect": 1,
+          "values": [
+            "photo_required",
+            "manager_override",
+            "time_based_approval"
+          ]
+        }
       }
     ],
     "indexes": [],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": "",
+    "options": {}
+  },
+  {
+    "id": "hpr041wso5t0n1v",
+    "name": "hotel_position_rates",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "system": false,
+        "id": "hot041",
+        "name": "hotel",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "2h92spk1pxjzr2l",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "pos041",
+        "name": "position",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "4j04uqm3rylzt4n",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "der041",
+        "name": "default_employee_rate",
+        "type": "number",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "noDecimal": false
+        }
+      },
+      {
+        "system": false,
+        "id": "dbr041",
+        "name": "default_billing_rate",
+        "type": "number",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "noDecimal": false
+        }
+      },
+      {
+        "system": false,
+        "id": "efd041",
+        "name": "effective_date",
+        "type": "date",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": "",
+          "max": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "isa041",
+        "name": "is_active",
+        "type": "bool",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {}
+      }
+    ],
+    "indexes": [
+      "CREATE INDEX IF NOT EXISTS idx_hotel_position ON hotel_position_rates (hotel, position)"
+    ],
     "listRule": "",
     "viewRule": "",
     "createRule": "",
@@ -1655,6 +2025,19 @@
       },
       {
         "system": false,
+        "id": "ipps001",
+        "name": "initial_payroll_period_start",
+        "type": "date",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": "",
+          "max": ""
+        }
+      },
+      {
+        "system": false,
         "id": "pctn001",
         "name": "primary_contact_name",
         "type": "text",
@@ -1726,6 +2109,25 @@
         "presentable": false,
         "unique": false,
         "options": {}
+      },
+      {
+        "system": false,
+        "id": "mkt_rel_hot",
+        "name": "market",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "mkts9x4r5z0t1a2b",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": [
+            "name",
+            "city"
+          ]
+        }
       }
     ],
     "indexes": [],
@@ -1796,6 +2198,245 @@
       }
     ],
     "indexes": [],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": "",
+    "options": {}
+  },
+  {
+    "id": "mkts9x4r5z0t1a2b",
+    "name": "markets",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "system": false,
+        "id": "lent_mkt",
+        "name": "legal_entity",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "1d81rok9owixr1k",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": [
+            "name"
+          ]
+        }
+      },
+      {
+        "system": false,
+        "id": "name_mkt",
+        "name": "name",
+        "type": "text",
+        "required": true,
+        "presentable": true,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": 100,
+          "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "code_mkt",
+        "name": "code",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "unique": true,
+        "options": {
+          "min": 2,
+          "max": 10,
+          "pattern": "^[A-Z0-9_]+$"
+        }
+      },
+      {
+        "system": false,
+        "id": "city_mkt",
+        "name": "city",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": 100,
+          "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "stat_mkt",
+        "name": "state",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": 2,
+          "max": 2,
+          "pattern": "^[A-Z]{2}$"
+        }
+      },
+      {
+        "system": false,
+        "id": "regn_mkt",
+        "name": "region",
+        "type": "select",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSelect": 1,
+          "values": [
+            "southeast",
+            "northeast",
+            "midwest",
+            "southwest",
+            "west"
+          ]
+        }
+      },
+      {
+        "system": false,
+        "id": "tzon_mkt",
+        "name": "timezone",
+        "type": "select",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSelect": 1,
+          "values": [
+            "America/New_York",
+            "America/Chicago",
+            "America/Denver",
+            "America/Los_Angeles",
+            "America/Phoenix"
+          ]
+        }
+      },
+      {
+        "system": false,
+        "id": "lnch_mkt",
+        "name": "launch_date",
+        "type": "date",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": "",
+          "max": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "actv_mkt",
+        "name": "is_active",
+        "type": "bool",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {}
+      },
+      {
+        "system": false,
+        "id": "qbid_mkt",
+        "name": "quickbooks_location_id",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "qbsy_mkt",
+        "name": "qb_sync_date",
+        "type": "date",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": "",
+          "max": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "opmg_mkt",
+        "name": "operations_manager",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": [
+            "name"
+          ]
+        }
+      },
+      {
+        "system": false,
+        "id": "cphn_mkt",
+        "name": "contact_phone",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "ceml_mkt",
+        "name": "contact_email",
+        "type": "email",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "exceptDomains": null,
+          "onlyDomains": null
+        }
+      },
+      {
+        "system": false,
+        "id": "note_mkt",
+        "name": "notes",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": 1000,
+          "pattern": ""
+        }
+      }
+    ],
+    "indexes": [
+      "CREATE INDEX IF NOT EXISTS idx_market_active ON markets (is_active)",
+      "CREATE INDEX IF NOT EXISTS idx_market_state ON markets (state)"
+    ],
     "listRule": "",
     "viewRule": "",
     "createRule": "",
@@ -2022,6 +2663,24 @@
         "options": {
           "min": "",
           "max": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "mkt_rel_op",
+        "name": "market",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "mkts9x4r5z0t1a2b",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": [
+            "name"
+          ]
         }
       }
     ],
@@ -2283,6 +2942,34 @@
           "max": null,
           "noDecimal": false
         }
+      },
+      {
+        "system": false,
+        "id": "npy012",
+        "name": "net_pay",
+        "type": "number",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "noDecimal": false
+        }
+      },
+      {
+        "system": false,
+        "id": "tbl012",
+        "name": "total_billing",
+        "type": "number",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "noDecimal": false
+        }
       }
     ],
     "indexes": [],
@@ -2356,9 +3043,48 @@
             "processing",
             "reconciled",
             "approved",
-            "sent_to_payroll"
+            "sent_to_payroll",
+            "error"
           ]
         }
+      },
+      {
+        "system": false,
+        "id": "dscc022",
+        "name": "discrepancy_count",
+        "type": "number",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "noDecimal": true
+        }
+      },
+      {
+        "system": false,
+        "id": "dpr022",
+        "name": "discrepancy_percentage",
+        "type": "number",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "noDecimal": false
+        }
+      },
+      {
+        "system": false,
+        "id": "aut022",
+        "name": "auto_generated",
+        "type": "bool",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {}
       },
       {
         "system": false,
@@ -2382,20 +3108,37 @@
       },
       {
         "system": false,
-        "id": "dpr022",
-        "name": "discrepancy_percentage",
-        "type": "number",
+        "id": "rcat022",
+        "name": "reconciled_at",
+        "type": "date",
         "required": false,
         "presentable": false,
         "unique": false,
         "options": {
-          "min": null,
-          "max": null,
-          "noDecimal": false
+          "min": "",
+          "max": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "rcby022",
+        "name": "reconciled_by",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
         }
       }
     ],
-    "indexes": [],
+    "indexes": [
+      "CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_period ON payroll_periods (hotel, period_start, period_end)"
+    ],
     "listRule": "",
     "viewRule": "",
     "createRule": "",
@@ -2758,6 +3501,22 @@
       },
       {
         "system": false,
+        "id": "hotd008",
+        "name": "hotel",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "2h92spk1pxjzr2l",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
         "id": "emp008",
         "name": "employee",
         "type": "relation",
@@ -2904,7 +3663,9 @@
         }
       }
     ],
-    "indexes": [],
+    "indexes": [
+      "CREATE INDEX IF NOT EXISTS idx_reconciliation_hotel_date ON reconciliations (hotel, date)"
+    ],
     "listRule": "",
     "viewRule": "",
     "createRule": "",
