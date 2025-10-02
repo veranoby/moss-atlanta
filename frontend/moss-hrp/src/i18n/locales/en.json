@@ -283,6 +283,19 @@
       "noEmployeesDescription": "Employees will appear here when users with the \"employee\" role are created",
       "editEmployee": "Edit Employee",
       "deleteConfirmation": "Are you sure you want to delete {firstName} {lastName}?"
+    },
+    "pleaseSelectHotel": "Please select a hotel to view the financial reports."
+    },
+    "dashboard": {
+      "title": "Dashboard Overview"
+    },
+    "users": {
+      "noName": "No name",
+      "passwordResetSuccess": "Password reset successfully for {name}",
+      "temporaryPassword": "Temporary password: {tempPassword}",
+      "passwordChangeWarning": "The user must change this password on their first login.",
+      "resetPasswordConfirmation": "Are you sure you want to reset the password for {name}?",
+      "passwordResetError": "Error: Could not reset password. Check permissions."
     }
   }
 }

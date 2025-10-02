@@ -3,7 +3,7 @@
     <!-- Dashboard Content -->
         <v-row>
           <v-col cols="12">
-            <h1 class="text-h4 mb-4">Dashboard Overview</h1>
+            <h1 class="text-h4 mb-4">{{ $t('admin.dashboard.title') }}</h1>
           </v-col>
         </v-row>
 

@@ -283,6 +283,18 @@
       "noEmployeesDescription": "Los empleados aparecerán aquí cuando se creen usuarios con rol \"employee\"",
       "editEmployee": "Editar Empleado",
       "deleteConfirmation": "¿Estás seguro de que quieres eliminar a {firstName} {lastName}?"
+    },
+    "pleaseSelectHotel": "Por favor seleccione un hotel para ver los reportes financieros.",
+    "dashboard": {
+      "title": "Resumen del Panel"
+    },
+    "users": {
+      "noName": "Sin nombre",
+      "passwordResetSuccess": "Contraseña restablecida exitosamente para {name}",
+      "temporaryPassword": "Contraseña temporal: {tempPassword}",
+      "passwordChangeWarning": "El usuario debe cambiar esta contraseña en su primer inicio de sesión.",
+      "resetPasswordConfirmation": "¿Está seguro de que desea restablecer la contraseña para {name}?",
+      "passwordResetError": "Error: No se pudo restablecer la contraseña. Verifique los permisos."
     }
   }
 }

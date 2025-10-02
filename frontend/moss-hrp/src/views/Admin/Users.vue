@@ -66,7 +66,7 @@
                 </span>
               </v-avatar>
               <div>
-                <div class="font-weight-medium">{{ item.name || 'No name' }}</div>
+                <div class="font-weight-medium">{{ item.name || $t('admin.users.noName') }}</div>
                 <div class="text-caption text-medium-emphasis">{{ item.email }}</div>
               </div>
             </div>
@@ -217,6 +217,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { pb } from '@/composables/usePocketbase'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useAuthStore } from '@/stores/auth'
@@ -234,33 +235,35 @@ const userToDelete = ref(null)
 const userForm = ref(null)
 const authStore = useAuthStore()
 
+const { t } = useI18n();
+
 // Role options
 const roleOptions = [
-  { title: 'Super Admin', value: 'super_admin' },
-  { title: 'Administrator', value: 'administrator' },
-  { title: 'Operations HR', value: 'operations_hr' },
-  { title: 'Finance', value: 'finance' },
-  { title: 'Field Manager', value: 'field_manager' },
-  { title: 'Employee', value: 'employee' }
+  { title: t('admin.roles.super_admin'), value: 'super_admin' },
+  { title: t('admin.roles.administrator'), value: 'administrator' },
+  { title: t('admin.roles.operations_hr'), value: 'operations_hr' },
+  { title: t('admin.roles.finance'), value: 'finance' },
+  { title: t('admin.roles.field_manager'), value: 'field_manager' },
+  { title: t('admin.roles.employee'), value: 'employee' }
 ]
 
 // Table headers
 const headers = [
-  { title: 'User', key: 'name', sortable: true },
-  { title: 'Role', key: 'system_role', sortable: true },
-  { title: 'Status', key: 'verified', sortable: true },
-  { title: 'Created', key: 'created', sortable: true },
-  { title: 'Actions', key: 'actions', sortable: false, align: 'end' }
+  { title: t('admin.users.user'), key: 'name', sortable: true },
+  { title: t('admin.users.role'), key: 'system_role', sortable: true },
+  { title: t('admin.users.status'), key: 'verified', sortable: true },
+  { title: t('admin.users.created'), key: 'created', sortable: true },
+  { title: t('admin.users.actions'), key: 'actions', sortable: false, align: 'end' }
 ]
 
 // Validation rules
 const rules = {
-  required: (value: string) => !!value || 'This field is required',
+  required: (value: string) => !!value || t(\'common.validations.required\'),
   email: (value: string) => {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return pattern.test(value) || 'Invalid email format'
+    return pattern.test(value) || t(\'common.validations.email\')
   },
-  minLength: (value: string) => (value && value.length >= 8) || 'Minimum 8 characters'
+  minLength: (value: string) => (value && value.length >= 8) || t(\'common.validations.minLength\', { min: 8 })
 }
 
 // Computed
@@ -416,7 +419,7 @@ const confirmDelete = async () => {
 }
 
 const resetPassword = async (user) => {
-  if (!confirm(`¿Está seguro de que desea restablecer la contraseña para ${user.name}?`)) {
+  if (!confirm(t('admin.users.resetPasswordConfirmation', { name: user.name }))) {
     return
   }
 
@@ -431,7 +434,7 @@ const resetPassword = async (user) => {
     })
 
     // Create a modal or better notification instead of alert
-    const message = `Contraseña restablecida exitosamente para ${user.name}\n\nContraseña temporal: ${tempPassword}\n\n⚠️ El usuario debe cambiar esta contraseña en su primer inicio de sesión.`
+    const message = `${t('admin.users.passwordResetSuccess', { name: user.name })}\n\n${t('admin.users.temporaryPassword', { tempPassword })}\n\n⚠️ ${t('admin.users.passwordChangeWarning')}`
 
     // For now using alert, but could be replaced with a proper modal
     alert(message)
@@ -443,7 +446,7 @@ const resetPassword = async (user) => {
     console.log(`Password reset for user ${user.id} (${user.email})`)
   } catch (error) {
     console.error('Failed to reset password:', error)
-    alert('Error: No se pudo restablecer la contraseña. Verifique los permisos.')
+    alert(t('admin.users.passwordResetError'))
   }
 }
 
