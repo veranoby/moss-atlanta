@@ -3,8 +3,8 @@
     <v-container fluid>
       <!-- Page Header -->
       <div class="mb-4">
-        <h2 class="text-h4">Hotel Billing & Financial Reports</h2>
-        <p class="text-medium-emphasis">View financial summaries and export billing data</p>
+        <h2 class="text-h4">{{ $t('admin.hotelBilling.title') }}</h2>
+        <p class="text-medium-emphasis">{{ $t('admin.hotelBilling.subtitle') }}</p>
       </div>
 
       <!-- Hotel Selector -->
@@ -15,10 +15,10 @@
             :items="hotels"
             item-title="name"
             item-value="id"
-            label="Select Hotel"
-            :rules="[v => !!v || 'A hotel must be selected to view data']"
+            :label="$t('admin.hotelBilling.selectHotel')"
+            :rules="[v => !!v || $t('admin.hotelBilling.hotelRequired')]"
             required
-            hint="Select a hotel to view financial data"
+            :hint="$t('admin.hotelBilling.selectHotel')"
             persistent-hint
           ></v-select>
         </v-card-text>
@@ -42,7 +42,7 @@
 
         <!-- Monthly Breakdown Table -->
         <v-card variant="outlined" class="mt-4">
-          <v-card-title>Monthly Breakdown</v-card-title>
+          <v-card-title>{{ $t('admin.hotelBilling.monthlyBreakdown') }}</v-card-title>
           <v-data-table
             :headers="monthlyHeaders"
             :items="monthlyBreakdown"
@@ -56,7 +56,7 @@
 
         <!-- Weekly Payroll Detail Table -->
         <v-card variant="outlined" class="mt-4">
-          <v-card-title>Weekly Payroll Detail</v-card-title>
+          <v-card-title>{{ $t('admin.hotelBilling.weeklyPayrollDetail') }}</v-card-title>
           <v-data-table
             :headers="weeklyHeaders"
             :items="billingData"
@@ -69,7 +69,7 @@
         </v-card>
       </div>
        <v-alert v-else type="info" variant="tonal" class="mt-4">
-          Please select a hotel to view the financial reports.
+          {{ $t('admin.hotelBilling.pleaseSelectHotel') }}
         </v-alert>
 
     </v-container>
@@ -78,9 +78,12 @@
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { useHotelBilling } from '@/composables/useHotelBilling';
 import { pb } from '@/plugins/pocketbase';
+
+const { t } = useI18n();
 
 // Composable Usage
 const { billingData, summary, loading, error, fetchHotelPayrollHistory, getYTDSummary, getMonthlyAggregation } = useHotelBilling();
@@ -93,25 +96,25 @@ const monthlyBreakdown = ref([]);
 
 // UI Data
 const summaryCards = computed(() => [
-  { title: 'YTD Total Hours', value: summary.value.totalHours.toFixed(2), icon: 'mdi-clock' },
-  { title: 'YTD Total Amount', value: formatCurrency(summary.value.totalAmount), icon: 'mdi-currency-usd' },
-  { title: 'Avg Weekly Hours', value: summary.value.avgWeeklyHours.toFixed(2), icon: 'mdi-chart-line' },
-  { title: 'Period Count', value: summary.value.periodCount, icon: 'mdi-calendar' }
+  { title: t('admin.hotelBilling.ytdTotalHours'), value: summary.value.totalHours.toFixed(2), icon: 'mdi-clock' },
+  { title: t('admin.hotelBilling.ytdTotalAmount'), value: formatCurrency(summary.value.totalAmount), icon: 'mdi-currency-usd' },
+  { title: t('admin.hotelBilling.avgWeeklyHours'), value: summary.value.avgWeeklyHours.toFixed(2), icon: 'mdi-chart-line' },
+  { title: t('admin.hotelBilling.periodCount'), value: summary.value.periodCount, icon: 'mdi-calendar' }
 ]);
 
 const monthlyHeaders = [
-  { title: 'Month', key: 'month' },
-  { title: 'Total Hours', key: 'totalHours', align: 'end' },
-  { title: 'Total Amount', key: 'totalAmount', align: 'end' },
-  { title: 'Week Count', key: 'weekCount', align: 'end' }
+  { title: t('admin.hotelBilling.month'), key: 'month' },
+  { title: t('admin.hotelBilling.totalHours'), key: 'totalHours', align: 'end' },
+  { title: t('admin.hotelBilling.totalAmount'), key: 'totalAmount', align: 'end' },
+  { title: t('admin.hotelBilling.weekCount'), key: 'weekCount', align: 'end' }
 ];
 
 const weeklyHeaders = [
-  { title: 'Week Start', key: 'week_start', sortable: true },
-  { title: 'Week End', key: 'week_end' },
-  { title: 'Total Hours', key: 'total_hours', align: 'end' },
-  { title: 'Total Amount', key: 'total_amount', align: 'end' },
-  { title: 'Status', key: 'status' }
+  { title: t('admin.hotelBilling.weekStart'), key: 'week_start', sortable: true },
+  { title: t('admin.hotelBilling.weekEnd'), key: 'week_end' },
+  { title: t('admin.hotelBilling.totalHours'), key: 'total_hours', align: 'end' },
+  { title: t('admin.hotelBilling.totalAmount'), key: 'total_amount', align: 'end' },
+  { title: t('admin.hotelBilling.status'), key: 'status' }
 ];
 
 // Functions

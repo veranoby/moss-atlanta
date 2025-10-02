@@ -3,13 +3,13 @@
     <v-container fluid>
       <!-- Page Header -->
       <div class="mb-4">
-        <h2 class="text-h4">Payroll History</h2>
-        <p class="text-medium-emphasis">View and export completed payroll periods</p>
+        <h2 class="text-h4">{{ $t('admin.payrollHistory.title') }}</h2>
+        <p class="text-medium-emphasis">{{ $t('admin.payrollHistory.subtitle') }}</p>
       </div>
 
       <!-- Filters Panel -->
       <v-card variant="outlined" class="mb-4">
-        <v-card-title>Filters</v-card-title>
+        <v-card-title>{{ $t('admin.payrollHistory.filters') }}</v-card-title>
         <v-card-text>
           <v-row dense>
             <v-col cols="12" md="4">
@@ -18,7 +18,7 @@
                 :items="hotels"
                 item-title="name"
                 item-value="id"
-                label="Filter by Hotel"
+                :label="$t('admin.payrollHistory.filterByHotel')"
                 clearable
                 density="compact"
               ></v-select>
@@ -26,7 +26,7 @@
             <v-col cols="12" md="3">
               <v-text-field
                 v-model="dateRange.startDate"
-                label="Week Start - From"
+                :label="$t('admin.payrollHistory.weekStartFrom')"
                 type="date"
                 density="compact"
                 hint="YYYY-MM-DD format"
@@ -35,14 +35,14 @@
             <v-col cols="12" md="3">
               <v-text-field
                 v-model="dateRange.endDate"
-                label="Week Start - To"
+                :label="$t('admin.payrollHistory.weekStartTo')"
                 type="date"
                 density="compact"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="2" class="d-flex align-center">
-              <v-btn @click="applyFilters" color="primary" class="mr-2">Apply</v-btn>
-              <v-btn @click="clearFilters" variant="outlined">Clear</v-btn>
+              <v-btn @click="applyFilters" color="primary" class="mr-2">{{ $t('admin.payrollHistory.apply') }}</v-btn>
+              <v-btn @click="clearFilters" variant="outlined">{{ $t('admin.payrollHistory.clear') }}</v-btn>
             </v-col>
           </v-row>
         </v-card-text>
@@ -78,13 +78,13 @@
   <v-dialog v-model="detailDialog" max-width="1000px">
     <v-card>
       <v-card-title>
-        <span class="text-h5">Payroll Details</span>
+        <span class="text-h5">{{ $t('admin.payrollHistory.payrollDetails') }}</span>
         <v-spacer></v-spacer>
         <v-btn icon="mdi-close" @click="detailDialog = false"></v-btn>
       </v-card-title>
       <v-card-text v-if="selectedPayroll">
-        <p><strong>Hotel:</strong> {{ selectedPayroll.expand.hotel.name }}</p>
-        <p><strong>Period:</strong> {{ selectedPayroll.week_start }} to {{ selectedPayroll.week_end }}</p>
+        <p><strong>{{ $t('admin.payrollHistory.hotel') }}:</strong> {{ selectedPayroll.expand.hotel.name }}</p>
+        <p><strong>{{ $t('admin.payrollHistory.period') }}:</strong> {{ selectedPayroll.week_start }} to {{ selectedPayroll.week_end }}</p>
         <v-data-table
           :headers="detailHeaders"
           :items="payrollItems"
@@ -102,9 +102,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { usePayrollHistory } from '@/composables/usePayrollHistory';
 import { pb } from '@/plugins/pocketbase';
+
+const { t } = useI18n();
 
 // Composable usage
 const { payrollHistory, loading, error, fetchPayrollHistory, fetchPayrollDetails } = usePayrollHistory();
@@ -120,22 +123,22 @@ const detailsLoading = ref(false);
 
 // Table Headers
 const headers = [
-  { title: 'Hotel', key: 'expand.hotel.name', sortable: true },
-  { title: 'Week Start', key: 'week_start', sortable: true },
-  { title: 'Week End', key: 'week_end', sortable: true },
-  { title: 'Total Hours', key: 'total_hours', align: 'end' },
-  { title: 'Total Amount', key: 'total_amount', align: 'end' },
-  { title: 'Status', key: 'status', sortable: true },
-  { title: 'QB Batch ID', key: 'quickbooks_batch_id' },
-  { title: 'Actions', key: 'actions', sortable: false }
+  { title: t('admin.payrollHistory.hotel'), key: 'expand.hotel.name', sortable: true },
+  { title: t('admin.payrollHistory.weekStart'), key: 'week_start', sortable: true },
+  { title: t('admin.payrollHistory.weekEnd'), key: 'week_end', sortable: true },
+  { title: t('admin.payrollHistory.totalHours'), key: 'total_hours', align: 'end' },
+  { title: t('admin.payrollHistory.totalAmount'), key: 'total_amount', align: 'end' },
+  { title: t('admin.payrollHistory.status'), key: 'status', sortable: true },
+  { title: t('admin.payrollHistory.qbBatchId'), key: 'quickbooks_batch_id' },
+  { title: t('admin.payrollHistory.actions'), key: 'actions', sortable: false }
 ];
 
 const detailHeaders = [
-  { title: 'Employee', key: 'expand.assignment.expand.employee.first_name' },
-  { title: 'Position', key: 'expand.assignment.expand.position.title' },
-  { title: 'Hours', key: 'hours_worked', align: 'end' },
-  { title: 'Rate', key: 'hourly_rate', align: 'end' },
-  { title: 'Gross Pay', key: 'gross_pay', align: 'end' }
+  { title: t('admin.payrollHistory.employee'), key: 'expand.assignment.expand.employee.first_name' },
+  { title: t('admin.payrollHistory.position'), key: 'expand.assignment.expand.position.title' },
+  { title: t('admin.payrollHistory.hours'), key: 'hours_worked', align: 'end' },
+  { title: t('admin.payrollHistory.rate'), key: 'hourly_rate', align: 'end' },
+  { title: t('admin.payrollHistory.grossPay'), key: 'gross_pay', align: 'end' }
 ];
 
 // Functions

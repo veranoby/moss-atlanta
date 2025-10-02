@@ -3,13 +3,13 @@
     <v-container fluid>
       <!-- Page Header -->
       <div class="mb-4">
-        <h2 class="text-h4">Reconciliation Archive</h2>
-        <p class="text-medium-emphasis">Search completed reconciliations for audit and compliance</p>
+        <h2 class="text-h4">{{ $t('admin.reconciliationArchive.title') }}</h2>
+        <p class="text-medium-emphasis">{{ $t('admin.reconciliationArchive.subtitle') }}</p>
       </div>
 
       <!-- Advanced Filters -->
       <v-card variant="outlined" class="mb-4">
-        <v-card-title>Advanced Filters</v-card-title>
+        <v-card-title>{{ $t('admin.reconciliationArchive.advancedFilters') }}</v-card-title>
         <v-card-text>
           <v-row dense>
             <v-col cols="12" md="3">
@@ -18,7 +18,7 @@
                 :items="hotels"
                 item-title="name"
                 item-value="id"
-                label="Hotel"
+                :label="$t('admin.reconciliationArchive.hotel')"
                 clearable
                 hide-details
                 density="compact"
@@ -27,7 +27,7 @@
             <v-col cols="12" md="2">
               <v-text-field
                 v-model="filters.dateFrom"
-                label="Date From"
+                :label="$t('admin.reconciliationArchive.dateFrom')"
                 type="date"
                 hide-details
                 density="compact"
@@ -36,7 +36,7 @@
             <v-col cols="12" md="2">
               <v-text-field
                 v-model="filters.dateTo"
-                label="Date To"
+                :label="$t('admin.reconciliationArchive.dateTo')"
                 type="date"
                 hide-details
                 density="compact"
@@ -46,7 +46,7 @@
               <v-select
                 v-model="filters.status"
                 :items="['match', 'discrepancy', 'resolved']"
-                label="Status"
+                :label="$t('admin.reconciliationArchive.status')"
                 multiple
                 clearable
                 hide-details
@@ -57,7 +57,7 @@
                <v-select
                 v-model="filters.discrepancyLevel"
                 :items="['Exact Match (<1%)', 'Low (1-5%)', 'High (>5%)']"
-                label="Discrepancy Level"
+                :label="$t('admin.reconciliationArchive.discrepancyLevel')"
                 clearable
                 hide-details
                 density="compact"
@@ -66,8 +66,8 @@
           </v-row>
           <v-row dense class="mt-2">
              <v-col cols="12" class="d-flex justify-end">
-                <v-btn @click="searchReconciliations" color="primary" class="mr-2">Search</v-btn>
-                <v-btn @click="clearFilters" variant="outlined">Clear</v-btn>
+                <v-btn @click="searchReconciliations" color="primary" class="mr-2">{{ $t('admin.reconciliationArchive.search') }}</v-btn>
+                <v-btn @click="clearFilters" variant="outlined">{{ $t('admin.reconciliationArchive.clear') }}</v-btn>
             </v-col>
           </v-row>
         </v-card-text>
@@ -103,25 +103,25 @@
   <v-dialog v-model="detailDialog" max-width="800px">
     <v-card>
       <v-card-title>
-        <span class="text-h5">Reconciliation Details</span>
+        <span class="text-h5">{{ $t('admin.reconciliationArchive.reconciliationDetails') }}</span>
       </v-card-title>
       <v-card-text v-if="selectedReconciliation">
-        <p><strong>ID:</strong> {{ selectedReconciliation.id }}</p>
-        <p><strong>Date:</strong> {{ new Date(selectedReconciliation.date).toLocaleDateString() }}</p>
-        <p><strong>Employee:</strong> {{ selectedReconciliation.expand?.employee?.first_name }} {{ selectedReconciliation.expand?.employee?.last_name }}</p>
-        <p><strong>Hotel:</strong> {{ selectedReconciliation.expand?.hotel_report?.expand?.hotel?.name }}</p>
-        <p><strong>Status:</strong> <v-chip size="small">{{ selectedReconciliation.status }}</v-chip></p>
-        <p><strong>Hotel Hours:</strong> {{ selectedReconciliation.hotel_hours }}</p>
-        <p><strong>App Hours:</strong> {{ selectedReconciliation.app_hours }}</p>
-        <p><strong>Final Hours:</strong> {{ selectedReconciliation.final_hours }}</p>
-        <p><strong>Approved By:</strong> {{ selectedReconciliation.expand?.approved_by?.name || 'N/A' }}</p>
+        <p><strong>{{ $t('admin.reconciliationArchive.id') }}:</strong> {{ selectedReconciliation.id }}</p>
+        <p><strong>{{ $t('admin.reconciliationArchive.date') }}:</strong> {{ new Date(selectedReconciliation.date).toLocaleDateString() }}</p>
+        <p><strong>{{ $t('admin.reconciliationArchive.employee') }}:</strong> {{ selectedReconciliation.expand?.employee?.first_name }} {{ selectedReconciliation.expand?.employee?.last_name }}</p>
+        <p><strong>{{ $t('admin.reconciliationArchive.hotel') }}:</strong> {{ selectedReconciliation.expand?.hotel_report?.expand?.hotel?.name }}</p>
+        <p><strong>{{ $t('admin.reconciliationArchive.status') }}:</strong> <v-chip size="small">{{ selectedReconciliation.status }}</v-chip></p>
+        <p><strong>{{ $t('admin.reconciliationArchive.hotelHours') }}:</strong> {{ selectedReconciliation.hotel_hours }}</p>
+        <p><strong>{{ $t('admin.reconciliationArchive.appHours') }}:</strong> {{ selectedReconciliation.app_hours }}</p>
+        <p><strong>{{ $t('admin.reconciliationArchive.finalHours') }}:</strong> {{ selectedReconciliation.final_hours }}</p>
+        <p><strong>{{ $t('admin.reconciliationArchive.approvedBy') }}:</strong> {{ selectedReconciliation.expand?.approved_by?.name || 'N/A' }}</p>
         <v-divider class="my-2"></v-divider>
-        <p class="font-weight-bold">Resolution Notes:</p>
-        <p style="white-space: pre-wrap;">{{ selectedReconciliation.resolution_notes || 'No notes provided.' }}</p>
+        <p class="font-weight-bold">{{ $t('admin.reconciliationArchive.resolutionNotes') }}</p>
+        <p style="white-space: pre-wrap;">{{ selectedReconciliation.resolution_notes || $t('admin.reconciliationArchive.noNotesProvided') }}</p>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" text @click="detailDialog = false">Close</v-btn>
+        <v-btn color="primary" text @click="detailDialog = false">{{ $t('admin.reconciliationArchive.close') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -130,8 +130,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { pb } from '@/plugins/pocketbase';
+
+const { t } = useI18n();
 
 // Component-specific state
 const reconciliations = ref([]);
@@ -148,15 +151,15 @@ const filters = ref({
 });
 
 const headers = [
-  { title: 'Date', key: 'date', sortable: true },
-  { title: 'Employee', key: 'expand.employee.first_name' },
-  { title: 'Hotel Hours', key: 'hotel_hours', align: 'end' },
-  { title: 'App Hours', key: 'app_hours', align: 'end' },
-  { title: 'Final Hours', key: 'final_hours', align: 'end' },
-  { title: 'Discrepancy', key: 'discrepancy', align: 'end' },
-  { title: 'Status', key: 'status' },
-  { title: 'Approved By', key: 'expand.approved_by.name' },
-  { title: 'Actions', key: 'actions', sortable: false },
+  { title: t('admin.reconciliationArchive.date'), key: 'date', sortable: true },
+  { title: t('admin.reconciliationArchive.employee'), key: 'expand.employee.first_name' },
+  { title: t('admin.reconciliationArchive.hotelHours'), key: 'hotel_hours', align: 'end' },
+  { title: t('admin.reconciliationArchive.appHours'), key: 'app_hours', align: 'end' },
+  { title: t('admin.reconciliationArchive.finalHours'), key: 'final_hours', align: 'end' },
+  { title: t('admin.reconciliationArchive.discrepancy'), key: 'discrepancy', align: 'end' },
+  { title: t('admin.reconciliationArchive.status'), key: 'status' },
+  { title: t('admin.reconciliationArchive.approvedBy'), key: 'expand.approved_by.name' },
+  { title: t('admin.reconciliationArchive.actions'), key: 'actions', sortable: false },
 ];
 
 const detailDialog = ref(false);

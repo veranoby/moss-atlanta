@@ -2,14 +2,14 @@
   <AdminLayout>
     <v-container fluid>
     <div class="d-flex justify-space-between align-center mb-4">
-      <h2 class="text-h4">Gestión de Aplicaciones</h2>
+      <h2 class="text-h4">{{ $t('admin.applications.title') }}</h2>
       <div class="d-flex align-center gap-3">
         <v-chip
           v-if="selectedApplications.length > 0"
           color="primary"
           prepend-icon="mdi-check-circle"
         >
-          {{ selectedApplications.length }} seleccionada(s)
+          {{ selectedApplications.length }} {{ $t('admin.applications.selected') }}
         </v-chip>
         <v-btn
           color="primary"
@@ -18,7 +18,7 @@
           :loading="loading"
           elevation="2"
         >
-          Actualizar
+          {{ $t('admin.applications.refresh') }}
         </v-btn>
       </div>
     </div>
@@ -34,7 +34,7 @@
           <v-col cols="12" md="4">
             <v-text-field
               v-model="searchTerm"
-              label="Buscar candidatos"
+              :label="$t('admin.applications.searchCandidates')"
               prepend-inner-icon="mdi-magnify"
               variant="outlined"
               density="compact"
@@ -45,7 +45,7 @@
             <v-select
               v-model="statusFilter"
               :items="statusFilterOptions"
-              label="Filtrar por Estado"
+              :label="$t('admin.applications.filterByStatus')"
               variant="outlined"
               density="compact"
               clearable
@@ -55,7 +55,7 @@
             <v-select
               v-model="viewMode"
               :items="viewModeOptions"
-              label="Vista"
+              :label="$t('admin.applications.view')"
               variant="outlined"
               density="compact"
             ></v-select>
@@ -67,7 +67,7 @@
               block
               prepend-icon="mdi-filter-off"
             >
-              Limpiar
+              {{ $t('admin.applications.clear') }}
             </v-btn>
           </v-col>
         </v-row>
@@ -139,7 +139,7 @@
 
             <template #item.documents="{ item }">
               <div class="d-flex gap-1">
-                <v-tooltip text="Ver CV/Resume" v-if="item.resume_url">
+                <v-tooltip :text="$t('admin.applications.viewCV')" v-if="item.resume_url">
                   <template #activator="{ props }">
                     <v-btn
                       v-bind="props"
@@ -151,7 +151,7 @@
                     ></v-btn>
                   </template>
                 </v-tooltip>
-                <v-tooltip text="Ver Documentos" v-if="item.documents_url">
+                <v-tooltip :text="$t('admin.applications.viewDocuments')" v-if="item.documents_url">
                   <template #activator="{ props }">
                     <v-btn
                       v-bind="props"
@@ -168,7 +168,7 @@
 
             <template #item.actions="{ item }">
               <div class="d-flex gap-1">
-                <v-tooltip text="Ver Perfil Completo">
+                <v-tooltip :text="$t('admin.applications.viewFullProfile')">
                   <template #activator="{ props }">
                     <v-btn
                       v-bind="props"
@@ -190,17 +190,17 @@
                   </template>
                   <v-list>
                     <v-list-item @click="quickStatusChange(item, 'reviewed')">
-                      <v-list-item-title>Marcar Revisado</v-list-item-title>
+                      <v-list-item-title>{{ $t('admin.applications.markReviewed') }}</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="quickStatusChange(item, 'interviewed')">
-                      <v-list-item-title>Marcar Entrevistado</v-list-item-title>
+                      <v-list-item-title>{{ $t('admin.applications.markInterviewed') }}</v-list-item-title>
                     </v-list-item>
                     <v-divider></v-divider>
                     <v-list-item @click="quickHire(item)" class="text-success">
-                      <v-list-item-title>Contratar</v-list-item-title>
+                      <v-list-item-title>{{ $t('admin.applications.hire') }}</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="quickReject(item)" class="text-error">
-                      <v-list-item-title>Rechazar</v-list-item-title>
+                      <v-list-item-title>{{ $t('admin.applications.reject') }}</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -251,12 +251,12 @@
 
                 <v-card-text>
                   <div class="mb-2">
-                    <strong>Posición:</strong> {{ application.position_name }}<br>
-                    <strong>Área:</strong> {{ application.area }} - {{ application.department_name }}
+                    <strong>{{ $t('admin.applications.position') }}:</strong> {{ application.position_name }}<br>
+                    <strong>{{ $t('admin.applications.area') }}:</strong> {{ application.area }} - {{ application.department_name }}
                   </div>
                   
                   <div class="mb-2">
-                    <strong>Aplicó:</strong> {{ formatDate(application.created) }}
+                    <strong>{{ $t('admin.applications.applied') }}:</strong> {{ formatDate(application.created) }}
                   </div>
 
                   <div class="d-flex justify-space-between align-center">
@@ -269,7 +269,7 @@
                     </v-chip>
                     
                     <div class="d-flex gap-1">
-                      <v-tooltip text="Ver Perfil">
+                      <v-tooltip :text="$t('admin.applications.viewFullProfile')">
                         <template #activator="{ props }">
                           <v-btn
                             v-bind="props"
@@ -378,12 +378,12 @@
         <v-alert v-if="!loading && filteredApplications.length === 0" type="info" class="mt-4">
           <div class="text-center">
             <v-icon size="48" class="mb-2">mdi-account-search</v-icon>
-            <h3>No hay aplicaciones que mostrar</h3>
+            <h3>{{ $t('admin.applications.noApplications') }}</h3>
             <p v-if="searchTerm || statusFilter">
-              Intente ajustar sus filtros de búsqueda.
+              {{ $t('admin.applications.adjustFilters') }}
             </p>
             <p v-else>
-              Las aplicaciones aparecerán aquí cuando los candidatos se postule en las posiciones abiertas.
+              {{ $t('admin.applications.applicationsAppearHere') }}
             </p>
           </div>
         </v-alert>
@@ -411,10 +411,13 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useHiringWorkflow } from '@/composables/useHiringWorkflow';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import HiringActions from '@/components/HiringActions.vue';
 import CandidateProfile from '@/components/CandidateProfile.vue';
+
+const { t } = useI18n();
 
 // --- Composables and State ---
 const {
@@ -439,7 +442,7 @@ const selectedCandidateEmail = ref('');
 const showHiringActions = computed(() => selectedApplications.value.length > 0);
 
 const statusFilterOptions = computed(() => [
-  { title: 'Todos los Estados', value: '' },
+  { title: t('admin.applications.allStatuses'), value: '' },
   ...applicationStatuses.map(status => ({
     title: status.title,
     value: status.value
@@ -447,18 +450,18 @@ const statusFilterOptions = computed(() => [
 ]);
 
 const viewModeOptions = [
-  { title: 'Lista', value: 'list' },
-  { title: 'Tarjetas', value: 'cards' },
-  { title: 'Agrupado por Posición', value: 'grouped' }
+  { title: t('admin.applications.listView'), value: 'list' },
+  { title: t('admin.applications.cardsView'), value: 'cards' },
+  { title: t('admin.applications.groupedByPositionView'), value: 'grouped' }
 ];
 
 const tableHeaders = [
-  { title: 'Candidato', key: 'candidate_name', sortable: true },
-  { title: 'Posición', key: 'position', sortable: false },
-  { title: 'Estado', key: 'status', sortable: true },
-  { title: 'Fecha Aplicación', key: 'created', sortable: true },
-  { title: 'Documentos', key: 'documents', sortable: false },
-  { title: 'Acciones', key: 'actions', sortable: false }
+  { title: t('admin.applications.candidate'), key: 'candidate_name', sortable: true },
+  { title: t('admin.applications.position'), key: 'position', sortable: false },
+  { title: t('admin.applications.status'), key: 'status', sortable: true },
+  { title: t('admin.applications.applicationDate'), key: 'created', sortable: true },
+  { title: t('admin.applications.documents'), key: 'documents', sortable: false },
+  { title: t('admin.applications.actions'), key: 'actions', sortable: false }
 ];
 
 const filteredApplications = computed(() => {

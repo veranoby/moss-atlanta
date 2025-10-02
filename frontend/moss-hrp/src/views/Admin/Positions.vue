@@ -11,12 +11,12 @@
           @update:options="loadItems"
         >
           <template #title>
-            <h2>Gestión de Puestos</h2>
+            <h2>{{ $t('admin.positions.title') }}</h2>
           </template>
 
           <template #actions>
             <v-btn color="primary" prepend-icon="mdi-plus" @click="openCreateModal">
-              Crear Nuevo Puesto
+              {{ $t('admin.positions.createPosition') }}
             </v-btn>
           </template>
 

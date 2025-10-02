@@ -3,15 +3,15 @@
     <v-container fluid class="pa-0">
     <div class="d-flex justify-space-between align-center mb-6">
       <div>
-        <h2 class="text-h4 mb-2">Gestión de Empleados</h2>
-        <p class="text-body-1 text-medium-emphasis">Administrar empleados del sistema MOSS</p>
+        <h2 class="text-h4 mb-2">{{ $t('admin.employees.title') }}</h2>
+        <p class="text-body-1 text-medium-emphasis">{{ $t('admin.employees.subtitle') }}</p>
       </div>
       <v-btn
         color="primary"
         prepend-icon="mdi-account-plus"
         @click="openCreateModal"
       >
-        Crear Empleado
+        {{ $t('admin.employees.createEmployee') }}
       </v-btn>
     </div>
 
@@ -26,8 +26,8 @@
       @clear-selection="selected = []"
       class="mb-4"
     >
-      <v-btn prepend-icon="mdi-check-circle-outline">Cambiar Estado</v-btn>
-      <v-btn prepend-icon="mdi-export">Exportar</v-btn>
+      <v-btn prepend-icon="mdi-check-circle-outline">{{ $t('admin.employees.changeStatus') }}</v-btn>
+      <v-btn prepend-icon="mdi-export">{{ $t('admin.employees.export') }}</v-btn>
     </BulkActionBar>
 
     <v-card variant="outlined">
@@ -66,8 +66,8 @@
       <!-- Fallback if no employees -->
       <div v-if="!loading && employees.length === 0" class="pa-4 text-center">
         <v-icon size="48" class="mb-2">mdi-account-off</v-icon>
-        <div class="text-h6">No se encontraron empleados</div>
-        <div class="text-body-2 text-medium-emphasis">Los empleados aparecerán aquí cuando se creen usuarios con rol "employee"</div>
+        <div class="text-h6">{{ $t('admin.employees.noEmployeesFound') }}</div>
+        <div class="text-body-2 text-medium-emphasis">{{ $t('admin.employees.noEmployeesDescription') }}</div>
       </div>
     </v-card>
 
@@ -86,6 +86,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { pb } from '@/composables/usePocketbase'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import AdvancedSearch from '@/components/AdvancedSearch.vue';
@@ -93,6 +94,8 @@ import BulkActionBar from '@/components/BulkActionBar.vue';
 import VirtualScrollTable from '@/components/VirtualScrollTable.vue';
 import FormModal from '@/components/FormModal.vue';
 import EmployeeForm from '@/components/forms/EmployeeForm.vue';
+
+const { t } = useI18n()
 
 // State
 const employees = ref([]);
@@ -106,13 +109,13 @@ const editedItem = ref({});
 const employeeForm = ref(null);
 
 const isEditing = computed(() => !!editedItem.value.id);
-const modalTitle = computed(() => isEditing.value ? 'Editar Empleado' : 'Crear Empleado');
+const modalTitle = computed(() => isEditing.value ? t('admin.employees.editEmployee') : t('admin.employees.createEmployee'));
 
 const headers = [
-  { title: 'Nombre', key: 'name', width: '30%' },
-  { title: 'Estado', key: 'status', width: '15%' },
-  { title: 'Fecha de Contratación', key: 'hire_date', width: '25%' },
-  { title: 'Acciones', key: 'actions', width: '15%', align: 'end' },
+  { title: t('admin.employees.name'), key: 'name', width: '30%' },
+  { title: t('admin.employees.status'), key: 'status', width: '15%' },
+  { title: t('admin.employees.hireDate'), key: 'hire_date', width: '25%' },
+  { title: t('admin.employees.actions'), key: 'actions', width: '15%', align: 'end' },
 ];
 
 // --- Data Loading ---
@@ -225,7 +228,7 @@ async function saveEmployee() {
 }
 
 async function deleteEmployee(item) {
-  if (window.confirm(`Are you sure you want to delete ${item.first_name} ${item.last_name}?`)) {
+  if (window.confirm(t('admin.employees.deleteConfirmation', { firstName: item.first_name, lastName: item.last_name }))) {
     loading.value = true;
     try {
       // Delete user from users collection (same as Users.vue pattern)

@@ -4,7 +4,7 @@
       <div class="d-flex justify-space-between align-center mb-6">
         <div>
           <h2 class="text-h4 mb-2">{{ $t('admin.settings') }}</h2>
-          <p class="text-body-1 text-medium-emphasis">Configuración del sistema MOSS Atlanta</p>
+          <p class="text-body-1 text-medium-emphasis">{{ $t('admin.settings.subtitle') }}</p>
         </div>
         <v-btn
           color="primary"
@@ -13,7 +13,7 @@
           :loading="saving"
           :disabled="!hasChanges"
         >
-          Guardar Cambios
+          {{ $t('admin.settings.saveChanges') }}
         </v-btn>
       </div>
 
@@ -23,28 +23,28 @@
           <v-card variant="outlined" class="text-center pa-4">
             <v-icon size="32" color="primary" class="mb-2">mdi-map-marker-radius</v-icon>
             <div class="text-h6">{{ punchRadius }}m</div>
-            <div class="text-caption text-medium-emphasis">Radio de Marcaje</div>
+            <div class="text-caption text-medium-emphasis">{{ $t('admin.settings.punchRadius') }}</div>
           </v-card>
         </v-col>
         <v-col cols="12" md="3">
           <v-card variant="outlined" class="text-center pa-4">
             <v-icon size="32" :color="autoProcessing ? 'success' : 'grey'" class="mb-2">mdi-robot</v-icon>
-            <div class="text-h6">{{ autoProcessing ? 'Activo' : 'Inactivo' }}</div>
-            <div class="text-caption text-medium-emphasis">Procesamiento IA</div>
+            <div class="text-h6">{{ autoProcessing ? $t('admin.settings.active') : $t('admin.settings.inactive') }}</div>
+            <div class="text-caption text-medium-emphasis">{{ $t('admin.settings.aiProcessing') }}</div>
           </v-card>
         </v-col>
         <v-col cols="12" md="3">
           <v-card variant="outlined" class="text-center pa-4">
             <v-icon size="32" :color="integrationsActive ? 'success' : 'warning'" class="mb-2">mdi-cloud-sync</v-icon>
             <div class="text-h6">{{ integrationsCount }}/2</div>
-            <div class="text-caption text-medium-emphasis">Integraciones</div>
+            <div class="text-caption text-medium-emphasis">{{ $t('admin.settings.integrations') }}</div>
           </v-card>
         </v-col>
         <v-col cols="12" md="3">
           <v-card variant="outlined" class="text-center pa-4">
             <v-icon size="32" color="info" class="mb-2">mdi-calendar-clock</v-icon>
             <div class="text-h6">{{ payrollPeriod }}</div>
-            <div class="text-caption text-medium-emphasis">Período Nómina</div>
+            <div class="text-caption text-medium-emphasis">{{ $t('admin.settings.payrollPeriod') }}</div>
           </v-card>
         </v-col>
       </v-row>
@@ -62,7 +62,7 @@
           <v-card variant="outlined">
             <v-card-title class="d-flex align-center">
               <v-icon class="me-2">mdi-cog</v-icon>
-              Sistema
+              {{ $t('admin.settings.system') }}
             </v-card-title>
             <v-card-text>
               <div v-for="setting in systemSettings" :key="setting.key" class="mb-4">
@@ -87,7 +87,7 @@
           <v-card variant="outlined">
             <v-card-title class="d-flex align-center">
               <v-icon class="me-2">mdi-cloud-sync</v-icon>
-              Integraciones
+              {{ $t('admin.settings.integrations') }}
             </v-card-title>
             <v-card-text>
               <div v-for="setting in integrationSettings" :key="setting.key" class="mb-4">
@@ -112,7 +112,7 @@
           <v-card variant="outlined">
             <v-card-title class="d-flex align-center">
               <v-icon class="me-2">mdi-calendar-clock</v-icon>
-              Nómina
+              {{ $t('admin.settings.payroll') }}
             </v-card-title>
             <v-card-text>
               <div v-for="setting in payrollSettings" :key="setting.key" class="mb-4">
@@ -138,7 +138,7 @@
           <v-card variant="outlined">
             <v-card-title class="d-flex align-center">
               <v-icon class="me-2">mdi-robot</v-icon>
-              Automatización
+              {{ $t('admin.settings.automation') }}
             </v-card-title>
             <v-card-text>
               <div v-for="setting in automationSettings" :key="setting.key" class="mb-4">
@@ -169,7 +169,7 @@
         {{ saveStatus.message }}
         <template #actions>
           <v-btn variant="text" @click="showSaveStatus = false">
-            Cerrar
+            {{ $t('admin.settings.close') }}
           </v-btn>
         </template>
       </v-snackbar>

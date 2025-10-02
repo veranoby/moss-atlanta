@@ -11,12 +11,12 @@
           @update:options="loadItems"
         >
           <template #title>
-            <h2>Gestión de Departamentos</h2>
+            <h2>{{ $t('admin.departments.title') }}</h2>
           </template>
 
           <template #actions>
             <v-btn color="primary" prepend-icon="mdi-plus" @click="openCreateModal">
-              Crear Nuevo Departamento
+              {{ $t('admin.departments.createDepartment') }}
             </v-btn>
           </template>
 
